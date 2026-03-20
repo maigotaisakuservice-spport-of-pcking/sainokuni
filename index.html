@@ -434,14 +434,17 @@
     const WEATHER_API_KEY = '45c9c252b90b42c0972105021261702'; // 提供されたキー
     async function initWeather() {
         try {
-            const res = await fetch(`https://api.weatherapi.com/v1/current.json?key=${WEATHER_API_KEY}&q=Saitama&lang=ja`);
+            const apiUrl = `https://api.weatherapi.com/v1/current.json?key=${WEATHER_API_KEY}&q=Saitama&lang=ja`;
+            const res = await fetch(`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(apiUrl)}`);
             const data = await res.json();
+
             document.getElementById('weather-info').innerHTML = `
                 <img src="${data.current.condition.icon}" class="mx-auto w-12 h-12">
                 ${data.current.temp_c}℃ / ${data.current.condition.text}
             `;
             startWeatherEffect(data.current.condition.code);
         } catch (e) {
+            console.error('Weather fetch error:', e);
             document.getElementById('weather-info').textContent = '取得失敗';
         }
     }
