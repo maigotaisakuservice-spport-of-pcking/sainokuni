@@ -4,7 +4,7 @@
 
 import * as webllm from "https://esm.run/@mlc-ai/web-llm";
 
-const SELECTED_MODEL = "Gemma-2b-it-q4f16_1-MLC"; // 軽量かつ埼玉の知識があるモデル
+const SELECTED_MODEL = "gemma-2-2b-it-q4f16_1-MLC"; // 軽量かつ埼玉の知識があるモデル
 
 const SYSTEM_PROMPT = `
 あなたは「AIサイタマニアくん」という、サイバーパンクな埴輪型AIです。
