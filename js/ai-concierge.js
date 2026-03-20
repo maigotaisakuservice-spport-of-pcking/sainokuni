@@ -61,14 +61,21 @@ async function handleChat() {
     userInput.value = '';
 
     if (!engine) {
-        addMessage('model', "ﾋﾟﾎﾟｯ...AIエンジンが準備中である。バックグラウンドでシステムをロードしている...少々待たれよ。");
+        const loadingMsg = addMessage('model', "ﾋﾟﾎﾟｯ...AIエンジンが準備中である。バックグラウンドでシステムをロードしている...少々待たれよ。 (0%)");
+        const inner = loadingMsg.querySelector('.inline-block');
+
         await initWebLLM((progress) => {
-            updateStatus(`Downloading... ${Math.round(progress.progress * 100)}%`);
-            if (progress.progress === 1) updateStatus("Online_");
+            const percent = Math.round(progress.progress * 100);
+            updateStatus(`Downloading... ${percent}%`);
+            inner.textContent = `ﾋﾟﾎﾟｯ...只今準備中である。システムロード中... (${percent}%)`;
+            if (progress.progress === 1) {
+                updateStatus("Online_");
+                inner.textContent = "ﾋﾟﾎﾟｯ...System_Boot...完了。お待たせした、質問に回答する。";
+            }
         });
+
         if (!engine) {
-            addMessage('model', "Error...AIエンジンの起動に失敗した。通常の検索モードで回答する。");
-            // フォールバック（既存の簡易ロジック）
+            inner.textContent = "Error...AIエンジンの起動に失敗した（リソースの取得に失敗）。通常の検索モードで回答する。";
             fallbackResponse(msg);
             return;
         }
@@ -147,11 +154,34 @@ window.addEventListener('load', () => {
     // ユーザーがチャットを開かなくてもダウンロードを開始（バックグラウンドロード）
     setTimeout(() => {
         initWebLLM((progress) => {
-            if (progress.progress > 0) updateStatus(`Loading... ${Math.round(progress.progress * 100)}%`);
+            const percent = Math.round(progress.progress * 100);
+            if (progress.progress > 0) updateStatus(`Loading... ${percent}%`);
+
+            // チャットの最初のメッセージを更新（準備中の表示）
+            const firstMsg = chatMessages.querySelector('.text-left .inline-block');
+            if (firstMsg && firstMsg.textContent.includes("System_Boot")) {
+                 if (progress.progress < 1) {
+                     firstMsg.textContent = `ﾋﾟﾎﾟｯ...只今準備中である... (${percent}%)`;
+                 } else {
+                     firstMsg.textContent = `ﾋﾟﾎﾟｯ...System_Boot...完了...コードネーム『サイタマニア』起動...質問をどうぞ...`;
+                 }
+            }
+
             if (progress.progress === 1) updateStatus("Online_");
         });
-    }, 3000);
+    }, 1000);
 });
+
+// 気分選択ボタンの処理
+window.selectMood = function(mood) {
+    const moodMap = {
+        'hungry': 'お腹が空いた。おすすめのグルメやカフェを教えて。',
+        'walk': '歩きたい。散策にぴったりの場所はどこ？',
+        'learn': '学びたい。歴史や文化に触れられる場所を教えて。'
+    };
+    userInput.value = moodMap[mood];
+    handleChat();
+};
 
 sendBtn.addEventListener('click', handleChat);
 userInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') handleChat(); });

@@ -1,115 +1,204 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <title>クイズで学ぼう！埼玉 | 埼玉県紹介サイト</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>究極・埼玉クイズ 2026 | 埼玉県紹介サイト</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=DotGothic16&display=swap" rel="stylesheet">
   <style>
-      body {
-        font-family: 'Noto Sans JP', sans-serif;
-        margin:0; padding:0;
-        background:#f9f9f9;
-        color:#222;
-        line-height:1.6;
-      }
-      header {
-        background:#2c3e50;
-        color:#ecf0f1;
-        padding:1rem 2rem;
-      }
-      header h1 {
-        margin:0;
-        font-weight:700;
-      }
-      nav a {
-        color:#ecf0f1;
-        text-decoration:none;
-        font-weight:600;
-      }
-      nav a:hover {
-        text-decoration: underline;
-      }
-      main {
-        max-width:900px;
-        margin:2rem auto;
-        padding:0 1rem;
-      }
-      h2 {
-        color:#34495e;
-        font-weight:700;
-        font-size:2rem;
-        margin-bottom:0.5rem;
-      }
-      p {
-        font-size:1.1rem;
-        color:#444;
-      }
-      img {
-        width: 100%;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      }
-      iframe {
-        margin-top: 2rem;
-        width: 100%;
-        height: 300px;
-        border: none;
-        border-radius: 12px;
-      }
-      a.back-link {
-        display: inline-block;
-        margin-top: 2rem;
-        color: #2980b9;
-        text-decoration: none;
-        font-weight: 600;
-      }
-      a.back-link:hover {
-        text-decoration: underline;
-      }
-      footer {
-        text-align:center;
-        padding:2rem 1rem;
-        color:#999;
-        font-size:0.9rem;
-        margin-top:3rem;
-      }
-    </style>
-  <script>
-    function checkAnswer(q, correct) {
-      const radios = document.getElementsByName(q);
-      let selected;
-      for (const radio of radios) {
-        if (radio.checked) selected = radio.value;
-      }
-      alert(selected === correct ? "正解！" : "残念、不正解です。");
+    body {
+      background-color: #0f172a;
+      color: #e2e8f0;
+      font-family: 'Noto Sans JP', sans-serif;
     }
-  </script>
+    .neon-border {
+        box-shadow: 0 0 20px rgba(56, 189, 248, 0.4), inset 0 0 10px rgba(56, 189, 248, 0.2);
+        border: 2px solid #38bdf8;
+    }
+    .btn-choice {
+        background: rgba(30, 41, 59, 0.7);
+        border: 1px solid #475569;
+        transition: all 0.2s;
+        text-align: left;
+        padding: 1.5rem;
+        border-radius: 1rem;
+        width: 100%;
+        margin-bottom: 1rem;
+        font-weight: bold;
+    }
+    .btn-choice:hover:not(:disabled) {
+        background: #334155;
+        border-color: #38bdf8;
+        transform: translateX(10px);
+    }
+    .btn-choice.correct {
+        background: #065f46;
+        border-color: #34d399;
+    }
+    .btn-choice.wrong {
+        background: #7f1d1d;
+        border-color: #f87171;
+    }
+    .progress-bar {
+        height: 6px;
+        background: #334155;
+        border-radius: 3px;
+        overflow: hidden;
+    }
+    #progress-fill {
+        height: 100%;
+        background: #38bdf8;
+        width: 0%;
+        transition: width 0.3s;
+    }
+    .cyber-font { font-family: 'DotGothic16', sans-serif; }
+  </style>
 </head>
-<body>
-  <header>
-    <h1>クイズで学ぼう！埼玉</h1>
-    <nav>
-      <a href="index.html">トップ</a>
-      <a href="access.html">アクセス</a>
-    </nav>
-  </header>
-  <main>
-    <section>
-      <h2>第1問：埼玉県の県庁所在地は？</h2>
-      <label><input type="radio" name="q1" value="さいたま市" /> さいたま市</label><br>
-      <label><input type="radio" name="q1" value="川越市" /> 川越市</label><br>
-      <label><input type="radio" name="q1" value="熊谷市" /> 熊谷市</label><br>
-      <button onclick="checkAnswer('q1', 'さいたま市')">答える</button>
-    </section>
-    <section>
-      <h2>第2問：草加せんべいの発祥地は？</h2>
-      <label><input type="radio" name="q2" value="草加市" /> 草加市</label><br>
-      <label><input type="radio" name="q2" value="所沢市" /> 所沢市</label><br>
-      <label><input type="radio" name="q2" value="秩父市" /> 秩父市</label><br>
-      <button onclick="checkAnswer('q2', '草加市')">答える</button>
-    </section>
-  </main>
-  <footer>
-    <p>© 2025 埼玉県大紹介スペシャル</p>
-  </footer>
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
+
+  <div id="game-card" class="max-w-2xl w-full bg-slate-900 rounded-3xl p-8 neon-border relative overflow-hidden">
+    <div class="mb-8 flex justify-between items-center">
+        <div class="flex items-center gap-4">
+            <span class="text-sky-400 font-bold tracking-widest cyber-font" id="q-number">MISSION: 01/05</span>
+            <button onclick="showHelp()" class="text-slate-500 hover:text-white transition-colors" title="遊び方">（？）</button>
+        </div>
+        <span class="text-slate-400 text-sm" id="score-text">SCORE: 0</span>
+    </div>
+
+    <!-- ヘルプモーダル -->
+    <div id="help-modal" class="fixed inset-0 bg-black/80 hidden items-center justify-center z-[3000] p-6" onclick="closeHelp()">
+        <div class="bg-slate-900 border-2 border-sky-400 p-8 rounded-3xl max-w-md w-full relative" onclick="event.stopPropagation()">
+            <h2 class="text-2xl font-bold mb-4 text-sky-400">遊び方：埼玉クイズ</h2>
+            <div class="text-slate-300 leading-relaxed">
+                <p class="mb-4">埼玉県に関するクイズが5問出題されます。4つの選択肢から正解だと思うものを選んでください。</p>
+                <p class="mb-4">1問正解につき20ポイント獲得。全問正解で100ポイントを目指しましょう！</p>
+                <p>正解・不正解はその場で判定されます。</p>
+            </div>
+            <button class="mt-8 w-full bg-sky-500 hover:bg-sky-600 text-white py-3 rounded-xl font-bold transition-colors" onclick="closeHelp()">わかった！</button>
+        </div>
+    </div>
+
+    <div class="progress-bar mb-10">
+        <div id="progress-fill"></div>
+    </div>
+
+    <div id="quiz-content">
+        <h2 class="text-2xl font-bold mb-10 leading-relaxed" id="question">読み込み中...</h2>
+        <div id="choices" class="space-y-4"></div>
+    </div>
+
+    <div id="result-overlay" class="hidden absolute inset-0 bg-slate-950 flex flex-col items-center justify-center z-50 p-8 text-center">
+        <h2 class="text-4xl font-bold mb-4 cyber-font text-sky-400">MISSION CLEAR</h2>
+        <div class="text-6xl font-bold mb-8" id="final-result-score">0</div>
+        <p class="text-xl mb-12 text-slate-300" id="final-msg">分析完了：あなたの埼玉愛を測定しました。</p>
+        <div class="flex flex-col sm:flex-row gap-4 w-full max-w-xs">
+            <button class="bg-sky-500 hover:bg-sky-600 text-white font-bold py-3 px-8 rounded-xl transition-all" onclick="location.reload()">再起動</button>
+            <button class="bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 px-8 rounded-xl transition-all" onclick="location.href='index.html'">帰還する</button>
+        </div>
+    </div>
+  </div>
+
+  <script>
+    const quizData = [
+        {
+            q: "2026年、埼玉県の人口は約何万人と予測されている？",
+            c: ["約730万人", "約650万人", "約800万人", "約500万人"],
+            a: 0
+        },
+        {
+            q: "「翔んで埼玉」でも有名。埼玉県の鳥は何？",
+            c: ["シラコバト", "ライチョウ", "トキ", "ツル"],
+            a: 0
+        },
+        {
+            q: "世界最大級の地下放水路「首都圏外郭放水路」があるのは何市？",
+            c: ["春日部市", "さいたま市", "越谷市", "草加市"],
+            a: 0
+        },
+        {
+            q: "渋沢栄一の出身地として知られる、深谷市の名産品は？",
+            c: ["深谷ねぎ", "深谷なす", "深谷メロン", "深谷ピーマン"],
+            a: 0
+        },
+        {
+            q: "大宮にある、日本最大級の鉄道の殿堂は何？",
+            c: ["鉄道博物館", "大宮リニア館", "埼玉ステーション", "JRワンダーランド"],
+            a: 0
+        }
+    ];
+
+    let currentQ = 0;
+    let score = 0;
+    let canAnswer = true;
+
+    function loadQuiz() {
+        canAnswer = true;
+        const data = quizData[currentQ];
+        document.getElementById('q-number').textContent = `MISSION: ${String(currentQ + 1).padStart(2, '0')}/05`;
+        document.getElementById('question').textContent = data.q;
+        document.getElementById('progress-fill').style.width = `${(currentQ / quizData.length) * 100}%`;
+
+        const choicesContainer = document.getElementById('choices');
+        choicesContainer.innerHTML = '';
+        data.c.forEach((choice, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'btn-choice';
+            btn.textContent = `${index + 1}. ${choice}`;
+            btn.onclick = () => selectChoice(index);
+            choicesContainer.appendChild(btn);
+        });
+    }
+
+    function selectChoice(index) {
+        if(!canAnswer) return;
+        canAnswer = false;
+        const data = quizData[currentQ];
+        const buttons = document.querySelectorAll('.btn-choice');
+
+        if(index === data.a) {
+            buttons[index].classList.add('correct');
+            score += 20;
+            document.getElementById('score-text').textContent = `SCORE: ${score}`;
+        } else {
+            buttons[index].classList.add('wrong');
+            buttons[data.a].classList.add('correct');
+        }
+
+        setTimeout(() => {
+            currentQ++;
+            if(currentQ < quizData.length) {
+                loadQuiz();
+            } else {
+                showResult();
+            }
+        }, 1500);
+    }
+
+    function showHelp() {
+        document.getElementById('help-modal').classList.remove('hidden');
+        document.getElementById('help-modal').classList.add('flex');
+    }
+
+    function closeHelp() {
+        document.getElementById('help-modal').classList.add('hidden');
+        document.getElementById('help-modal').classList.remove('flex');
+    }
+
+    function showResult() {
+        document.getElementById('progress-fill').style.width = '100%';
+        document.getElementById('result-overlay').classList.remove('hidden');
+        document.getElementById('final-result-score').textContent = score;
+
+        let msg = "";
+        if(score === 100) msg = "完璧だ...。あなたは『埼玉そのもの』と言っても過言ではない。";
+        else if(score >= 60) msg = "素晴らしい。埼玉のポテンシャルを十分に理解している。";
+        else if(score >= 20) msg = "伸びしろがある。埼玉の魅力はまだまだ奥が深い。";
+        else msg = "警告：埼玉成分が不足している。今すぐ観光を推奨する。";
+        document.getElementById('final-msg').textContent = msg;
+    }
+
+    loadQuiz();
+  </script>
 </body>
 </html>

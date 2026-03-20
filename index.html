@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="css/common.css">
     <style>
         :root {
-            --saitama-blue: #00ACC1;
+            --saitama-blue: var(--saitama-blue);
             --saitama-green: #4CAF50;
             --saitama-red: #F44336;
         }
@@ -205,6 +205,13 @@
         </div>
     </div>
     <nav class="flex items-center gap-6">
+        <a id="coupon-menu-item" href="index.html?reward=true" class="hidden text-yellow-400 font-bold animate-pulse" title="クーポン獲得！">💎 特典</a>
+        <div class="hidden lg:flex items-center gap-2 bg-black/20 p-1 rounded-full px-3">
+            <span class="text-[10px] uppercase font-bold opacity-70">Saicolor:</span>
+            <button onclick="changeTheme('blue')" class="w-4 h-4 rounded-full bg-cyan-500 border-2 border-white/50" title="Saitama Blue"></button>
+            <button onclick="changeTheme('green')" class="w-4 h-4 rounded-full bg-emerald-500 border-2 border-white/50" title="Saitama Green"></button>
+            <button onclick="changeTheme('red')" class="w-4 h-4 rounded-full bg-red-500 border-2 border-white/50" title="Saitama Red"></button>
+        </div>
         <a href="destinations/kawagoe.html" class="hover:text-emerald-400 font-bold">観光地</a>
         <a href="map.html" class="hover:text-emerald-400 font-bold">マップ</a>
         <a href="saitama-mini-game.html" class="hover:text-emerald-400 font-bold">ゲーム</a>
@@ -223,6 +230,22 @@
         <p class="text-xl md:text-2xl mt-4 opacity-90">SAITAMA RENEWAL 2026</p>
     </div>
 </div>
+
+<section id="widgets" class="!py-12 bg-gray-50 dark:bg-gray-900 border-y border-gray-200 dark:border-gray-800">
+    <h2 class="section-title !mb-12">リアルタイム埼玉</h2>
+    <div class="widget-container">
+        <div class="widget-card" id="weather-widget">
+            <h3 class="font-bold mb-4">現在の天気（さいたま市）</h3>
+            <div id="weather-info" class="text-2xl font-bold text-blue-500">Loading...</div>
+        </div>
+        <div class="widget-card">
+            <h3 class="font-bold mb-4">お祭りカウントダウン</h3>
+            <div id="countdown" class="text-xl">
+                川越まつりまで あと <span id="days-to-festival" class="text-red-500 font-bold">--</span> 日
+            </div>
+        </div>
+    </div>
+</section>
 
 <section id="ai-concierge-intro">
     <h2 class="section-title">AIサイタマニアくんに相談</h2>
@@ -280,21 +303,6 @@
     </div>
 </section>
 
-<section id="widgets">
-    <h2 class="section-title">リアルタイム埼玉</h2>
-    <div class="widget-container">
-        <div class="widget-card" id="weather-widget">
-            <h3 class="font-bold mb-4">現在の天気（さいたま市）</h3>
-            <div id="weather-info" class="text-2xl font-bold text-blue-500">Loading...</div>
-        </div>
-        <div class="widget-card">
-            <h3 class="font-bold mb-4">お祭りカウントダウン</h3>
-            <div id="countdown" class="text-xl">
-                川越まつりまで あと <span id="days-to-festival" class="text-red-500 font-bold">--</span> 日
-            </div>
-        </div>
-    </div>
-</section>
 
 <footer>
     <div class="max-w-6xl mx-auto">
@@ -323,6 +331,11 @@
     </div>
     <div id="chat-messages" class="chat-messages">
         <!-- メッセージがここに追加される -->
+    </div>
+    <div id="mood-selector" class="px-4 py-2 border-t border-gray-700 flex flex-wrap gap-2 justify-center">
+        <button onclick="selectMood('hungry')" class="text-[10px] bg-amber-600/20 text-amber-400 border border-amber-600/50 px-2 py-1 rounded-full hover:bg-amber-600 hover:text-white transition-all">🍕 お腹が空いた</button>
+        <button onclick="selectMood('walk')" class="text-[10px] bg-sky-600/20 text-sky-400 border border-sky-600/50 px-2 py-1 rounded-full hover:bg-sky-600 hover:text-white transition-all">👟 歩きたい</button>
+        <button onclick="selectMood('learn')" class="text-[10px] bg-emerald-600/20 text-emerald-400 border border-emerald-600/50 px-2 py-1 rounded-full hover:bg-emerald-600 hover:text-white transition-all">📚 学びたい</button>
     </div>
     <div class="chat-input-area">
         <input type="text" id="user-input" class="chat-input" placeholder="挨拶や質問をどうぞ...">
@@ -359,21 +372,66 @@
         slides[currentSlide].classList.add('active');
     }, 5000);
 
-    // ダークモード
+    // ダークモード & サイカラー
     const darkBtn = document.getElementById('dark-mode-toggle');
     darkBtn.addEventListener('click', () => {
         document.body.classList.toggle('dark-mode');
         darkBtn.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+        localStorage.setItem('saitama-dark-mode', document.body.classList.contains('dark-mode'));
     });
+    if (localStorage.getItem('saitama-dark-mode') === 'true') {
+        document.body.classList.add('dark-mode');
+        darkBtn.textContent = '☀️';
+    }
+
+    function changeTheme(color) {
+        document.body.classList.remove('theme-blue', 'theme-green', 'theme-red');
+        document.body.classList.add(`theme-${color}`);
+        localStorage.setItem('saitama-theme', color);
+
+        // CSS変数の更新
+        const roots = {
+            blue: { main: 'var(--saitama-blue)', hover: '#008ba3' },
+            green: { main: '#10b981', hover: '#059669' },
+            red: { main: '#f43f5e', hover: '#e11d48' }
+        };
+        document.documentElement.style.setProperty('--saitama-blue', roots[color].main);
+        const titles = document.querySelectorAll('.section-title::after');
+        // ::afterはJSから直接触れないので、styleタグで上書きするのが一般的だが、ここではクラス切り替えで対応
+    }
+    const savedTheme = localStorage.getItem('saitama-theme');
+    if (savedTheme) changeTheme(savedTheme);
 
     // カウントダウン (川越まつり: 毎年10月第3土日)
+    // クーポン演出 (スタンプコンプリート済みの場合)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('reward') === 'true') {
+        setTimeout(() => {
+            const overlay = document.createElement('div');
+            overlay.className = "fixed inset-0 bg-black/80 flex items-center justify-center z-[10000] p-4";
+            overlay.innerHTML = `
+                <div class="bg-gradient-to-br from-yellow-400 to-amber-600 rounded-3xl p-8 max-w-md w-full text-center shadow-[0_0_50px_rgba(251,191,36,0.5)] border-4 border-white text-white">
+                    <div class="text-7xl mb-6">🏆</div>
+                    <h2 class="text-3xl font-bold mb-4">COMPLETE REWARD</h2>
+                    <p class="text-xl mb-8">スタンプ制覇おめでとう！<br>以下のコードを提携店舗で提示してね。</p>
+                    <div class="bg-white/20 backdrop-blur-md rounded-2xl py-6 mb-8">
+                        <p class="text-xs uppercase tracking-widest opacity-80 mb-2">Secret Code</p>
+                        <p class="text-4xl font-black tracking-tighter">SAITAMANIA_2026</p>
+                    </div>
+                    <button onclick="this.closest('.fixed').remove()" class="w-full bg-white text-amber-600 font-bold py-4 px-6 rounded-2xl hover:bg-opacity-90 transition-all">OK</button>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+        }, 500);
+    }
+
     const nextFestival = new Date('2026-10-17');
     const today = new Date();
     const diff = Math.ceil((nextFestival - today) / (1000 * 60 * 60 * 24));
     document.getElementById('days-to-festival').textContent = diff > 0 ? diff : '開催中!';
 
     // 天気API & エフェクト
-    const WEATHER_API_KEY = '45c9c252b90b42c0972105021261702'; // 期間限定キー
+    const WEATHER_API_KEY = '45c9c252b90b42c0972105021261702'; // 提供されたキー
     async function initWeather() {
         try {
             const res = await fetch(`https://api.weatherapi.com/v1/current.json?key=${WEATHER_API_KEY}&q=Saitama&lang=ja`);
@@ -447,7 +505,9 @@
             <div class="space-y-4">
                 <p><strong>🚄 電車で:</strong> 東京駅から大宮駅まで新幹線で約25分、JR上野東京ラインで約30分。</p>
                 <p><strong>🚗 車で:</strong> 関越自動車道、東北自動車道、首都高速道路が県内を縦横に走り、都心からのドライブにも最適です。</p>
-                <p>各スポットの詳細な行き方は、個別の観光地ページをご確認ください。</p>
+                <p>埼玉県のハブである「大宮駅」を中心としたアクセスが便利です。</p>
+                <iframe src="https://www.google.com/maps?q=大宮駅&output=embed" class="w-full h-64 rounded-xl border-0"></iframe>
+                <p class="text-sm">各スポットの詳細な行き方は、個別の観光地ページをご確認ください。</p>
             </div>
         `,
         copyright: `

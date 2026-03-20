@@ -40,13 +40,13 @@
         section { margin-top: 3rem; }
         h2 {
             font-size: 2rem;
-            border-bottom: 4px solid #00ACC1;
+            border-bottom: 4px solid var(--saitama-blue);
             padding-bottom: 0.5rem;
             margin-bottom: 1.5rem;
         }
         h3 {
             font-size: 1.5rem;
-            color: #00ACC1;
+            color: var(--saitama-blue);
             margin-top: 2rem;
         }
 
@@ -90,7 +90,7 @@
             padding: 1rem;
             margin-bottom: 0.5rem;
             border-radius: 10px;
-            border-left: 5px solid #00ACC1;
+            border-left: 5px solid var(--saitama-blue);
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
     </style>
@@ -101,11 +101,11 @@
 
 <header>
     <h1><a href="../index.html">埼玉県紹介サイト</a></h1>
-    <button class="tts-btn" onclick="readPageText()">🔊 音声読み上げ</button>
-</header>
+    <div class="flex items-center gap-4"><button class="tts-btn" onclick="readPageText()">🔊 音声読み上げ</button><button class="hamburger-btn" onclick="toggleMenu()">☰</button></div>
+</header><div id="menu-overlay" class="menu-overlay" onclick="toggleMenu()"></div><div id="menu-content" class="menu-content"><nav><div class="menu-title">Main Menu</div><ul class="menu-list"><li><a href="../index.html">🏠 Home</a></li><li><a href="../map.html">🗺️ Map</a></li><li><a href="../saitama-mini-game.html">🎮 Game Hub</a></li><li id="coupon-menu-item" class="hidden"><a href="../index.html?reward=true" class="text-yellow-400 font-bold">💎 Special Coupon</a></li></ul><div class="menu-title">Other Destinations</div><ul class="menu-list"><li><a href="kawagoe.html">🏮 Kawagoe</a></li><li><a href="nagatoro.html">🛶 Nagatoro</a></li><li><a href="railway.html">🚆 Railway Museum</a></li><li><a href="stadium.html">⚽ Stadium</a></li><li><a href="maruyama.html">🌳 Maruyama Park</a></li></ul></nav></div>
 
 <div class="hero-image-container">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/%E5%9F%BC%E7%8E%89%E3%82%B9%E3%82%BF%E3%82%B8%E3%82%A2%E3%83%A02002%EF%BC%88%E6%AD%A3%E9%9D%A2%EF%BC%89.jpg/640px-%E5%9F%BC%E7%8E%89%E3%82%B9%E3%82%BF%E3%82%B8%E3%82%A2%E3%83%A02002%EF%BC%88%E6%AD%A3%E9%9D%A2%EF%BC%89.jpg" alt="埼玉スタジアム2002">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/%E5%9F%BC%E7%8E%89%E3%82%B9%E3%82%BF%E3%82%B8%E3%82%A2%E3%83%A02002%EF%BC%88%E6%AD%A3%E9%9D%A2%EF%BC%89.jpg/800px-thumbnail.jpg" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/%E5%9F%BC%E7%8E%89%E3%82%B9%E3%82%BF%E3%82%B8%E3%82%A2%E3%83%A02002%EF%BC%88%E6%AD%A3%E9%9D%A2%EF%BC%89.jpg/640px-%E5%9F%BC%E7%8E%89%E3%82%B9%E3%82%BF%E3%82%B8%E3%82%A2%E3%83%A02002%EF%BC%88%E6%AD%A3%E9%9D%A2%EF%BC%89.jpg'" alt="埼玉スタジアム2002">
     <h2 class="hero-title">埼玉スタジアム2002</h2>
 </div>
 

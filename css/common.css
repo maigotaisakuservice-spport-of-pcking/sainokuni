@@ -1,4 +1,16 @@
 
+:root {
+    --saitama-blue: #00ACC1;
+}
+
+body {
+    font-size: clamp(14px, 2vw, 18px);
+}
+
+body.theme-blue { --saitama-blue: #00ACC1; }
+body.theme-green { --saitama-blue: #10b981; }
+body.theme-red { --saitama-blue: #f43f5e; }
+
 /* 読了インジケーター */
 #reading-progress-container {
     position: fixed;
@@ -12,7 +24,7 @@
 #reading-progress-bar {
     width: 0%;
     height: 100%;
-    background: #00ACC1; /* Saitama Blue */
+    background: var(--saitama-blue);
     transition: width 0.1s;
 }
 
@@ -23,7 +35,7 @@
     right: 30px;
     width: 60px;
     height: 60px;
-    background-color: #00ACC1;
+    background-color: #00ACC1; /* Request: #00ACC1 (Saitama Blue) */
     color: white;
     border: none;
     border-radius: 50%;
@@ -136,4 +148,73 @@
 .stamp-btn:disabled {
     background: #ccc;
     cursor: default;
+}
+
+/* ハンバーガーメニュー (観光地ページ用) */
+.hamburger-menu {
+    position: relative;
+}
+.hamburger-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 1100;
+}
+.menu-content {
+    position: fixed;
+    top: 0;
+    right: -300px;
+    width: 300px;
+    height: 100vh;
+    background: #1a202c;
+    color: white;
+    z-index: 1050;
+    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 80px 30px;
+    box-shadow: -5px 0 20px rgba(0,0,0,0.5);
+    overflow-y: auto;
+    visibility: hidden;
+    pointer-events: none;
+}
+.menu-content.active {
+    right: 0;
+    visibility: visible;
+    pointer-events: auto;
+}
+.menu-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1040;
+    display: none;
+}
+.menu-overlay.active {
+    display: block;
+}
+.menu-list {
+    list-style: none;
+    padding: 0;
+}
+.menu-list li {
+    margin-bottom: 20px;
+}
+.menu-list a {
+    color: #e2e8f0;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+.menu-list a:hover {
+    color: #00ACC1;
+}
+.menu-title {
+    font-size: 0.8rem;
+    color: #718096;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    margin-top: 30px;
 }

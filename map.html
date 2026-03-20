@@ -8,6 +8,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
@@ -74,7 +77,7 @@
             className: '', iconSize: [30, 30], iconAnchor: [15, 15]
         });
 
-        const markers = L.layerGroup().addTo(map);
+        const markers = L.markerClusterGroup().addTo(map);
         let currentType = 'all';
 
         // Overpass API を使用して実際の施設データを取得
@@ -87,7 +90,8 @@
             if (type === 'toilets') {
                 query = `node["amenity"="toilet"](${bbox});`; emoji = "🚻"; color = "#3498db";
             } else if (type === 'vms') {
-                query = `node["amenity"="vending_machine"](${bbox});`; emoji = "🥤"; color = "#e74c3c";
+                // 自販機は詳細が不明なものが多いので、nameがあるものや特定のオペレーターを優先
+                query = `node["amenity"="vending_machine"]["name"](${bbox});`; emoji = "🥤"; color = "#e74c3c";
             } else if (type === 'stations') {
                 query = `node["railway"="station"](${bbox});`; emoji = "🚉"; color = "#2ecc71";
             } else if (type === 'attractions') {

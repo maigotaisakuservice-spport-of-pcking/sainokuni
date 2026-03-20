@@ -40,13 +40,13 @@
         section { margin-top: 3rem; }
         h2 {
             font-size: 2rem;
-            border-bottom: 4px solid #00ACC1;
+            border-bottom: 4px solid var(--saitama-blue);
             padding-bottom: 0.5rem;
             margin-bottom: 1.5rem;
         }
         h3 {
             font-size: 1.5rem;
-            color: #00ACC1;
+            color: var(--saitama-blue);
             margin-top: 2rem;
         }
 
@@ -90,7 +90,7 @@
             padding: 1rem;
             margin-bottom: 0.5rem;
             border-radius: 10px;
-            border-left: 5px solid #00ACC1;
+            border-left: 5px solid var(--saitama-blue);
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
     </style>
@@ -101,8 +101,8 @@
 
 <header>
     <h1><a href="../index.html">埼玉県紹介サイト</a></h1>
-    <button class="tts-btn" onclick="readPageText()">🔊 音声読み上げ</button>
-</header>
+    <div class="flex items-center gap-4"><button class="tts-btn" onclick="readPageText()">🔊 音声読み上げ</button><button class="hamburger-btn" onclick="toggleMenu()">☰</button></div>
+</header><div id="menu-overlay" class="menu-overlay" onclick="toggleMenu()"></div><div id="menu-content" class="menu-content"><nav><div class="menu-title">Main Menu</div><ul class="menu-list"><li><a href="../index.html">🏠 Home</a></li><li><a href="../map.html">🗺️ Map</a></li><li><a href="../saitama-mini-game.html">🎮 Game Hub</a></li><li id="coupon-menu-item" class="hidden"><a href="../index.html?reward=true" class="text-yellow-400 font-bold">💎 Special Coupon</a></li></ul><div class="menu-title">Other Destinations</div><ul class="menu-list"><li><a href="kawagoe.html">🏮 Kawagoe</a></li><li><a href="nagatoro.html">🛶 Nagatoro</a></li><li><a href="railway.html">🚆 Railway Museum</a></li><li><a href="stadium.html">⚽ Stadium</a></li><li><a href="maruyama.html">🌳 Maruyama Park</a></li></ul></nav></div>
 
 <div class="hero-image-container">
     <img src="../images/kawagoe.jpg" alt="川越の蔵造りの町並み">
