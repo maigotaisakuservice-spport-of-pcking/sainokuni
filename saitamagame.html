@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>さいたま わくわくゲームパーク | 埼玉県紹介サイト</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Mochiy Pop One', sans-serif;
+            touch-action: none;
+        }
+        .game-container {
+            width: 100%;
+            max-width: 500px;
+            height: 700px;
+            max-height: 80vh;
+            border: 4px solid #333;
+            box-shadow: 8px 8px 0px rgba(0,0,0,0.75);
+        }
+        .btn-3d {
+            background-color: #4f46e5;
+            border-bottom: 6px solid #3730a3;
+            transition: all 0.1s;
+            transform: translateY(0);
+        }
+        .btn-3d:active {
+            transform: translateY(4px);
+            border-bottom-width: 2px;
+        }
+        .text-shadow {
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        canvas {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="bg-emerald-100 flex items-center justify-center min-h-screen p-4">
+
+    <div id="game-world" class="relative bg-white rounded-2xl overflow-hidden game-container">
+
+        <div id="title-screen" class="absolute inset-0 bg-sky-400 flex flex-col items-center justify-center p-8 z-50">
+            <div class="text-center">
+                <h1 class="text-4xl md:text-5xl font-bold text-white text-shadow mb-2">さいたま</h1>
+                <h2 class="text-3xl md:text-4xl font-bold text-white text-shadow mb-8">わくわくゲームパーク</h2>
+            </div>
+            <div class="w-full max-w-xs space-y-6">
+                <button id="start-pk-game" class="w-full text-white text-2xl font-bold py-4 px-6 rounded-xl btn-3d bg-red-500 border-red-700">
+                    ⚽ PKチャレンジ
+                </button>
+                <button id="start-catch-game" class="w-full text-white text-2xl font-bold py-4 px-6 rounded-xl btn-3d bg-amber-500 border-amber-700">
+                    🧺 名物キャッチ
+                </button>
+                <button onclick="location.href='howtogame.html'" class="w-full text-white text-2xl font-bold py-4 px-6 rounded-xl btn-3d bg-amber-500 border-amber-700" style="background-color:green;">
+                    📖 ゲームの遊び方
+                </button>
+            </div>
+            <div class="absolute bottom-4 text-white text-xs">Lets Play Togetter!<br>&copy; 2025 埼玉県紹介サイト - 埼玉県大紹介スペシャル</div>
+        </div>
+
+        <canvas id="game-canvas" class="hidden"></canvas>
+
+        <div id="modal" class="hidden absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-40">
+            <div id="modal-content" class="bg-white rounded-2xl p-6 w-full max-w-sm text-center shadow-2xl">
+
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const titleScreen = document.getElementById('title-screen');
+        const canvas = document.getElementById('game-canvas');
+        const ctx = canvas.getContext('2d');
+        const modal = document.getElementById('modal');
+        const modalContent = document.getElementById('modal-content');
+
+        const gameWorld = document.getElementById('game-world');
+        canvas.width = gameWorld.clientWidth;
+        canvas.height = gameWorld.clientHeight;
+
+        let activeGame = null;
+        let animationFrameId;
+
+        const synth = new Tone.Synth().toDestination();
+        const polySynth = new Tone.PolySynth(Tone.Synth).toDestination();
+
+        function playSound(note, duration) {
+            if (Tone.context.state !== 'running') {
+                Tone.context.resume();
+            }
+            synth.triggerAttackRelease(note, duration);
+        }
+
+        function playGoalSound() {
+            if (Tone.context.state !== 'running') {
+                Tone.context.resume();
+            }
+            polySynth.triggerAttackRelease(["C4", "E4", "G4", "C5"], "0.5");
+        }
+
+        const pkGame = {
+            state: 'ready',
+            shots: 5,
+            goals: 0,
+            currentShot: 0,
+            ball: { x: 0, y: 0, radius: 15 },
+            goal: { x: 0, y: 0, width: 200, height: 100 },
+            keeper: { x: 0, y: 0, width: 40, height: 80, vx: 3 },
+            target: { x: 0, y: 0 },
+            isAiming: false,
+
+            init() {
+                this.state = 'ready';
+                this.currentShot = 0;
+                this.goals = 0;
+                this.resetBallAndKeeper();
+                this.start();
+            },
+
+            resetBallAndKeeper() {
+                this.ball.x = canvas.width / 2;
+                this.ball.y = canvas.height - 80;
+                this.goal.x = canvas.width / 2 - this.goal.width / 2;
+                this.goal.y = canvas.height * 0.15;
+                this.keeper.x = canvas.width / 2;
+                this.keeper.y = this.goal.y + 10;
+                this.keeper.vx = (Math.random() * 4 + 2) * (Math.random() < 0.5 ? 1 : -1);
+            },
+
+            start() {
+                activeGame = this;
+                canvas.style.cursor = 'crosshair';
+                this.state = 'ready';
+                this.loop();
+            },
+
+            draw() {
+                ctx.fillStyle = '#66bb6a';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = 'rgba(0,0,0,0.1)';
+                ctx.fillRect(0, 0, canvas.width, this.goal.y);
+
+                ctx.strokeStyle = '#FFF';
+                ctx.lineWidth = 5;
+                ctx.strokeRect(this.goal.x, this.goal.y, this.goal.width, this.goal.height);
+
+                ctx.fillStyle = '#e53935'; // 赤
+                ctx.fillRect(this.keeper.x - this.keeper.width / 2, this.keeper.y, this.keeper.width, this.keeper.height);
+
+                ctx.beginPath();
+                ctx.arc(this.ball.x, this.ball.y, this.ball.radius, 0, Math.PI * 2);
+                ctx.fillStyle = '#FFF';
+                ctx.fill();
+                ctx.strokeStyle = '#000';
+                ctx.stroke();
+
+                if (this.isAiming) {
+                    ctx.beginPath();
+                    ctx.moveTo(this.ball.x, this.ball.y);
+                    ctx.lineTo(this.target.x, this.target.y);
+                    ctx.setLineDash([5, 5]);
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                }
+
+                ctx.fillStyle = 'white';
+                ctx.font = "24px 'Mochiy Pop One'";
+                ctx.textAlign = 'center';
+                ctx.fillText(`ゴール: ${this.goals} / ${this.currentShot}`, canvas.width / 2, 40);
+            },
+
+            update() {
+                if (this.state === 'ready' || this.state === 'shooting') {
+                    this.keeper.x += this.keeper.vx;
+                    if (this.keeper.x < this.goal.x + this.keeper.width / 2 || this.keeper.x > this.goal.x + this.goal.width - this.keeper.width / 2) {
+                        this.keeper.vx *= -1;
+                    }
+                }
+
+                if (this.state === 'shooting') {
+                    const dx = this.target.x - this.ball.x;
+                    const dy = this.target.y - this.ball.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    this.ball.x += (dx / dist) * 20;
+                    this.ball.y += (dy / dist) * 20;
+                    this.ball.radius *= 0.98;
+
+                    if (this.ball.y < this.goal.y + this.goal.height) {
+                        this.checkGoal();
+                    }
+                }
+            },
+
+            checkGoal() {
+                const keeperRect = {
+                    x: this.keeper.x - this.keeper.width / 2,
+                    y: this.keeper.y,
+                    w: this.keeper.width,
+                    h: this.keeper.height
+                };
+                const ballInGoal = this.ball.x > this.goal.x && this.ball.x < this.goal.x + this.goal.width && this.ball.y > this.goal.y;
+                const ballBlocked = this.ball.x > keeperRect.x && this.ball.x < keeperRect.x + keeperRect.w && this.ball.y > keeperRect.y && this.ball.y < keeperRect.y + keeperRect.h;
+
+                if (ballInGoal && !ballBlocked) {
+                    this.goals++;
+                    showTemporaryMessage("GOAL!!", "gold", playGoalSound);
+                } else {
+                    showTemporaryMessage("MISS...", "red", () => playSound("C3", "0.5s"));
+                }
+
+                this.currentShot++;
+                this.state = 'result';
+                setTimeout(() => this.nextShot(), 1500);
+            },
+
+            nextShot() {
+                if (this.currentShot >= this.shots) {
+                    this.endGame();
+                } else {
+                    this.resetBallAndKeeper();
+                    this.state = 'ready';
+                }
+            },
+
+            endGame() {
+                let couponHtml = "";
+                if (this.goals >= 4) {
+                    couponHtml = `
+                    <div class="mt-4 p-4 bg-yellow-100 border-2 border-yellow-500 rounded-xl animate-bounce">
+                        <p class="text-yellow-700 font-bold text-sm">秘密のクーポンコード出現！</p>
+                        <p class="text-2xl font-black text-red-600">SAITAMA2026</p>
+                    </div>`;
+                }
+                showModal(`
+                    <h2 class="text-3xl font-bold mb-4 text-indigo-600">結果発表！</h2>
+                    <p class="text-5xl font-bold mb-6">${this.goals} / ${this.shots} GOALS</p>
+                    <p class="text-xl mb-6">${this.goals >= 4 ? '君はPK職人だ！⚽️👑' : this.goals >= 2 ? 'ナイスシュート！' : '次は頑張ろう！'}</p>
+                    ${couponHtml}
+                    <button onclick="returnToTitle()" class="w-full mt-6 text-white text-xl font-bold py-3 px-6 rounded-xl btn-3d bg-indigo-500 border-indigo-700">タイトルへ</button>
+                `);
+                stopLoop();
+            },
+
+            handleMouseDown(e) {
+                if (this.state !== 'ready') return;
+                const pos = getMousePos(e);
+                const dx = pos.x - this.ball.x;
+                const dy = pos.y - this.ball.y;
+                if (Math.sqrt(dx*dx + dy*dy) < this.ball.radius) {
+                    this.isAiming = true;
+                }
+            },
+
+            handleMouseMove(e) {
+                if (!this.isAiming) return;
+                this.target = getMousePos(e);
+            },
+
+            handleMouseUp(e) {
+                if (!this.isAiming) return;
+                this.isAiming = false;
+                this.state = 'shooting';
+                playSound("A4", "0.1s");
+            },
+
+            loop() {
+                this.update();
+                this.draw();
+                animationFrameId = requestAnimationFrame(() => this.loop());
+            }
+        };
+
+        const catchGame = {
+            state: 'playing',
+            score: 0,
+            timeLeft: 60,
+            basket: { x: 0, y: 0, width: 100, height: 20 },
+            items: [],
+            itemTypes: {
+                // 名物 (ポイント)
+                unagi: { emoji: '🐟', points: 30, name: 'うなぎ' },
+                bonsai: { emoji: '‍🌳', points: 50, name: '盆栽' },
+                ningyo: { emoji: '🎎', points: 20, name: '岩槻人形' },
+                ball: { emoji: '⚽', points: 10, name: 'サッカーボール' },
+                // お邪魔
+                takoyaki: { emoji: '🐙', points: -30, name: 'たこ焼き' },
+                apple: { emoji: '🍎', points: -20, name: 'りんご' },
+            },
+            caughtItems: new Set(),
+
+            init() {
+                this.state = 'playing';
+                this.score = 0;
+                this.timeLeft = 60;
+                this.items = [];
+                this.caughtItems.clear();
+                this.basket.x = canvas.width / 2 - this.basket.width / 2;
+                this.basket.y = canvas.height - 50;
+                this.start();
+            },
+
+            start() {
+                activeGame = this;
+                canvas.style.cursor = 'none';
+                this.itemInterval = setInterval(() => this.spawnItem(), 500);
+                this.timerInterval = setInterval(() => {
+                    this.timeLeft--;
+                    if (this.timeLeft <= 0) {
+                        this.endGame();
+                    }
+                }, 1000);
+                this.loop();
+            },
+
+            spawnItem() {
+                const itemKeys = Object.keys(this.itemTypes);
+                const key = itemKeys[Math.floor(Math.random() * itemKeys.length)];
+                this.items.push({
+                    ...this.itemTypes[key],
+                    x: Math.random() * (canvas.width - 40) + 20,
+                    y: -20,
+                    size: 40,
+                    speed: Math.random() * 3 + 2
+                });
+            },
+
+            draw() {
+                // 背景
+                ctx.fillStyle = '#a7f3d0'; // 薄い緑
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // アイテム
+                ctx.font = "40px sans-serif";
+                this.items.forEach(item => {
+                    ctx.fillText(item.emoji, item.x, item.y);
+                });
+
+                // カゴ
+                ctx.fillStyle = '#8d6e63'; // 茶色
+                ctx.fillRect(this.basket.x, this.basket.y, this.basket.width, this.basket.height);
+                ctx.fillStyle = '#6d4c41';
+                ctx.fillRect(this.basket.x + 5, this.basket.y + 5, this.basket.width - 10, this.basket.height - 10);
+
+
+                // UI
+                ctx.fillStyle = '#333';
+                ctx.font = "24px 'Mochiy Pop One'";
+                ctx.textAlign = 'left';
+                ctx.fillText(`スコア: ${this.score}`, 20, 40);
+                ctx.textAlign = 'right';
+                ctx.fillText(`のこり: ${this.timeLeft}秒`, canvas.width - 20, 40);
+            },
+
+            update() {
+                if (this.state !== 'playing') return;
+
+                this.items.forEach((item, index) => {
+                    item.y += item.speed;
+
+                    // 衝突判定
+                    if (item.y > this.basket.y - item.size / 2 && item.y < this.basket.y + this.basket.height &&
+                        item.x > this.basket.x - item.size / 2 && item.x < this.basket.x + this.basket.width) {
+                        this.score += item.points;
+                        if (item.points > 0) {
+                            this.caughtItems.add(item.name);
+                            playSound("C5", "0.1s");
+                        } else {
+                            playSound("A3", "0.1s");
+                            gameWorld.style.animation = 'shake 0.3s';
+                            setTimeout(() => gameWorld.style.animation = '', 300);
+                        }
+                        this.items.splice(index, 1);
+                    }
+
+                    // 画面外
+                    if (item.y > canvas.height) {
+                        this.items.splice(index, 1);
+                    }
+                });
+            },
+
+            endGame() {
+                this.state = 'finished';
+                clearInterval(this.itemInterval);
+                clearInterval(this.timerInterval);
+                stopLoop();
+
+                let zukanHtml = '<h3 class="text-xl font-bold mt-6 mb-2 text-green-700">集めた名物ずかん</h3>';
+                if (this.caughtItems.size > 0) {
+                    zukanHtml += '<ul class="text-left space-y-1">';
+                    this.caughtItems.forEach(name => {
+                        const itemInfo = Object.values(this.itemTypes).find(it => it.name === name);
+                        zukanHtml += `<li class="text-lg">${itemInfo.emoji} ${name}</li>`;
+                    });
+                    zukanHtml += '</ul>';
+                } else {
+                    zukanHtml += '<p>今回は名物を集められなかった...</p>';
+                }
+
+                let couponHtml = "";
+                if (this.score >= 300) {
+                    couponHtml = `
+                    <div class="mt-4 p-4 bg-yellow-100 border-2 border-yellow-500 rounded-xl animate-bounce">
+                        <p class="text-yellow-700 font-bold text-sm">秘密のクーポンコード出現！</p>
+                        <p class="text-2xl font-black text-red-600">SAITAMA2026</p>
+                    </div>`;
+                }
+                showModal(`
+                    <h2 class="text-3xl font-bold mb-4 text-amber-600">しゅうりょう！</h2>
+                    <p class="text-5xl font-bold mb-4">${this.score}</p>
+                    <p class="text-xl mb-4">${this.score >= 300 ? '君はさいたま博士だ！👨‍🎓' : this.score >= 100 ? 'さいたま通だね！' : 'さいたまを知る第一歩！'}</p>
+                    ${zukanHtml}
+                    ${couponHtml}
+                    <button onclick="returnToTitle()" class="w-full mt-6 text-white text-xl font-bold py-3 px-6 rounded-xl btn-3d bg-amber-500 border-amber-700">タイトルへ</button>
+                `);
+            },
+
+            handleMouseMove(e) {
+                const pos = getMousePos(e);
+                this.basket.x = pos.x - this.basket.width / 2;
+                if (this.basket.x < 0) this.basket.x = 0;
+                if (this.basket.x > canvas.width - this.basket.width) this.basket.x = canvas.width - this.basket.width;
+            },
+
+            loop() {
+                this.update();
+                this.draw();
+                animationFrameId = requestAnimationFrame(() => this.loop());
+            }
+        };
+
+        // =================================================================
+        // 共通ヘルパー関数
+        // =================================================================
+        function getMousePos(e) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+            const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+            return {
+                x: (clientX - rect.left) * scaleX,
+                y: (clientY - rect.top) * scaleY
+            };
+        }
+
+        function showModal(html) {
+            modalContent.innerHTML = html;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function hideModal() {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function showTemporaryMessage(text, color, callback) {
+            const msgDiv = document.createElement('div');
+            msgDiv.textContent = text;
+            msgDiv.style.position = 'absolute';
+            msgDiv.style.left = '50%';
+            msgDiv.style.top = '50%';
+            msgDiv.style.transform = 'translate(-50%, -50%)';
+            msgDiv.style.fontSize = '60px';
+            msgDiv.style.fontWeight = 'bold';
+            msgDiv.style.color = color;
+            msgDiv.style.textShadow = '3px 3px 0 #fff';
+            msgDiv.style.pointerEvents = 'none';
+            msgDiv.style.zIndex = '100';
+            gameWorld.appendChild(msgDiv);
+
+            if(callback) callback();
+
+            setTimeout(() => {
+                gameWorld.removeChild(msgDiv);
+            }, 1200);
+        }
+
+        function returnToTitle() {
+            hideModal();
+            canvas.classList.add('hidden');
+            titleScreen.classList.remove('hidden');
+            activeGame = null;
+            canvas.style.cursor = 'default';
+        }
+
+        function stopLoop() {
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+                animationFrameId = null;
+            }
+        }
+
+        // =================================================================
+        // イベントリスナー
+        // =================================================================
+        document.getElementById('start-pk-game').addEventListener('click', () => {
+            titleScreen.classList.add('hidden');
+            canvas.classList.remove('hidden');
+            pkGame.init();
+        });
+
+        document.getElementById('start-catch-game').addEventListener('click', () => {
+            titleScreen.classList.add('hidden');
+            canvas.classList.remove('hidden');
+            catchGame.init();
+        });
+
+        // Canvasへのイベントリスナー
+        function handleStart(e) {
+            e.preventDefault();
+            if (activeGame && activeGame.handleMouseDown) activeGame.handleMouseDown(e);
+        }
+        function handleMove(e) {
+            e.preventDefault();
+            if (activeGame && activeGame.handleMouseMove) activeGame.handleMouseMove(e);
+        }
+        function handleEnd(e) {
+            e.preventDefault();
+            if (activeGame && activeGame.handleMouseUp) activeGame.handleMouseUp(e);
+        }
+
+        canvas.addEventListener('mousedown', handleStart);
+        canvas.addEventListener('mousemove', handleMove);
+        canvas.addEventListener('mouseup', handleEnd);
+        canvas.addEventListener('touchstart', handleStart);
+        canvas.addEventListener('touchmove', handleMove);
+        canvas.addEventListener('touchend', handleEnd);
+
+        // リサイズ対応
+        window.addEventListener('resize', () => {
+            canvas.width = gameWorld.clientWidth;
+            canvas.height = gameWorld.clientHeight;
+        });
+
+        // CSS for shake animation
+        const styleSheet = document.createElement("style");
+        styleSheet.type = "text/css";
+        styleSheet.innerText = `
+            @keyframes shake {
+                0% { transform: translate(1px, 1px) rotate(0deg); }
+                10% { transform: translate(-1px, -2px) rotate(-1deg); }
+                20% { transform: translate(-3px, 0px) rotate(1deg); }
+                30% { transform: translate(3px, 2px) rotate(0deg); }
+                40% { transform: translate(1px, -1px) rotate(1deg); }
+                50% { transform: translate(-1px, 2px) rotate(-1deg); }
+                60% { transform: translate(-3px, 1px) rotate(0deg); }
+                70% { transform: translate(3px, 1px) rotate(-1deg); }
+                80% { transform: translate(-1px, -1px) rotate(1deg); }
+                90% { transform: translate(1px, 2px) rotate(0deg); }
+                100% { transform: translate(1px, -2px) rotate(-1deg); }
+            }
+        `;
+        document.head.appendChild(styleSheet);
+
+    </script>
+</body>
+</html>

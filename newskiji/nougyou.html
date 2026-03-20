@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>埼玉の農業イノベーション最前線</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/common.css">
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #f9f9f9;
+        }
+        .note-container {
+            max-width: 720px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 2rem 1rem;
+        }
+        .article-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1.4;
+            margin-bottom: 1rem;
+        }
+        .article-subtitle {
+            font-size: 1.125rem;
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 2rem;
+            border-left: 3px solid #60a5fa;
+            padding-left: 1rem;
+        }
+        .author-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #555;
+            font-size: 0.875rem;
+            margin-bottom: 2rem;
+        }
+        .author-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+        .article-body h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-top: 4rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        .article-body h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: #1f2937;
+        }
+        .article-body p {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #374151;
+            margin-bottom: 1.5rem;
+        }
+        .article-body img {
+            border-radius: 12px;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            width: 100%;
+            height: auto;
+        }
+        .hashtag {
+            display: inline-block;
+            background-color: #eef2ff;
+            color: #4f46e5;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .follow-button {
+            background-color: #60a5fa;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-weight: 700;
+            transition: background-color 0.3s;
+        }
+        .follow-button:hover {
+            background-color: #3b82f6;
+        }
+        .follow-button.followed {
+            background-color: #e5e7eb;
+            color: #374151;
+            cursor: not-allowed;
+        }
+        .sticky-header {
+            top: 0;
+            position: sticky;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+    <div id="reading-progress-container"><div id="reading-progress-bar"></div></div>
+
+    <header class="bg-white border-b border-gray-200 sticky-header">
+        <div class="note-container px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <a href="../index.html" class="flex items-center gap-2 text-gray-600 hover:text-blue-500 transition-colors">
+                    <span class="font-bold text-lg hidden sm:inline">トップへ</span>
+                </a>
+            </div>
+            <button id="follow-button-header" class="follow-button py-2 px-4 rounded-full text-sm transition-colors">フォロー</button>
+        </div>
+    </header>
+
+    <main class="note-container px-4 py-12 md:py-16">
+        <article>
+            <div class="mb-4">
+                <span class="hashtag">#埼玉</span>
+                <span class="hashtag">#農業</span>
+                <span class="hashtag">#イノベーション</span>
+            </div>
+
+            <h1 class="article-title">埼玉の農業イノベーション最前線</h1>
+
+            <p class="article-subtitle">AI、水耕栽培、そして地元の誇り</p>
+
+            <div class="author-info mb-8">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 21v-4M8 21v-8M16 21v-6"/>
+                    <path d="M17.5 12.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+                    <path d="M10 6.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+                    <path d="M19 6.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+                </svg>
+                <div>
+                    <strong>埼玉農業マガジン</strong>
+                    <time datetime="2025-09-14">2025年9月14日</time>
+                </div>
+            </div>
+
+            <div class="article-body">
+                <p>
+                    農業は勘と経験に頼るもの、という常識が変わりつつあります。埼玉県内の農家では、AIを搭載したセンサーやドローンを使い、農地の状態をリアルタイムで分析する取り組みが始まっています。土壌の湿度、作物の生育状況、病気の兆候などをデータで把握することで、水やりや肥料の量を最適化し、安定した高品質な作物を栽培できるようになりました。これにより、若い世代の新規参入も容易になり、農業の担い手不足解消への期待が高まっています。
+                </p>
+
+          <img src="kijiimg/aiyasai.jpg" alt="AIを使った野菜作りのイメージ" style="height:500px;" class="w-full h-auto object-cover">
+                <h2>#01 AIとデータで変わる野菜作り</h2>
+                <p>
+                    都市部での食料生産を可能にする水耕栽培も、埼玉で注目されているイノベーションの一つです。特に、LED照明と温度管理が徹底された屋内農園では、天候に左右されることなく年間を通して安定的に野菜を生産できます。化学肥料を使わないオーガニック栽培や、栄養価を高めた特殊な野菜も開発されており、都市に住む人々に新鮮で安全な食材を提供しています。
+                </p>
+
+          <img src="kijiimg/ainegi.jpg" alt="AIを使った野菜作りのイメージ" style="height:500px;" class="w-full h-auto object-cover">
+                <h2>#02 伝統と革新が融合する地場産品</h2>
+                <p>
+                    埼玉の農業は、単なる生産性の向上に留まりません。その土地ならではのユニークな農産物をブランド化し、付加価値を高める取り組みも盛んです。例えば、埼玉の伝統野菜である<strong class="font-semibold">里芋「川越いも」</strong>や、県内でしか生産されない<strong class="font-semibold">深谷ねぎ</strong>は、その品質と風味の良さから全国的な人気を博しています。近年では、これらの伝統的な農産物を新しい品種と掛け合わせたり、加工品として販売したりすることで、新たな市場を開拓しています。
+                </p>
+
+          <img src="kijiimg/aitunagarisns.jpg" alt="AIを使った野菜作りのイメージ" style="height:500px;" class="w-full h-auto object-cover">
+                <h2>#03 消費者とのつながりを強化</h2>
+                <p>
+                    未来の農業は、生産者と消費者がより密接につながる形を目指しています。直売所の運営はもちろん、SNSを通じて日々の農作業の様子を発信したり、収穫体験イベントを開催したりすることで、消費者との信頼関係を築いています。これにより、農産物の価値を直接伝え、生産者の顔が見える安心感を提供しています。
+                </p>
+            </div>
+        </article>
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 mt-16">
+        <div class="note-container px-4 py-8">
+            <h3 class="font-bold text-center mb-4">この記事が気に入ったら、フォローを！</h3>
+            <div class="text-center">
+                <button id="follow-button-footer" class="follow-button py-3 px-6 rounded-full transition-colors">クリエイターをフォロー</button>
+            </div>
+        </div>
+    </footer>
+
+    <button onclick="scrollToTop()" class="go-to-top-button" aria-label="トップへ戻る">↑</button>
+    <script src="../js/common.js"></script>
+    <script>
+        // フォロー機能
+        const followButtons = document.querySelectorAll('.follow-button');
+
+        const handleFollow = (button) => {
+            button.textContent = 'フォロー中';
+            button.classList.add('followed');
+            button.disabled = true;
+        };
+
+        followButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                followButtons.forEach(btn => handleFollow(btn));
+            });
+        });
+    </script>
+</body>
+</html>

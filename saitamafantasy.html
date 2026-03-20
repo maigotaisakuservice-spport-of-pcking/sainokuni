@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Saitama Go!</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=DotGothic16&display=swap');
+
+        html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
+        body { background-color: #000; color: #fff; font-family: 'DotGothic16', sans-serif; display: flex; justify-content: center; align-items: center; text-align: center; }
+        .game-container { width: 100%; height: 100%; max-width: 600px; max-height: 900px; position: relative; background-color: #1a1a1a; display: flex; flex-direction: column; }
+        button { font-family: 'DotGothic16', sans-serif; }
+
+        #title-screen { width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; background-color: #000; z-index: 100; position: absolute; top: 0; left: 0; }
+        .title-container { border: 4px solid #fff; padding: 2rem 3rem; }
+        h1 { font-size: 2.5rem; margin: 0; text-shadow: 2px 2px #888; }
+        .menu { margin-top: 2rem; }
+        .menu-item { display: block; margin: 1rem 0; font-size: 1.5rem; cursor: pointer; }
+        .blinking { animation: blink 1.5s linear infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        #game-screen { width: 100%; height: 100%; display: none; flex-direction: column; }
+        #status-bar { padding: 0.5rem; background-color: #000; border-bottom: 4px solid #4a3c2a; display: flex; justify-content: space-around; font-size: 1rem; flex-shrink: 0; }
+
+        #map-container { flex-grow: 1; position: relative; background-color: #567d46; }
+        #saitama-map-svg { width: 100%; height: 100%; }
+        .land { fill: #a2b28b; stroke: #4a3c2a; stroke-width: 2; }
+        .city-node { cursor: pointer; transition: transform 0.2s; }
+        .city-node circle { stroke: #fff; stroke-width: 1.5; transition: r 0.3s; }
+        .city-node text { fill: #fff; font-size: 10px; text-anchor: middle; pointer-events: none; text-shadow: 1px 1px 2px #000; }
+        .city-node.discovered circle { fill: gold; }
+        .city-node.undiscovered circle { fill: grey; opacity: 0.7; }
+        .city-node:hover { transform: scale(1.2); }
+
+        #action-button-container { padding: 0.5rem 1rem; background-color: rgba(0, 0, 0, 0.7); flex-shrink: 0; display: flex; justify-content: space-around; align-items: center; }
+        .action-button { background-color: #4a4a4a; color: #fff; font-size: 0.9rem; padding: 0.5rem; border: 2px solid #fff; cursor: pointer; }
+
+        .modal-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 199; display: none; }
+        .modal-window { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 500px; padding: 1rem; background-color: #c2b280; border: 8px solid; border-image: linear-gradient(45deg, #7a6a4f, #4a3c2a) 1; box-shadow: 0 0 20px rgba(0,0,0,0.5); z-index: 200; color: #3a2e20; max-height: 80vh; overflow-y: auto; }
+        .modal-window h2 { text-align: center; font-size: 1.5rem; margin-top: 0; }
+        .close-button { display: block; margin: 1rem auto 0; padding: 0.5rem 1rem; font-size: 1rem; cursor: pointer; background: #7a6a4f; color: white; border: 2px solid #3a2e20; }
+
+        #stone-window { top: auto; bottom: 15%; transform: translateX(-50%); padding: 1.5rem; }
+        #info-window img { width: 100%; height: 150px; object-fit: cover; border: 4px solid #7a6a4f; margin-bottom: 1rem; }
+        #info-window p { font-size: 1rem; line-height: 1.4; text-align: left; }
+        #info-window a { color: #0000ff; }
+        #book-content ul { list-style: none; padding: 0; text-align: left; }
+        #book-content li { margin-bottom: 0.5rem; }
+        #quiz-options button { display: block; width: 100%; margin-top: 0.5rem; padding: 0.8rem; font-size: 1rem; }
+
+        #share-preview img { max-width: 100%; border: 2px solid #fff; }
+        #share-preview p { color: #fff; }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <div id="title-screen">
+            <div class="title-container">
+                <h1>SAITAMA GO!</h1>
+                <div class="menu">
+                    <span id="start-button" class="menu-item blinking">> 冒険をはじめる</span>
+                    <span id="book-button-title" class="menu-item">&nbsp; 冒険の書</span>
+                </div>
+            </div>
+            <div>
+              <h3>《ゲームの遊び方》</h3>
+              <p>冒険を始めるを押すと、ゲームが始まります<br>仕組みとしては、「現在地で到達を確認」を押していただくと<br>現在地が到達したとして、冒険の書に登録されます！</p>
+            </div>
+            <p>© 2025 埼玉県大紹介スペシャル</p>
+        </div>
+
+        <div id="game-screen">
+            <div id="status-bar">
+                <span id="player-title">しょうごう: 埼玉の初心者</span>
+                <span id="player-exp">EXP: 0 / 63</span>
+            </div>
+            <div id="map-container">
+                <svg id="saitama-map-svg" viewBox="0 0 400 400"></svg>
+            </div>
+            <div id="action-button-container">
+                <button id="arrival-button" class="action-button">現在地で到達を確認</button>
+                <button id="book-button-game" class="action-button">冒険の書</button>
+                <button id="share-button" class="action-button">冒険をシェア</button>
+            </div>
+        </div>
+
+        <div id="modal-overlay" class="modal-overlay"></div>
+        <div id="stone-window" class="modal-window" style="display: none;"><p id="stone-window-text"></p></div>
+        <div id="info-window" class="modal-window" style="display: none;">
+            <h2 id="info-title"></h2>
+            <img id="info-image" src="" alt="市町村の画像">
+            <p id="info-description"></p>
+            <a id="info-link" href="#" target="_blank" rel="noopener noreferrer">もっと詳しく！</a>
+            <button class="close-button">とじる</button>
+        </div>
+        <div id="book-window" class="modal-window" style="display: none;">
+            <h2>冒険の書</h2>
+            <div id="book-content"></div>
+            <button class="close-button">とじる</button>
+        </div>
+        <div id="quiz-window" class="modal-window" style="display: none;">
+            <h2 id="quiz-title"></h2>
+            <p id="quiz-question"></p>
+            <div id="quiz-options"></div>
+        </div>
+        <div id="share-preview" class="modal-window" style="display: none;">
+             <h2>冒険の証</h2>
+             <p>この画像を長押しして保存・シェア！</p>
+             <div id="share-image-container"></div>
+             <button class="close-button">とじる</button>
+        </div>
+    </div>
+
+    <script>
+    const SAITAMA_BOUNDS = { minLat: 35.75, maxLat: 36.3, minLon: 138.8, maxLon: 139.9 };
+    const CITIES = {
+        saitama: { name: 'さいたま市', lat: 35.861, lon: 139.645, desc: '県の中心にして最大の都市。鉄道とサッカーの街として知られる古の地。', quiz: { q: 'さいたま市のJリーグチームでないのは？', o: ['浦和レッズ', '大宮アルディージャ', '川越スパークス'], a: 2 } },
+        kawagoe: { name: '川越市', lat: 35.924, lon: 139.487, desc: '「小江戸」の異名を持つ古都。時の鐘が、旅人を昔日へと誘う。', quiz: { q: '川越の有名な横丁の名前は？', o: ['菓子屋横丁', 'のんべえ横丁', '思い出横丁'], a: 0 } },
+        kumagaya: { name: '熊谷市', lat: 36.147, lon: 139.389, desc: '「あついぞ！」で知られる夏の猛者。うちわ祭の熱気は気温以上だ。' },
+        kawaguchi: { name: '川口市', lat: 35.805, lon: 139.72, desc: '鋳物の歴史が息づく職人の街。荒川を越えれば、そこはもう異世界（東京）だ。' },
+        gyoda: { name: '行田市', lat: 36.136, lon: 139.455, desc: '古代蓮と足袋の街。さきたま古墳群に、古代の王たちの夢が眠る。' },
+        chichibu: { name: '秩父市', lat: 35.993, lon: 139.084, desc: '三峯、宝登山、秩父神社。神々の坐す山々に囲まれた神秘の盆地。' },
+        tokorozawa: { name: '所沢市', lat: 35.798, lon: 139.47, desc: '航空発祥の地。緑深き森には、不思議な生き物が住んでいるとかいないとか…。' },
+        hanno: { name: '飯能市', lat: 35.853, lon: 139.32, desc: '山と川に抱かれたアウトドアの聖地。天覧山からの眺めは格別。' },
+        kazo: { name: '加須市', lat: 36.126, lon: 139.597, desc: 'こいのぼりの生産量日本一。5月には巨大なこいのぼりが空を泳ぐ。' },
+        honjo: { name: '本庄市', lat: 36.239, lon: 139.189, desc: '中山道最大の宿場町。利根川を渡れば、そこはもう北の国（群馬）。' },
+        higashimatsuyama: { name: '東松山市', lat: 36.042, lon: 139.401, desc: 'ウォーキングの聖地。箭弓稲荷神社は牡丹の名所としても知られる。' },
+        kasukabe: { name: '春日部市', lat: 35.98, lon: 139.75, desc: '国民的アニメの舞台として有名。地下には巨大な神殿が眠っている。', quiz: { q: '春日部が舞台のアニメといえば？', o: ['ドラえもん', 'クレヨンしんちゃん', 'サザエさん'], a: 1 } },
+        sayama: { name: '狭山市', lat: 35.854, lon: 139.41, desc: 'ここもまた、茶の名産地。入間川のせせらぎが心地よい。' },
+        hanyu: { name: '羽生市', lat: 36.172, lon: 139.53, desc: 'ムジナモが自生する宝蔵寺沼。世界のキャラクターが集うイベントも開催される。' },
+        kounosu: { name: '鴻巣市', lat: 36.06, lon: 139.51, desc: 'ひな人形の里。3月の空を鯉のぼりが泳ぐ、驚きの光景が見られるらしい。' },
+        fukaya: { name: '深谷市', lat: 36.195, lon: 139.28, desc: '深谷ねぎとレンガの街。新一万円札の偉人の故郷でもある。' },
+        ageo: { name: '上尾市', lat: 35.977, lon: 139.59, desc: '中山道の宿場町として栄えた地。今も昔も、交通の要所である。' },
+        soka: { name: '草加市', lat: 35.824, lon: 139.80, desc: '奥の細道にも詠まれた宿場町。松並木が往時の面影を伝える。' },
+        koshigaya: { name: '越谷市', lat: 35.888, lon: 139.78, desc: '日本最大級のショッピングモールがそびえ立つ、現代の商業都市。' },
+        warabi: { name: '蕨市', lat: 35.825, lon: 139.68, desc: '日本で最も小さい市。その小さき地に、濃密な歴史が刻まれているという。' },
+        toda: { name: '戸田市', lat: 35.815, lon: 139.67, desc: 'ボートレースの聖地。水上の熱き戦いが、旅人を魅了する。' },
+        iruma: { name: '入間市', lat: 35.836, lon: 139.38, desc: '狭山茶の主産地。深い味わいの一杯が、冒険の疲れを癒やす。' },
+        asaka: { name: '朝霞市', lat: 35.795, lon: 139.59, desc: 'にんじんが名産。彩夏祭の熱気は、夏の風物詩として語り継がれる。' },
+        shiki: { name: '志木市', lat: 35.828, lon: 139.57, desc: 'カッパの伝説が残る街。柳瀬川のどこかに、今も潜んでいるかもしれない。' },
+        wako: { name: '和光市', lat: 35.78, lon: 139.61, desc: '理化学の叡智が集う最先端の街。白子川の源流がここにある。' },
+        niiza: { name: '新座市', lat: 35.79, lon: 139.56, desc: '平林寺の広大な境内林は、武蔵野の面影を今に伝える貴重な場所だ。' },
+        okegawa: { name: '桶川市', lat: 36.002, lon: 139.56, desc: 'べに花の伝説が残る。かつては街道を赤く染めたと言われる幻の花を探せ。' },
+        kuki: { name: '久喜市', lat: 36.068, lon: 139.67, desc: '鷲宮神社は、アニメの聖地として知られ、多くの巡礼者が訪れる。' },
+        kitamoto: { name: '北本市', lat: 36.028, lon: 139.53, desc: 'トマトと桜が有名な地。自然の恵み豊かな大地が広がる。' },
+        yashio: { name: '八潮市', lat: 35.81, lon: 139.84, desc: 'つくばエクスプレスが通り、都心へのアクセスも良好な新興の地。' },
+        fujimi: { name: '富士見市', lat: 35.85, lon: 139.55, desc: 'ここからも富士山が。水辺の公園は、人々の憩いの場となっている。' },
+        misato: { name: '三郷市', lat: 35.83, lon: 139.88, desc: '江戸川、中川、大場川。三つの川に囲まれた水の郷。' },
+        hasuda: { name: '蓮田市', lat: 35.98, lon: 139.65, desc: 'その名の通り、蓮の花が美しい。黒浜沼には多くの野鳥が集う。' },
+        satte: { name: '幸手市', lat: 36.07, lon: 139.72, desc: '権現堂堤の桜並木と菜の花のコントラストは、春の絶景として名高い。' },
+        tsurugashima: { name: '鶴ヶ島市', lat: 35.94, lon: 139.39, desc: '脚折雨乞は、龍神が舞う壮大な祭りとして知られる。' },
+        hidaka: { name: '日高市', lat: 35.90, lon: 139.34, desc: '巾着田の曼珠沙華は、秋になると大地を真紅に染め上げる絶景。' },
+        yoshikawa: { name: '吉川市', lat: 35.88, lon: 139.84, desc: 'なまず料理で知られる食文化の街。金のなまずのモニュメントは必見。' },
+        fujimino: { name: 'ふじみ野市', lat: 35.87, lon: 139.52, desc: '新しい街並みと自然が調和する地。富士山が見える高台があるという。' },
+        shiraoka: { name: '白岡市', lat: 36.01, lon: 139.66, desc: '梨の名産地。甘くてみずみずしい果実が、旅人を待つ。' },
+        ina: { name: '伊奈町', lat: 35.99, lon: 139.61, desc: 'バラの町。町制記念公園には、色とりどりのバラが咲き誇る。' },
+        miyoshi: { name: '三芳町', lat: 35.82, lon: 139.52, desc: '多聞院の毘沙門天は、寅の日に多くの参拝者で賑わうという。' },
+        moroyama: { name: '毛呂山町', lat: 35.94, lon: 139.31, desc: '流鏑馬で有名。鎌倉時代から続く勇壮な伝統が息づく。' },
+        ogose: { name: '越生町', lat: 35.96, lon: 139.30, desc: '梅の里。春には越生梅林が、山里を白く染め上げる。' },
+        namegawa: { name: '滑川町', lat: 36.08, lon: 139.46, desc: '国営武蔵丘陵森林公園が広がる。四季折々の自然を楽しめる。' },
+        ranzan: { name: '嵐山町', lat: 36.04, lon: 139.32, desc: '嵐山渓谷の紅葉は、京の嵐山にも劣らないと称される。' },
+        ogawa: { name: '小川町', lat: 36.05, lon: 139.26, desc: '和紙の里。千年の歴史を持つ小川和紙の技術は、今も受け継がれている。' },
+        yoshimi: { name: '吉見町', lat: 36.08, lon: 139.49, desc: '吉見百穴は、古代人の謎に満ちた集合墳墓である。' },
+        kawajima: { name: '川島町', lat: 35.98, lon: 139.47, desc: 'いちじくの名産地。鳥たちの楽園、白鳥飛来地もある。' },
+        hatoyama: { name: '鳩山町', lat: 35.97, lon: 139.35, desc: 'JAXAの地球観測センターがある、宇宙に一番近い町かもしれない。' },
+        tokigawa: { name: 'ときがわ町', lat: 36.00, lon: 139.25, desc: '木のむらキャンプ場など、清流と緑に囲まれた癒やしの地。' },
+        yokoze: { name: '横瀬町', lat: 35.97, lon: 139.10, desc: '武甲山の麓に広がる町。棚田の風景は、日本の原風景そのものである。' },
+        minano: { name: '皆野町', lat: 36.07, lon: 139.10, desc: '秩父音頭発祥の地。美の山公園からの雲海は、見る者を圧倒する。' },
+        nagatoro: { name: '長瀞町', lat: 36.09, lon: 139.11, desc: '荒川が生んだ岩畳の芸術。ライン下りは、冒険の醍醐味の一つだ。' },
+        ogano: { name: '小鹿野町', lat: 36.02, lon: 138.99, desc: '歌舞伎の舞台が今も残る文化の町。バイク乗りの聖地でもあるらしい。' },
+        misato_m: { name: '美里町', lat: 36.15, lon: 139.15, desc: 'ブルーベリーと古代遺跡の町。猪俣小平六の伝説が残る。' },
+        kamikawa: { name: '神川町', lat: 36.22, lon: 139.09, desc: '城峯公園の冬桜は、冬に咲く珍しい桜として知られる。' },
+        kamisato: { name: '上里町', lat: 36.26, lon: 139.14, desc: '小麦の名産地。こむぎっちが町の魅力を伝える。' },
+        yorii: { name: '寄居町', lat: 36.11, lon: 139.19, desc: '鉢形城跡は、戦国時代の栄華を今に伝える。風の城とも呼ばれた。' },
+        miyashiro: { name: '宮代町', lat: 36.02, lon: 139.72, desc: '東武動物公園がある、楽しさあふれる町。' },
+        sugito: { name: '杉戸町', lat: 36.02, lon: 139.74, desc: '日光御成街道の宿場町。アグリパークは家族連れに人気のスポット。' },
+        matsubushi: { name: '松伏町', lat: 35.92, lon: 139.81, desc: '田園風景が広がるのどかな町。伝統的な祭りも数多く残る。' },
+        higashichichibu: { name: '東秩父村', lat: 36.05, lon: 139.18, desc: '埼玉県唯一の村。和紙の里や花桃の郷など、日本の原風景がここにある。' }
+    };
+    const HIDDEN_TITLES = [
+        { name: '小江戸探訪者', cities: ['kawagoe', 'saitama'] },
+        { name: '秩父ネイティブ', cities: ['chichibu', 'yokoze', 'minano', 'nagatoro', 'ogano'] },
+        { name: '東武の民', cities: ['kasukabe', 'koshigaya', 'soka', 'sugito'] },
+        { name: '西武線の覇者', cities: ['tokorozawa', 'hanno', 'iruma'] },
+        { name: '高崎線の民', cities: ['saitama', 'ageo', 'kumagaya', 'fukaya'] },
+        { name: '古代埼玉の王', cities: ['gyoda', 'yoshimi'] },
+    ];
+    const TITLES = [ { exp: 0, name: '埼玉の初心者' }, { exp: 10, name: '埼玉の旅人' }, { exp: 25, name: '埼玉の冒険家' }, { exp: 45, name: '埼玉の探求者' }, { exp: 63, name: '埼玉マスター' } ];
+    let gameState = { discovered: [], titles: [], exp: 0, currentTitle: '埼玉の初心者' };
+
+    const allModals = document.querySelectorAll('.modal-window');
+    const modalOverlay = document.getElementById('modal-overlay');
+    const titleScreen = document.getElementById('title-screen');
+    const gameScreen = document.getElementById('game-screen');
+    const startButton = document.getElementById('start-button');
+    const bookButtonTitle = document.getElementById('book-button-title');
+    const arrivalButton = document.getElementById('arrival-button');
+    const bookButtonGame = document.getElementById('book-button-game');
+    const shareButton = document.getElementById('share-button');
+    const mapSvg = document.getElementById('saitama-map-svg');
+    const playerTitle = document.getElementById('player-title');
+    const playerExp = document.getElementById('player-exp');
+
+    function init() {
+        loadGame();
+        setupEventListeners();
+        drawMap();
+    }
+
+    function setupEventListeners() {
+        startButton.addEventListener('click', startGame);
+        bookButtonTitle.addEventListener('click', showBook);
+        bookButtonGame.addEventListener('click', showBook);
+        arrivalButton.addEventListener('click', checkArrivalByLocation);
+        shareButton.addEventListener('click', generateShareImage);
+        modalOverlay.addEventListener('click', closeAllModals);
+        allModals.forEach(m => m.querySelector('.close-button')?.addEventListener('click', closeAllModals));
+    }
+
+    function startGame() {
+        titleScreen.style.display = 'none';
+        gameScreen.style.display = 'flex';
+        updateStatus();
+    }
+
+    function convertGeoToSvg(lat, lon) {
+        const { minLat, maxLat, minLon, maxLon } = SAITAMA_BOUNDS;
+        const mapWidth = 400;
+        const mapHeight = 400;
+        const x = mapWidth * (lon - minLon) / (maxLon - minLon);
+        const y = mapHeight * (maxLat - lat) / (maxLat - minLat);
+        return { x, y };
+    }
+
+    function drawMap() {
+        mapSvg.innerHTML = '';
+        Object.keys(CITIES).forEach(id => {
+            const city = CITIES[id];
+            const { x, y } = convertGeoToSvg(city.lat, city.lon);
+            const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            g.setAttribute('class', 'city-node ' + (gameState.discovered.includes(id) ? 'discovered' : 'undiscovered'));
+            g.setAttribute('transform', `translate(${x}, ${y})`);
+
+            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circle.setAttribute('r', 6);
+
+            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            text.textContent = city.name.substring(0, 1);
+            text.setAttribute('y', 3);
+
+            g.appendChild(circle);
+            g.appendChild(text);
+            g.addEventListener('click', () => onCityClick(id));
+            mapSvg.appendChild(g);
+        });
+    }
+
+    function onCityClick(id) {
+        if (gameState.discovered.includes(id)) showCityInfo(id);
+        else showStoneWindow('この地はまだ\n雲に覆われている…');
+    }
+
+    function triggerArrivalEvent(id) {
+        if (gameState.discovered.includes(id)) return;
+        gameState.discovered.push(id);
+        showStoneWindow(`${CITIES[id].name} に\nとうたつした！`);
+        checkHiddenTitles();
+        updateStatus();
+        drawMap();
+        saveGame();
+        if (CITIES[id].quiz) setTimeout(() => showQuiz(id), 2500);
+    }
+
+    function updateStatus() {
+        gameState.exp = gameState.discovered.length;
+        let baseTitle = TITLES.filter(t => t.exp <= gameState.exp).pop()?.name || '埼玉の初心者';
+        gameState.currentTitle = baseTitle;
+        playerTitle.textContent = `しょうごう: ${gameState.currentTitle}`;
+        playerExp.textContent = `EXP: ${gameState.exp} / ${Object.keys(CITIES).length}`;
+    }
+
+    function checkHiddenTitles() {
+        HIDDEN_TITLES.forEach(ht => {
+            if (!gameState.titles.includes(ht.name) && ht.cities.every(cityId => gameState.discovered.includes(cityId))) {
+                gameState.titles.push(ht.name);
+                setTimeout(() => showStoneWindow(`隠し称号「${ht.name}」\nをてにいれた！`), 1500);
+            }
+        });
+    }
+
+    function checkArrivalByLocation() {
+        showStoneWindow('現在地を確認中...');
+        if (!navigator.geolocation) {
+            showStoneWindow('エラー:\nお使いのブラウザは\n位置情報に対応していません。');
+            return;
+        }
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const { latitude, longitude } = position.coords;
+                let closestCity = null;
+                let minDistance = Infinity;
+
+                Object.keys(CITIES).forEach(id => {
+                    const city = CITIES[id];
+                    const distance = calculateDistance(latitude, longitude, city.lat, city.lon);
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        closestCity = id;
+                    }
+                });
+
+                if (closestCity && minDistance < 20) {
+                    if (gameState.discovered.includes(closestCity)) {
+                        showStoneWindow(`ここは ${CITIES[closestCity].name} だ。\nすでに冒険の書に\n記されている。`);
+                    } else {
+                        triggerArrivalEvent(closestCity);
+                    }
+                } else {
+                    showStoneWindow('この辺りには\n未発見の地はないようだ…\n(埼玉県の範囲外かもしれません)');
+                }
+            },
+            () => { showStoneWindow('エラー:\n位置情報の取得に\n失敗しました。'); }
+        );
+    }
+
+    function calculateDistance(lat1, lon1, lat2, lon2) {
+        const R = 6371;
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                  Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                  Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
+    }
+
+    function showModal(id) { modalOverlay.style.display = 'block'; document.getElementById(id).style.display = 'block'; }
+    function closeAllModals() { modalOverlay.style.display = 'none'; allModals.forEach(m => m.style.display = 'none'); }
+    function showStoneWindow(text) {
+        const stoneWindow = document.getElementById('stone-window');
+        stoneWindow.querySelector('p').innerHTML = text.replace(/\n/g, '<br>');
+        stoneWindow.style.display = 'block';
+        setTimeout(() => { stoneWindow.style.display = 'none'; }, 2800);
+    }
+    function showCityInfo(id) {}
+    function showBook() {}
+    function showQuiz(id) {}
+
+    function generateShareImage() {
+        const container = document.getElementById('share-image-container');
+        container.innerHTML = '画像を生成中...';
+        showModal('share-preview');
+        html2canvas(document.getElementById('game-screen'), { backgroundColor: '#1a1a1a', useCORS: true })
+            .then(canvas => {
+                container.innerHTML = '';
+                const img = new Image();
+                img.src = canvas.toDataURL('image/png');
+                container.appendChild(img);
+            }).catch(err => { container.innerHTML = 'エラーが発生しました。'; });
+    }
+
+    function saveGame() { localStorage.setItem('saitamaFantasyState_real', JSON.stringify(gameState)); }
+    function loadGame() { const saved = localStorage.getItem('saitamaFantasyState_real'); if (saved) gameState = JSON.parse(saved); }
+
+    function showCityInfo(id) {
+        const city = CITIES[id];
+        document.getElementById('info-title').textContent = city.name;
+        document.getElementById('info-image').src = `https://placehold.co/400x150/a2b28b/3a2e20?text=${city.name}`;
+        document.getElementById('info-description').textContent = city.desc;
+        document.getElementById('info-link').href = `https://www.google.com/search?q=埼玉県+${city.name}`;
+        showModal('info-window');
+    }
+    function showBook() {
+        const content = document.getElementById('book-content');
+        let html = '<h3>到達した市町村</h3><ul>';
+        if(gameState.discovered.length > 0) gameState.discovered.forEach(id => { html += `<li>${CITIES[id].name}</li>`; });
+        else html += '<li>まだない</li>';
+        html += '</ul><h3>獲得した称号</h3><ul>';
+        if (gameState.titles.length > 0) gameState.titles.forEach(title => { html += `<li>${title}</li>`; });
+        else html += '<li>まだない</li>';
+        html += '</ul>';
+        content.innerHTML = html;
+        showModal('book-window');
+    }
+    function showQuiz(id) {
+        const quiz = CITIES[id].quiz;
+        document.getElementById('quiz-title').textContent = `${CITIES[id].name} クイズ`;
+        document.getElementById('quiz-question').textContent = quiz.q;
+        const optionsContainer = document.getElementById('quiz-options');
+        optionsContainer.innerHTML = '';
+        quiz.o.forEach((option, index) => {
+            const button = document.createElement('button');
+            button.textContent = option;
+            button.onclick = () => {
+                closeAllModals();
+                if (index === quiz.a) showStoneWindow('せいかい！\n物知りだな！');
+                else showStoneWindow('ざんねん！\nまた挑戦してくれ！');
+            };
+            optionsContainer.appendChild(button);
+        });
+        showModal('quiz-window');
+    }
+
+    init();
+    </script>
+</body>
+</html>

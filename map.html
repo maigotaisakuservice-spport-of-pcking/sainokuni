@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>さいたま周辺施設マップ | 2026年版</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/common.css">
+
+    <style>
+        body { font-family: 'Noto Sans JP', sans-serif; }
+        #map { height: 100%; width: 100%; z-index: 1; }
+        .custom-div-icon {
+            border-radius: 50%; text-align: center; line-height: 30px; font-size: 18px;
+            color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.3); border: 2px solid white;
+            width: 30px !important; height: 30px !important;
+        }
+        .map-header {
+            background: #2c3e50; color: #ecf0f1; padding: 1rem;
+            display: flex; flex-direction: column; gap: 10px; z-index: 100;
+        }
+        .filter-chip {
+            padding: 5px 15px; border-radius: 20px; font-size: 0.85rem;
+            cursor: pointer; transition: all 0.3s; border: 1px solid #7f8c8d;
+            background: rgba(255,255,255,0.1); display: flex; align-items: center; gap: 5px;
+        }
+        .filter-chip.active { background: #00ACC1; border-color: #00ACC1; }
+        .back-to-home { position: absolute; top: 1rem; left: 1rem; z-index: 1000; background: white; padding: 8px 15px; border-radius: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.2); text-decoration: none; color: #333; font-weight: bold; }
+    </style>
+</head>
+<body class="flex flex-col h-screen">
+
+    <a href="index.html" class="back-to-home">🏠 ホームへ</a>
+
+    <div class="map-header">
+        <h1 class="text-xl font-bold text-center">さいたま周辺施設マップ</h1>
+        <div class="flex flex-wrap justify-center gap-2" id="filter-container">
+            <div class="filter-chip active" data-type="all">すべて</div>
+            <div class="filter-chip" data-type="toilets">🚻 トイレ</div>
+            <div class="filter-chip" data-type="vms">🥤 自販機</div>
+            <div class="filter-chip" data-type="stations">🚉 駅</div>
+            <div class="filter-chip" data-type="attractions">📍 観光スポット</div>
+        </div>
+        <button id="locate-btn" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-6 rounded-full transition-colors self-center shadow-lg">
+            現在地を取得
+        </button>
+    </div>
+
+    <main class="flex-grow relative">
+        <div id="map"></div>
+        <div id="loading-overlay" class="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center z-[2000] hidden">
+            <div class="text-center">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500 mx-auto mb-2"></div>
+                <p class="font-bold text-gray-700">データを取得中...</p>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        const map = L.map('map').setView([35.8617, 139.6455], 13); // 浦和周辺をデフォルトに
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+        const createIcon = (emoji, color) => L.divIcon({
+            html: `<div class="custom-div-icon" style="background-color: ${color};">${emoji}</div>`,
+            className: '', iconSize: [30, 30], iconAnchor: [15, 15]
+        });
+
+        const markers = L.layerGroup().addTo(map);
+        let currentType = 'all';
+
+        // Overpass API を使用して実際の施設データを取得
+        async function fetchOSMData(type, bounds) {
+            const bbox = `${bounds.getSouth()},${bounds.getWest()},${bounds.getNorth()},${bounds.getEast()}`;
+            let query = "";
+            let emoji = "📍";
+            let color = "#333";
+
+            if (type === 'toilets') {
+                query = `node["amenity"="toilet"](${bbox});`; emoji = "🚻"; color = "#3498db";
+            } else if (type === 'vms') {
+                query = `node["amenity"="vending_machine"](${bbox});`; emoji = "🥤"; color = "#e74c3c";
+            } else if (type === 'stations') {
+                query = `node["railway"="station"](${bbox});`; emoji = "🚉"; color = "#2ecc71";
+            } else if (type === 'attractions') {
+                query = `node["tourism"="attraction"](${bbox});`; emoji = "📍"; color = "#f1c40f";
+            } else {
+                // all の場合は主要なものをまとめて取得
+                query = `
+                    (node["amenity"="toilet"](${bbox});
+                     node["amenity"="vending_machine"](${bbox});
+                     node["railway"="station"](${bbox});
+                     node["tourism"="attraction"](${bbox});)
+                `;
+            }
+
+            const url = `https://overpass-api.de/api/interpreter?data=[out:json];${query};out;`;
+
+            document.getElementById('loading-overlay').classList.remove('hidden');
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+
+                markers.clearLayers();
+                data.elements.forEach(el => {
+                    let mEmoji = emoji;
+                    let mColor = color;
+
+                    if (type === 'all') {
+                        if (el.tags.amenity === 'toilet') { mEmoji = "🚻"; mColor = "#3498db"; }
+                        else if (el.tags.amenity === 'vending_machine') { mEmoji = "🥤"; mColor = "#e74c3c"; }
+                        else if (el.tags.railway === 'station') { mEmoji = "🚉"; mColor = "#2ecc71"; }
+                        else if (el.tags.tourism === 'attraction') { mEmoji = "📍"; mColor = "#f1c40f"; }
+                    }
+
+                    const marker = L.marker([el.lat, el.lon], { icon: createIcon(mEmoji, mColor) });
+                    const name = el.tags.name || el.tags.operator || "名称不明の施設";
+                    marker.bindPopup(`<b>${name}</b><br>${el.tags.amenity || el.tags.tourism || ""}`);
+                    marker.addTo(markers);
+                });
+            } catch (e) {
+                console.error("OSMデータの取得に失敗:", e);
+            } finally {
+                document.getElementById('loading-overlay').classList.add('hidden');
+            }
+        }
+
+        // 初期表示と移動時の更新
+        map.on('moveend', () => {
+            fetchOSMData(currentType, map.getBounds());
+        });
+
+        // フィルター操作
+        document.querySelectorAll('.filter-chip').forEach(chip => {
+            chip.addEventListener('click', (e) => {
+                document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+                currentType = chip.dataset.type;
+                fetchOSMData(currentType, map.getBounds());
+            });
+        });
+
+        // 現在地取得
+        document.getElementById('locate-btn').addEventListener('click', () => {
+            map.locate({setView: true, maxZoom: 16});
+        });
+
+        map.on('locationfound', (e) => {
+            L.marker(e.latlng, { icon: createIcon('🚶', '#00ACC1') }).addTo(map)
+                .bindPopup("あなたはここにいます").openPopup();
+        });
+
+        // 初回ロード
+        fetchOSMData('all', map.getBounds());
+    </script>
+</body>
+</html>

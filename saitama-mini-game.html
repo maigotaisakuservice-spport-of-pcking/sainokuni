@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLAY-HUB | 埼玉ゲームセンター</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=DotGothic16&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        body {
+            font-family: 'Mochiy Pop One', sans-serif;
+            background: #1a202c;
+            color: #fff;
+        }
+        .hub-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .main-game-area {
+            background: #2d3748;
+            border-radius: 30px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            border: 4px solid #4a5568;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        .game-card {
+            background: #2d3748;
+            border-radius: 20px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 2px solid #4a5568;
+            position: relative;
+        }
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border-color: #00ACC1;
+        }
+        .btn-play {
+            background: #00ACC1;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        .help-icon {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 10;
+        }
+        .stamp-badge {
+            background: #f59e0b;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+        iframe.game-preview {
+            width: 100%;
+            height: 500px;
+            border-radius: 15px;
+            border: none;
+            background: #000;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hub-container">
+        <header class="flex justify-between items-center mb-10">
+            <div>
+                <h1 class="text-4xl font-bold text-emerald-400">PLAY-HUB</h1>
+                <p class="text-gray-400">埼玉を遊び尽くせ！</p>
+            </div>
+            <a href="index.html" class="bg-gray-700 hover:bg-gray-600 px-6 py-2 rounded-full transition-colors">🏠 ホームへ</a>
+        </header>
+
+        <div class="main-game-area">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold flex items-center gap-2">
+                    🕹️ メインコンテンツ: Saitama Go!
+                </h2>
+                <div class="help-icon" onclick="showHelp('saitama-go')">?</div>
+            </div>
+            <iframe src="saitamafantasy.html" class="game-preview"></iframe>
+            <div id="stamp-alert" class="mt-4 hidden">
+                <div class="bg-yellow-900/50 border border-yellow-500 p-4 rounded-xl flex items-center gap-4">
+                    <span class="text-2xl">🏆</span>
+                    <p>スタンプラリー全達成！特別なキャラがアンロックされました！</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="game-card p-6">
+                <div class="help-icon" onclick="showHelp('pk')">?</div>
+                <h3 class="text-2xl font-bold mb-2">⚽ PKチャレンジ</h3>
+                <p class="text-gray-400 mb-4">埼玉スタジアムでゴールを決めろ！5回中何回入るかな？</p>
+                <a href="saitamagame.html" class="btn-play">プレイする</a>
+            </div>
+
+            <div class="game-card p-6">
+                <div class="help-icon" onclick="showHelp('tea')">?</div>
+                <h3 class="text-2xl font-bold mb-2">🍵 狭山茶摘み取り</h3>
+                <p class="text-gray-400 mb-4">旬の茶葉を素早くキャッチ！狭山茶の名人を目指そう。</p>
+                <a href="otyatumi.html" class="btn-play">プレイする</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ヘルプモーダル -->
+    <div id="help-modal" class="fixed inset-0 bg-black/80 hidden items-center justify-center z-50 p-6" onclick="closeHelp()">
+        <div class="bg-gray-800 p-8 rounded-3xl max-w-md w-full relative" onclick="event.stopPropagation()">
+            <h2 id="help-title" class="text-2xl font-bold mb-4">遊び方</h2>
+            <div id="help-content" class="text-gray-300 leading-relaxed"></div>
+            <button class="mt-8 w-full bg-emerald-500 py-3 rounded-xl font-bold" onclick="closeHelp()">わかった！</button>
+        </div>
+    </div>
+
+    <script>
+        const helpData = {
+            'saitama-go': 'ドット絵の世界で埼玉を冒険！矢印キーまたは画面上のボタンで操作して、落ちているアイテムを集めよう。',
+            'pk': 'マウスまたはタップでボールを飛ばす方向を決めて放そう！キーパーの動きを読んで、隙間を狙うのがコツだ。',
+            'tea': '画面に現れるひし形の茶葉を素早くクリックまたはタップ！3秒で消えてしまうから気をつけて。'
+        };
+
+        function showHelp(id) {
+            document.getElementById('help-content').textContent = helpData[id];
+            document.getElementById('help-modal').classList.remove('hidden');
+            document.getElementById('help-modal').classList.add('flex');
+        }
+
+        function closeHelp() {
+            document.getElementById('help-modal').classList.add('hidden');
+            document.getElementById('help-modal').classList.remove('flex');
+        }
+
+        // スタンプラリー連動
+        window.addEventListener('load', () => {
+            const stamps = JSON.parse(localStorage.getItem('saitama-stamps') || '{}');
+            const count = Object.keys(stamps).length;
+            if (count >= 5) {
+                document.getElementById('stamp-alert').classList.remove('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

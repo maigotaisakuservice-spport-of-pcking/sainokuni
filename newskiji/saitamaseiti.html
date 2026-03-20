@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人気アニメの舞台を巡る！埼玉聖地巡礼ガイド</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/common.css">
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #f9f9f9;
+        }
+        .note-container {
+            max-width: 720px; /* note-like content width */
+            margin: 0 auto;
+        }
+        .article-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1.4;
+            margin-bottom: 1rem;
+        }
+        .article-subtitle {
+            font-size: 1.125rem;
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 2rem;
+            border-left: 3px solid #60a5fa;
+            padding-left: 1rem;
+        }
+        .author-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #555;
+            font-size: 0.875rem;
+        }
+        .author-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+        .article-body h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-top: 4rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        .article-body h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: #1f2937;
+        }
+        .article-body p {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #374151;
+            margin-bottom: 1.5rem;
+        }
+        .article-body img {
+            border-radius: 12px;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .hashtag {
+            display: inline-block;
+            background-color: #eef2ff;
+            color: #4f46e5;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .follow-button.followed {
+            background-color: #e5e7eb; /* gray-200 */
+            color: #374151; /* gray-700 */
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+    <div id="reading-progress-container"><div id="reading-progress-bar"></div></div>
+
+    <!-- ヘッダー -->
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-10">
+        <div class="note-container px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <a href="../index.html" class="flex items-center gap-2 text-gray-600 hover:text-blue-500 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                    <span class="font-bold text-lg hidden sm:inline">ホーム</span>
+                </a>
+            </div>
+            <button id="follow-button-header" class="follow-button bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full text-sm transition-colors">フォロー</button>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="note-container px-4 py-12 md:py-16">
+        <article>
+            <!-- ハッシュタグ -->
+            <div class="mb-4">
+                <span class="hashtag">#アニメ聖地</span>
+                <span class="hashtag">#川越</span>
+                <span class="hashtag">#秩父</span>
+            </div>
+
+            <!-- タイトル -->
+            <h1 class="article-title">人気アニメの舞台を巡る！埼玉聖地巡礼ガイド</h1>
+
+            <!-- サブタイトル -->
+            <p class="article-subtitle">あの感動をもう一度。作中の風景が広がるスポットを巡り、物語の世界に浸る旅へ。</p>
+
+            <!-- 著者情報 -->
+            <div class="author-info mb-8">
+                <svg alt="著者アイコン" style="background-color: #90EE90; border-radius:15px;" class="w-10 h-10 stroke-gray-400 stroke-2 fill-none mr-3" viewBox="0 0 24 24"><path d="M6 9h12M6 12h12M9 6h6M9 15h6M7 3h10a2 2 0 0 12 2v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path><circle cx="10" cy="9" r="0.5" fill="currentColor" class="text-emerald-400"></circle><circle cx="14" cy="9" r="0.5" fill="currentColor" class="text-emerald-400"></circle></svg>
+                <div>
+                    <strong>埼玉大好きサイタマニアくん</strong>
+                    <time datetime="2025-08-02">2025年8月2日</time>
+                </div>
+            </div>
+
+            <!-- 記事本文 -->
+            <div class="article-body">
+                <p>
+                    数々の人気アニメの舞台として、国内外から注目を集めている埼玉県。
+                    物語で見たあの風景が、すぐそこに広がっています。
+                    今回は、特に人気の高い「川越」と「秩父」エリアに焦点を当て、心に残る聖地巡礼の旅をご提案します。
+                    カメラを片手に、お気に入りのシーンを追体験してみませんか？
+                </p>
+
+                <img src="../images/kawagoe.jpg" alt="川越のイメージ" class="w-full h-auto object-cover">
+
+                <h2>#01 川越エリア：情緒あふれる小江戸の町並み</h2>
+                <p>
+                    江戸時代の風情が色濃く残る「小江戸」川越。美しい蔵造りの町並みは、歩いているだけでタイムスリップしたかのような気分にさせてくれます。
+                </p>
+                <h3>『月がきれい』の舞台を歩く</h3>
+                <p>
+                    川越が主な舞台となったアニメ『月がきれい』。作中には、時の鐘や氷川神社、蔵造りの町並みなど、実在のスポットが数多く登場します。
+                    主人公たちが歩いた道をたどりながら、甘酸っぱい物語の世界に浸ってみましょう。特に夕暮れ時の町並みは、ロマンチックな雰囲気が一層高まります。
+                </p>
+
+                <img src="https://tse1.mm.bing.net/th/id/OIP.6QV7ba8AdL0xd8Mv3rBxCwHaE8?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" alt="秩父のイメージ" class="w-full h-auto object-cover">
+
+                <h2>#02 秩父エリア：心揺さぶる感動の風景</h2>
+                <p>
+                    豊かな自然に囲まれた秩父は、多くの人々を感動させた名作アニメの聖地として知られています。
+                </p>
+                <h3>『あの日見た花の名前を僕達はまだ知らない。』の感動を再び</h3>
+                <p>
+                    「あの花」のファンにとって、秩父は特別な場所です。作中の重要なシーンで登場する旧秩父橋や定林寺など、見どころが満載。
+                    キャラクターたちの心情に思いを馳せながら巡れば、物語の感動が鮮やかに蘇ってくるはずです。聖地巡礼マップを片手に、仲間たちとの思い出の場所を探す旅もおすすめです。
+                </p>
+            </div>
+        </article>
+    </main>
+
+    <!-- フッター -->
+    <footer class="bg-white border-t border-gray-200 mt-16">
+        <div class="note-container px-4 py-8">
+            <h3 class="font-bold text-center mb-4">この記事が気に入ったら、フォローを！</h3>
+            <div class="text-center">
+                 <button id="follow-button-footer" class="follow-button bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-full transition-colors">クリエイターをフォロー</button>
+            </div>
+        </div>
+    </footer>
+
+    <button onclick="scrollToTop()" class="go-to-top-button" aria-label="トップへ戻る">↑</button>
+    <script src="../js/common.js"></script>
+    <script>
+        // フォローボタンの機能
+        const followButtons = document.querySelectorAll('.follow-button');
+
+        const handleFollow = (button) => {
+            button.textContent = 'フォロー中';
+            button.classList.add('followed');
+            button.disabled = true;
+        };
+
+        followButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // クリックされたボタンと同じ機能を持つもう片方のボタンも変更する
+                followButtons.forEach(btn => handleFollow(btn));
+            });
+        });
+    </script>
+</body>
+</html>

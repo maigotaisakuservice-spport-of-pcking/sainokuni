@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>狭山茶摘み取りゲーム | 埼玉県紹介サイト</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: url("https://photock.jp/photo/2023/tea-field_saitama.jpg") center/cover no-repeat;
+      font-family: sans-serif;
+      overflow: hidden;
+      color: green;
+    }
+
+    #score {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 20px;
+      z-index: 10;
+    }
+
+    .leaf {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      background-color: #3fa64f;
+      background-image: url("https://thumb.photo-ac.com/d0/d09de16b5f7becae910375baf7d5bb4a_t.jpeg");
+      background-size: cover;
+      background-repeat: no-repeat;
+      cursor: pointer;
+      clip-path: polygon(50% 0%, 80% 30%, 100% 50%, 80% 70%, 50% 100%, 20% 70%, 0% 50%, 20% 30%);
+      animation: appear 0.3s ease-out;
+      box-shadow: 0 0 5px #2e7d32;
+    }
+
+    @keyframes appear {
+      from { transform: scale(0.5); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    a {
+      color: green;
+    }
+  </style>
+</head>
+<body>
+  <div id="score">茶摘みスコア: 0 <a href="index.html"><p>ホームへ戻る</p></a><p><br>ひし形の葉っぱをクリックするとゲームが始まります！<br>※ ゲームの仕様上、ゲームを終了する際は再読み込みを行ったあと、ホームに戻るボタンを押して終了して下さい </p></div>
+  <script>
+    let score = 0;
+    const scoreEl = document.getElementById("score");
+
+    function createLeaf() {
+      const leaf = document.createElement("div");
+      leaf.className = "leaf";
+      leaf.style.left = Math.random() * (window.innerWidth - 60) + "px";
+      leaf.style.top = Math.random() * (window.innerHeight - 60) + "px";
+
+      leaf.addEventListener("click", () => {
+        score++;
+        scoreEl.textContent = "茶摘みスコア: " + score;
+        leaf.remove();
+      });
+
+      document.body.appendChild(leaf);
+
+      setTimeout(() => {
+        leaf.remove();
+      }, 3000); // 3秒で消える
+    }
+
+    setInterval(createLeaf, 800); // 0.8秒ごとに新芽出現
+  </script>
+</body>
+</html>

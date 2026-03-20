@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>彩の国ポータル 2026 | 埼玉県紹介サイト</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Mochiy+Pop+One&family=DotGothic16&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        :root {
+            --saitama-blue: #00ACC1;
+            --saitama-green: #4CAF50;
+            --saitama-red: #F44336;
+        }
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: #fff;
+            color: #333;
+            transition: background-color 0.5s, color 0.5s;
+            overflow-x: hidden;
+        }
+        body.dark-mode {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+        .header-main {
+            background: rgba(44, 62, 80, 0.9);
+            backdrop-filter: blur(10px);
+            color: #ecf0f1;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0; width: 100%; z-index: 1000;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .hero-slider {
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+        .slide-bg {
+            position: absolute; width: 100%; height: 100%;
+            background-size: cover; background-position: center;
+            opacity: 0; transition: opacity 1s;
+        }
+        .slide-bg.active { opacity: 1; }
+        .hero-overlay {
+            position: absolute; inset: 0;
+            background: rgba(0,0,0,0.3);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            color: white; text-align: center;
+        }
+        .hero-text {
+            font-size: clamp(32px, 8vw, 80px);
+            font-weight: 700;
+            text-shadow: 0 5px 20px rgba(0,0,0,0.5);
+            margin-bottom: 1rem;
+        }
+
+        /* 天候エフェクト */
+        #weather-canvas {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none; z-index: 50;
+        }
+
+        /* 各セクション */
+        section { padding: 5rem 1.5rem; max-width: 1200px; margin: 0 auto; }
+        .section-title {
+            font-size: 2.5rem; font-weight: 700; margin-bottom: 3rem;
+            text-align: center; position: relative;
+        }
+        .section-title::after {
+            content: ''; display: block; width: 50px; height: 4px;
+            background: var(--saitama-blue); margin: 10px auto;
+        }
+
+        /* 記事カード */
+        .article-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        .article-card {
+            background: white; border-radius: 20px; overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+        .article-card:hover { transform: translateY(-10px); }
+        .dark-mode .article-card { background: #1e1e1e; color: #fff; }
+
+        /* フォトギャラリー */
+        .gallery-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        .gallery-item {
+            aspect-ratio: 1; overflow: hidden; position: relative;
+            cursor: pointer; border-radius: 8px;
+        }
+        .gallery-item img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 0.5s;
+        }
+        .gallery-item:hover img { transform: scale(1.1); }
+
+        /* ウィジェット */
+        .widget-container {
+            display: flex; flex-wrap: wrap; gap: 2rem; justify-content: center;
+        }
+        .widget-card {
+            background: #f8f9fa; padding: 2rem; border-radius: 20px;
+            min-width: 280px; text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        .dark-mode .widget-card { background: #252525; }
+
+        /* チャットAI UI */
+        #chat-widget-container {
+            position: fixed; bottom: 100px; right: 30px;
+            width: 380px; height: 500px;
+            background: #1a202c; border-radius: 20px;
+            display: none; flex-direction: column;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+            z-index: 2000; overflow: hidden;
+            border: 1px solid #2d3748;
+        }
+        #chat-widget-container.active { display: flex; animation: slideUp 0.3s forwards; }
+        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .chat-header {
+            background: #2d3748; padding: 15px 20px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .chat-messages {
+            flex: 1; overflow-y: auto; padding: 20px;
+            display: flex; flex-direction: column;
+        }
+        .chat-input-area {
+            padding: 20px; border-top: 1px solid #2d3748;
+            display: flex; gap: 10px;
+        }
+        .chat-input {
+            flex: 1; background: #2d3748; border: none;
+            padding: 10px 15px; border-radius: 10px; color: white;
+        }
+        .send-btn {
+            background: #10b981; color: white; border: none;
+            padding: 0 20px; border-radius: 10px; cursor: pointer;
+            font-weight: 700;
+        }
+        .chat-toggle-btn {
+            position: fixed; bottom: 30px; right: 100px;
+            width: 60px; height: 60px; background: #1a202c;
+            border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 2000;
+        }
+
+        /* モーダル */
+        .modal {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.8);
+            display: none; justify-content: center; align-items: center;
+            z-index: 3000; padding: 20px;
+        }
+        .modal-content {
+            background: white; padding: 2.5rem; border-radius: 20px;
+            max-width: 600px; width: 100%; position: relative;
+            color: #333;
+        }
+        .dark-mode .modal-content { background: #1e1e1e; color: #fff; }
+        .modal-close {
+            position: absolute; top: 15px; right: 20px;
+            font-size: 30px; cursor: pointer;
+        }
+
+        footer {
+            background: #2c3e50; color: #ecf0f1; padding: 4rem 2rem;
+            text-align: center;
+        }
+        .footer-links {
+            display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 20px;
+        }
+        .footer-links a { color: #bdc3c7; text-decoration: none; cursor: pointer; }
+        .footer-links a:hover { color: white; }
+
+        /* 音声読み上げ */
+        .tts-control {
+            display: flex; align-items: center; gap: 10px;
+            background: rgba(255,255,255,0.1); padding: 5px 15px; border-radius: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="weather-canvas"></canvas>
+<div id="reading-progress-container"><div id="reading-progress-bar"></div></div>
+
+<header class="header-main">
+    <div class="flex items-center gap-4">
+        <h1 class="text-xl font-bold tracking-tighter" style="font-family: 'Mochiy Pop One';">SAITAMA 2026</h1>
+        <div class="tts-control hidden md:flex">
+            <span class="text-sm">アクセシビリティ</span>
+            <button onclick="readPageText()" class="hover:text-emerald-400">🔊 音声読み上げ</button>
+        </div>
+    </div>
+    <nav class="flex items-center gap-6">
+        <a href="destinations/kawagoe.html" class="hover:text-emerald-400 font-bold">観光地</a>
+        <a href="map.html" class="hover:text-emerald-400 font-bold">マップ</a>
+        <a href="saitama-mini-game.html" class="hover:text-emerald-400 font-bold">ゲーム</a>
+        <button id="dark-mode-toggle" class="text-xl">🌙</button>
+    </nav>
+</header>
+
+<div class="hero-slider">
+    <div class="slide-bg active" style="background-image: url('images/kawagoe.jpg');"></div>
+    <div class="slide-bg" style="background-image: url('images/nagatoro.jpg');"></div>
+    <div class="slide-bg" style="background-image: url('images/densya.jpg');"></div>
+    <div class="hero-overlay">
+        <div class="hero-text" style="font-family: 'Mochiy Pop One';">
+            東京の、となり。<br>心の、まんなか。
+        </div>
+        <p class="text-xl md:text-2xl mt-4 opacity-90">SAITAMA RENEWAL 2026</p>
+    </div>
+</div>
+
+<section id="ai-concierge-intro">
+    <h2 class="section-title">AIサイタマニアくんに相談</h2>
+    <div class="text-center max-w-2xl mx-auto">
+        <p class="text-lg mb-8">「どこに行けばいいかわからない...」そんな時はAIサイタマニアくんにお任せ！<br>あなたの気分にぴったりのスポットを提案します。</p>
+        <button onclick="toggleChat()" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-4 px-8 rounded-full shadow-lg transition-all transform hover:scale-105">
+            チャットで相談する
+        </button>
+    </div>
+</section>
+
+<section id="articles">
+    <h2 class="section-title">今週のイチオシ</h2>
+    <div class="article-grid">
+        <a href="newskiji/cafe.html" class="article-card">
+            <img src="newskiji/tyosyaimg/cafetyosya.jpg" alt="カフェ記事" class="w-full h-48 object-cover">
+            <div class="p-6">
+                <h3 class="text-xl font-bold mb-2">自然に癒やされる。埼玉の森と川のカフェ</h3>
+                <p class="text-gray-500 text-sm">美味しいコーヒーと共に最高の景色を味わおう！</p>
+            </div>
+        </a>
+        <a href="newskiji/nougyou.html" class="article-card">
+            <img src="newskiji/kijiimg/aiyasai.jpg" alt="農業記事" class="w-full h-48 object-cover">
+            <div class="p-6">
+                <h3 class="text-xl font-bold mb-2">埼玉の農業イノベーション最前線</h3>
+                <p class="text-gray-500 text-sm">AI、水耕栽培、そして地元の誇り</p>
+            </div>
+        </a>
+        <a href="newskiji/saitamaseiti.html" class="article-card">
+            <img src="images/kawagoe.jpg" alt="聖地巡礼記事" class="w-full h-48 object-cover">
+            <div class="p-6">
+                <h3 class="text-xl font-bold mb-2">人気アニメ！埼玉聖地巡礼ガイド</h3>
+                <p class="text-gray-500 text-sm">あの感動をもう一度。物語の世界に浸る旅へ。</p>
+            </div>
+        </a>
+    </div>
+</section>
+
+<section id="movie" class="bg-gray-100 dark:bg-gray-800 rounded-3xl">
+    <h2 class="section-title">埼玉を紹介する動画</h2>
+    <div class="aspect-video max-w-4xl mx-auto rounded-2xl overflow-hidden shadow-2xl">
+        <iframe width="100%" height="100%" src="https://www.youtube.com/embed/61qSijTSWKo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    </div>
+</section>
+
+<section id="gallery">
+    <h2 class="section-title">#埼玉散歩 ギャラリー</h2>
+    <div class="gallery-grid">
+        <div class="gallery-item"><img src="images/kawagoe.jpg" alt="埼玉の風景"></div>
+        <div class="gallery-item"><img src="images/nagatoro.jpg" alt="埼玉の風景"></div>
+        <div class="gallery-item"><img src="images/densya.jpg" alt="埼玉の風景"></div>
+        <div class="gallery-item"><img src="images/maruyama.jpeg" alt="埼玉の風景"></div>
+        <div class="gallery-item"><img src="images/hodosan.jpeg" alt="埼玉の風景"></div>
+        <div class="gallery-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/%E5%9F%BC%E7%8E%89%E3%82%B9%E3%82%BF%E3%82%B8%E3%82%A2%E3%83%A02002%EF%BC%88%E6%AD%A3%E9%9D%A2%EF%BC%89.jpg/330px-%E5%9F%BC%E7%8E%89%E3%82%B9%E3%82%BF%E3%82%B8%E3%82%A2%E3%83%A02002%EF%BC%88%E6%AD%A3%E9%9D%A2%EF%BC%89.jpg" alt="埼玉の風景"></div>
+    </div>
+</section>
+
+<section id="widgets">
+    <h2 class="section-title">リアルタイム埼玉</h2>
+    <div class="widget-container">
+        <div class="widget-card" id="weather-widget">
+            <h3 class="font-bold mb-4">現在の天気（さいたま市）</h3>
+            <div id="weather-info" class="text-2xl font-bold text-blue-500">Loading...</div>
+        </div>
+        <div class="widget-card">
+            <h3 class="font-bold mb-4">お祭りカウントダウン</h3>
+            <div id="countdown" class="text-xl">
+                川越まつりまで あと <span id="days-to-festival" class="text-red-500 font-bold">--</span> 日
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="max-w-6xl mx-auto">
+        <h2 class="text-2xl font-bold mb-4" style="font-family: 'Mochiy Pop One';">SAITAMA 2026</h2>
+        <p>© 2026 埼玉県大紹介ポータル - 遊び尽くせ、彩の国。</p>
+        <div class="footer-links">
+            <a onclick="openModal('about')">サイトについて</a>
+            <a onclick="openModal('access')">アクセス</a>
+            <a onclick="openModal('copyright')">著作権</a>
+            <a onclick="openModal('recruit')">加盟店募集</a>
+        </div>
+    </div>
+</footer>
+
+<!-- チャットUI -->
+<div id="chat-widget-container">
+    <div class="chat-header">
+        <div class="flex items-center gap-3">
+            <svg class="w-8 h-8 stroke-emerald-400 stroke-2 fill-none" viewBox="0 0 24 24"><path d="M6 9h12M6 12h12M9 6h6M9 15h6M7 3h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path><circle cx="10" cy="9" r="0.5" fill="currentColor"></circle><circle cx="14" cy="9" r="0.5" fill="currentColor"></circle></svg>
+            <div>
+                <div class="font-bold text-emerald-400">AIサイタマニアくん</div>
+                <div class="text-xs text-gray-400">Status: Online_</div>
+            </div>
+        </div>
+        <button onclick="toggleChat()" class="text-gray-400 hover:text-white">消去</button>
+    </div>
+    <div id="chat-messages" class="chat-messages">
+        <!-- メッセージがここに追加される -->
+    </div>
+    <div class="chat-input-area">
+        <input type="text" id="user-input" class="chat-input" placeholder="挨拶や質問をどうぞ...">
+        <button id="send-btn" class="send-btn">送信</button>
+    </div>
+    <div class="px-4 pb-4 text-[10px] text-gray-500 text-center">
+        「サイタマニアくん」は不正確な情報を表示することがあるため、生成された回答を再確認するようにしてください。
+    </div>
+</div>
+
+<div class="chat-toggle-btn" id="chat-toggle-btn" onclick="toggleChat()">
+    <svg class="w-8 h-8 stroke-white stroke-2 fill-none" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+</div>
+
+<!-- モーダル -->
+<div id="info-modal" class="modal" onclick="closeModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <span class="modal-close" onclick="closeModal()">&times;</span>
+        <div id="modal-body"></div>
+    </div>
+</div>
+
+<button onclick="scrollToTop()" class="go-to-top-button" aria-label="トップへ戻る">↑</button>
+
+<script src="js/common.js"></script>
+<script type="module" src="js/ai-concierge.js"></script>
+<script>
+    // スライダー
+    const slides = document.querySelectorAll('.slide-bg');
+    let currentSlide = 0;
+    setInterval(() => {
+        slides[currentSlide].classList.remove('active');
+        currentSlide = (currentSlide + 1) % slides.length;
+        slides[currentSlide].classList.add('active');
+    }, 5000);
+
+    // ダークモード
+    const darkBtn = document.getElementById('dark-mode-toggle');
+    darkBtn.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        darkBtn.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+    });
+
+    // カウントダウン (川越まつり: 毎年10月第3土日)
+    const nextFestival = new Date('2026-10-17');
+    const today = new Date();
+    const diff = Math.ceil((nextFestival - today) / (1000 * 60 * 60 * 24));
+    document.getElementById('days-to-festival').textContent = diff > 0 ? diff : '開催中!';
+
+    // 天気API & エフェクト
+    const WEATHER_API_KEY = '5582f347313a48e785534839252003'; // 期間限定キー
+    async function initWeather() {
+        try {
+            const res = await fetch(`https://api.weatherapi.com/v1/current.json?key=${WEATHER_API_KEY}&q=Saitama&lang=ja`);
+            const data = await res.json();
+            document.getElementById('weather-info').innerHTML = `
+                <img src="${data.current.condition.icon}" class="mx-auto w-12 h-12">
+                ${data.current.temp_c}℃ / ${data.current.condition.text}
+            `;
+            startWeatherEffect(data.current.condition.code);
+        } catch (e) {
+            document.getElementById('weather-info').textContent = '取得失敗';
+        }
+    }
+
+    const canvas = document.getElementById('weather-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    function startWeatherEffect(code) {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        // シンプルな雨のエフェクト (1063, 1180-1201 などが雨)
+        if ([1063, 1183, 1186, 1189, 1192, 1195, 1240, 1243, 1246].includes(code)) {
+            createRain();
+        } else if ([1066, 1114, 1210, 1213, 1216, 1219, 1222, 1225, 1255, 1258].includes(code)) {
+            createSnow();
+        }
+    }
+    function createRain() {
+        for(let i=0; i<100; i++) particles.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, l:Math.random()*20, v:Math.random()*10+5});
+        function animate() {
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            ctx.strokeStyle = 'rgba(174,194,224,0.5)'; ctx.lineWidth = 1;
+            particles.forEach(p => {
+                ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x, p.y+p.l); ctx.stroke();
+                p.y += p.v; if(p.y > canvas.height) p.y = -p.l;
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    }
+    function createSnow() {
+        for(let i=0; i<100; i++) particles.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*3+1, v:Math.random()*2+1});
+        function animate() {
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            ctx.fillStyle = 'rgba(255,255,255,0.8)';
+            particles.forEach(p => {
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
+                p.y += p.v; p.x += Math.sin(p.y/30);
+                if(p.y > canvas.height) p.y = -10;
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    }
+
+    // チャットAI
+    function toggleChat() {
+        document.getElementById('chat-widget-container').classList.toggle('active');
+        if(document.getElementById('chat-messages').children.length === 0) addWelcomeMessage();
+    }
+
+    // モーダル
+    const modalContents = {
+        about: `
+            <h2 class="text-2xl font-bold mb-4">彩の国ポータルについて</h2>
+            <p class="mb-4">「SAITAMA 2026」は、埼玉県の多彩な魅力を全世界に発信するために構築された次世代ポータルサイトです。</p>
+            <p>伝統的な蔵造りの町並みから、最新のAI農業、そして熱気溢れるスタジアムまで、私たちが愛する埼玉の「今」を凝縮してお届けします。</p>
+        `,
+        access: `
+            <h2 class="text-2xl font-bold mb-4">アクセスガイド</h2>
+            <div class="space-y-4">
+                <p><strong>🚄 電車で:</strong> 東京駅から大宮駅まで新幹線で約25分、JR上野東京ラインで約30分。</p>
+                <p><strong>🚗 車で:</strong> 関越自動車道、東北自動車道、首都高速道路が県内を縦横に走り、都心からのドライブにも最適です。</p>
+                <p>各スポットの詳細な行き方は、個別の観光地ページをご確認ください。</p>
+            </div>
+        `,
+        copyright: `
+            <h2 class="text-2xl font-bold mb-4">著作権・免責事項</h2>
+            <p class="mb-4">© 2026 埼玉県大紹介プロジェクト / SAITAMA RENEWAL 2026. All Rights Reserved.</p>
+            <p class="text-sm">当サイトに使用されている画像、文章、およびゲームコンテンツの無断転載・複製を禁じます。掲載情報は2026年時点のものであり、最新の情報と異なる場合があります。</p>
+        `,
+        recruit: `
+            <h2 class="text-2xl font-bold mb-4 text-emerald-600">クーポン加盟店 大募集！</h2>
+            <p class="mb-4">当サイトのゲームコーナー（PLAY-HUB）で発行される「秘密のクーポンコード」を取り扱っていただける店舗・施設様を募集しています。</p>
+            <div class="bg-gray-100 p-4 rounded-xl mb-4">
+                <p class="font-bold mb-2">加盟のメリット:</p>
+                <ul class="list-disc list-inside text-sm">
+                    <li>サイト内での店舗紹介・誘導</li>
+                    <li>若年層・ファミリー層へのリーチ拡大</li>
+                    <li>地域コミュニティとの連携強化</li>
+                </ul>
+            </div>
+            <p class="text-center font-bold">お問い合わせ: recruit@saitama-2026-portal.jp</p>
+        `
+    };
+    function openModal(type) {
+        document.getElementById('modal-body').innerHTML = modalContents[type];
+        document.getElementById('info-modal').style.display = 'flex';
+    }
+    function closeModal(e) {
+        document.getElementById('info-modal').style.display = 'none';
+    }
+
+    initWeather();
+</script>
+
+<script>
+    function addWelcomeMessage() {
+        if(typeof addMessage === 'function') {
+            addMessage('model', "ﾋﾟﾎﾟｯ...System_Boot...完了...コードネーム『サイタマニア』起動...質問をどうぞ...");
+        } else {
+            // モジュールロード前
+            const chatMessages = document.getElementById('chat-messages');
+            const div = document.createElement('div');
+            div.className = "mb-4 text-left";
+            div.innerHTML = `<div class="inline-block p-3 rounded-2xl bg-gray-700 text-gray-200">ﾋﾟﾎﾟｯ...System_Boot...完了...コードネーム『サイタマニア』起動...質問をどうぞ...</div>`;
+            chatMessages.appendChild(div);
+        }
+    }
+</script>
+</body>
+</html>
