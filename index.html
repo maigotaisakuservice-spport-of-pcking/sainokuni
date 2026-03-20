@@ -373,7 +373,7 @@
     document.getElementById('days-to-festival').textContent = diff > 0 ? diff : '開催中!';
 
     // 天気API & エフェクト
-    const WEATHER_API_KEY = '5582f347313a48e785534839252003'; // 期間限定キー
+    const WEATHER_API_KEY = '45c9c252b90b42c0972105021261702'; // 期間限定キー
     async function initWeather() {
         try {
             const res = await fetch(`https://api.weatherapi.com/v1/current.json?key=${WEATHER_API_KEY}&q=Saitama&lang=ja`);
