@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D公園探検 - SAITAMA GO! | 2026 Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans JP', sans-serif; background: #000; color: #fff; margin: 0; overflow: hidden; }
+        .accent-font { font-family: 'Mochiy Pop One', sans-serif; }
+        .back-home { position: absolute; top: 1.5rem; left: 1.5rem; z-index: 50; background: white; padding: 8px 20px; border-radius: 50px; text-decoration: none; color: #2c3e50; font-weight: 700; }
+
+        .loading-screen {
+            position: fixed; inset: 0; background: #2e7d32; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; z-index: 1000;
+        }
+        .progress-bar { width: 300px; height: 10px; background: rgba(255,255,255,0.2); border-radius: 5px; overflow: hidden; margin-top: 20px; }
+        .progress-fill { width: 45%; height: 100%; background: #fff; }
+
+        .placeholder-message {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            text-align: center; max-width: 600px; padding: 2rem; background: rgba(0,0,0,0.7);
+            border: 2px solid #2e7d32; border-radius: 20px; backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body>
+
+    <a href="saitama-mini-game.html" class="back-home">⬅ ゲーム一覧へ</a>
+
+    <div class="loading-screen" id="loader">
+        <h1 class="text-3xl accent-font mb-4">3D PARK EXPLORATION</h1>
+        <p class="text-sm opacity-80">アセットをロード中...</p>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress"></div>
+        </div>
+        <div class="mt-4 text-xs">45.2MB / 102.4MB</div>
+    </div>
+
+    <div class="placeholder-message">
+        <h2 class="text-2xl font-bold mb-4 text-green-400">SAITAMA GO! 3D公園探検</h2>
+        <p class="mb-6">現在、3Dエンジンの最適化および公園アセットの構築を行っています。<br>2026年のリニューアル本番に向けて、最高の体験をお届けします！</p>
+        <div class="grid grid-cols-2 gap-4 mb-8">
+            <div class="bg-white/10 p-4 rounded-xl">
+                <div class="text-xs opacity-50 mb-1">エンジン</div>
+                <div class="font-bold">Three.js R160</div>
+            </div>
+            <div class="bg-white/10 p-4 rounded-xl">
+                <div class="text-xs opacity-50 mb-1">目標</div>
+                <div class="font-bold">60FPS / 4K</div>
+            </div>
+        </div>
+        <p class="text-sm opacity-60">※このページは現在プレビュー段階（箱のみ）です。お楽しみに！</p>
+    </div>
+
+    <!-- Background Decoration -->
+    <div class="absolute inset-0 z-[-1] opacity-30">
+        <img src="https://images.unsplash.com/photo-1519331379826-f10be5486c6f?q=80&w=2070&auto=format&fit=crop" class="w-full h-full object-cover">
+    </div>
+
+    <script>
+        // Fake loading progress
+        let progress = 45;
+        const bar = document.getElementById('progress');
+        setInterval(() => {
+            if (progress < 95) {
+                progress += Math.random() * 0.5;
+                bar.style.width = `${progress}%`;
+            }
+        }, 500);
+    </script>
+</body>
+</html>
