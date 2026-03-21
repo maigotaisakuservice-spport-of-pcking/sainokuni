@@ -1,0 +1,26 @@
+[
+    {
+        "title": "彩の国 ニュース",
+        "link": "https://www.pref.saitama.lg.jp/news/index.html",
+        "description": "埼玉県の最新ニュースやイベント情報をお届けします。県の取り組みや生活に役立つ情報をチェックしましょう。",
+        "source": "埼玉県"
+    },
+    {
+        "title": "旧山吉デパート",
+        "link": "https://www.kawagoe-yell.com/sightseeing/yamakiti-department/",
+        "description": "昭和初期のモダニズム建築。現在は店舗として利用されていますが、当時のデザインが色濃く残っています。",
+        "source": "川越市のモダニズム建築"
+    },
+    {
+        "title": "大沢家住宅",
+        "link": "https://ja.wikipedia.org/wiki/%E5%A4%A7%E6%B2%A2%E5%AE%B6%E4%BD%8F%E5%AE%85",
+        "description": "大正12年に建てられた病院。スクラッチタイルが特徴的なモダンなデザインです。",
+        "source": "川越市のモダニズム建築"
+    },
+    {
+        "title": "盆栽の聖地・大宮",
+        "link": "https://www.stib.jp/bonsai/index.html",
+        "description": "世界中から愛好家が集まる大宮盆栽村。四季折々の表情を見せる芸術作品に触れてみませんか。",
+        "source": "さいたま観光国際協会"
+    }
+]

@@ -1,15 +1,13 @@
 
 :root {
     --saitama-blue: #00ACC1;
+    --saitama-green: #2E7D32; /* Nature-focused green */
+    --saitama-accent: #8BC34A; /* Light green accent */
 }
 
 body {
     font-size: clamp(14px, 2vw, 18px);
 }
-
-body.theme-blue { --saitama-blue: #00ACC1; }
-body.theme-green { --saitama-blue: #10b981; }
-body.theme-red { --saitama-blue: #f43f5e; }
 
 /* 読了インジケーター */
 #reading-progress-container {
@@ -35,7 +33,7 @@ body.theme-red { --saitama-blue: #f43f5e; }
     right: 30px;
     width: 60px;
     height: 60px;
-    background-color: #00ACC1; /* Request: #00ACC1 (Saitama Blue) */
+    background-color: var(--saitama-green);
     color: white;
     border: none;
     border-radius: 50%;

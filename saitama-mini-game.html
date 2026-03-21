@@ -3,162 +3,172 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PLAY-HUB | 埼玉ゲームセンター</title>
+    <title>PLAY-HUB SAITAMA | ゲームセンター</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=DotGothic16&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=DotGothic16&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/common.css">
     <style>
-        body {
-            font-family: 'Mochiy Pop One', sans-serif;
-            background: #1a202c;
-            color: #fff;
-        }
-        .hub-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-        .main-game-area {
-            background: #2d3748;
-            border-radius: 30px;
-            padding: 2rem;
-            margin-bottom: 3rem;
-            border: 4px solid #4a5568;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-        }
+        body { font-family: 'Noto Sans JP', sans-serif; background-color: #fdfdfb; color: #2c3e50; }
+        .game-title { font-family: 'Mochiy Pop One', sans-serif; color: #2e7d32; }
+        .pixel-font { font-family: 'DotGothic16', sans-serif; }
+
         .game-card {
-            background: #2d3748;
-            border-radius: 20px;
-            overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
-            border: 2px solid #4a5568;
-            position: relative;
+            background: white; border-radius: 24px; overflow: hidden;
+            box-shadow: 0 10px 30px rgba(46, 125, 50, 0.1);
+            transition: all 0.3s; border: 1px solid #e8f5e9;
         }
-        .game-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            border-color: #00ACC1;
+        .game-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(46, 125, 50, 0.2); }
+
+        .play-btn {
+            background: linear-gradient(135deg, #2e7d32, #4caf50);
+            color: white; font-weight: 700; padding: 12px 30px; border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3); transition: all 0.3s;
         }
-        .btn-play {
-            background: #00ACC1;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 10px;
-            font-weight: bold;
-            display: inline-block;
-            margin-top: 10px;
-        }
-        .help-icon {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            width: 30px;
-            height: 30px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            z-index: 10;
-        }
-        .stamp-badge {
-            background: #f59e0b;
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            margin-bottom: 10px;
-            display: inline-block;
-        }
-        iframe.game-preview {
-            width: 100%;
-            height: 500px;
-            border-radius: 15px;
-            border: none;
-            background: #000;
-        }
+        .play-btn:hover { transform: scale(1.05); filter: brightness(1.1); }
+
+        .back-home { position: absolute; top: 1.5rem; left: 1.5rem; z-index: 50; background: white; padding: 8px 20px; border-radius: 50px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-decoration: none; color: #2c3e50; font-weight: 700; }
     </style>
 </head>
-<body>
+<body class="min-h-screen bg-emerald-50/30">
 
-    <div class="hub-container">
-        <header class="flex justify-between items-center mb-10">
-            <div>
-                <h1 class="text-4xl font-bold text-emerald-400">PLAY-HUB</h1>
-                <p class="text-gray-400">埼玉を遊び尽くせ！</p>
-            </div>
-            <a href="index.html" class="bg-gray-700 hover:bg-gray-600 px-6 py-2 rounded-full transition-colors">🏠 ホームへ</a>
-        </header>
+    <a href="index.html" class="back-home">🏠 ホームへ戻る</a>
 
-        <div class="main-game-area">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-2xl font-bold flex items-center gap-2">
-                    🕹️ メインコンテンツ: Saitama Go!
-                </h2>
-                <div class="help-icon" onclick="showHelp('saitama-go')">?</div>
-            </div>
-            <iframe src="saitamafantasy.html" class="game-preview"></iframe>
-            <div id="stamp-alert" class="mt-4 hidden">
-                <div class="bg-yellow-900/50 border border-yellow-500 p-4 rounded-xl flex items-center gap-4">
-                    <span class="text-2xl">🏆</span>
-                    <p>スタンプラリー全達成！特別なキャラがアンロックされました！</p>
+    <header class="pt-20 pb-12 text-center bg-white border-b border-emerald-100">
+        <h1 class="text-4xl md:text-6xl game-title mb-4">PLAY-HUB SAITAMA</h1>
+        <p class="text-lg text-emerald-700 font-bold">埼玉を遊びつくせ！デジタル・アミューズメント</p>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-6 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+            <!-- 3D公園探検 (Coming Soon or Implementation) -->
+            <div class="game-card col-span-1 md:col-span-2 relative">
+                <div class="absolute top-4 left-4 bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full z-10">NEW (3D)</div>
+                <div class="aspect-video bg-gray-200 relative overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1519331379826-f10be5486c6f?q=80&w=2070&auto=format&fit=crop" alt="3D公園探検" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+                        <div class="text-center text-white p-6">
+                            <h2 class="text-3xl font-bold mb-2">SAITAMA GO: 3D公園探検</h2>
+                            <p class="text-sm opacity-90 mb-6">広大な埼玉の公園を3Dで自由に探索！<br>アイテムを集めてレアなスタンプをゲットしよう。</p>
+                            <a href="saitamagame.html" class="play-btn text-xl">🚀 今すぐ探検！</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="bg-blue-100 text-blue-700 text-[10px] px-2 py-0.5 rounded">Three.js</span>
+                        <span class="bg-emerald-100 text-emerald-700 text-[10px] px-2 py-0.5 rounded">オープンワールド</span>
+                    </div>
+                    <p class="text-sm text-gray-500">※3Dモデルの読み込みに時間がかかる場合があります。</p>
                 </div>
             </div>
-        </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="game-card p-6">
-                <div class="help-icon" onclick="showHelp('pk')">?</div>
-                <h3 class="text-2xl font-bold mb-2">⚽ PKチャレンジ</h3>
-                <p class="text-gray-400 mb-4">埼玉スタジアムでゴールを決めろ！5回中何回入るかな？</p>
-                <a href="saitamagame.html" class="btn-play">プレイする</a>
+            <!-- 釣りゲーム -->
+            <div class="game-card">
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1544551763-47a0159f9234?q=80&w=2070&auto=format&fit=crop" alt="釣りゲーム" class="w-full h-48 object-cover">
+                    <div class="absolute inset-0 bg-emerald-900/20 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+                        <a href="fishing.html" class="play-btn">🎣 プレイする</a>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h2 class="text-xl font-bold mb-2">長瀞フィッシング！</h2>
+                    <p class="text-sm text-gray-600 mb-4">長瀞の清流で大物を釣り上げよう！2Dアクション釣りゲーム。</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs text-emerald-600 font-bold">難易度: ★★☆</span>
+                        <button onclick="openHelp('fishing')" class="text-gray-400">❓</button>
+                    </div>
+                </div>
             </div>
 
-            <div class="game-card p-6">
-                <div class="help-icon" onclick="showHelp('tea')">?</div>
-                <h3 class="text-2xl font-bold mb-2">🍵 狭山茶摘み取り</h3>
-                <p class="text-gray-400 mb-4">旬の茶葉を素早くキャッチ！狭山茶の名人を目指そう。</p>
-                <a href="otyatumi.html" class="btn-play">プレイする</a>
+            <!-- RPG -->
+            <div class="game-card">
+                <div class="relative">
+                    <img src="images/saitama_fantasy_thumb.png" alt="RPG" class="w-full h-48 object-cover" onerror="this.src='https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2070&auto=format&fit=crop'">
+                    <div class="absolute inset-0 bg-emerald-900/20 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+                        <a href="saitamafantasy.html" class="play-btn">⚔️ 冒険に出る</a>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h2 class="text-xl font-bold mb-2 pixel-font">SAITAMA FANTASY</h2>
+                    <p class="text-sm text-gray-600 mb-4">レトロな2Dドット絵の世界で、埼玉の伝説を解き明かすRPG。</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs text-emerald-600 font-bold">難易度: ★★★</span>
+                        <button onclick="openHelp('rpg')" class="text-gray-400">❓</button>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
 
-    <!-- ヘルプモーダル -->
-    <div id="help-modal" class="fixed inset-0 bg-black/80 hidden items-center justify-center z-50 p-6" onclick="closeHelp()">
-        <div class="bg-gray-800 p-8 rounded-3xl max-w-md w-full relative" onclick="event.stopPropagation()">
-            <h2 id="help-title" class="text-2xl font-bold mb-4">遊び方</h2>
-            <div id="help-content" class="text-gray-300 leading-relaxed"></div>
-            <button class="mt-8 w-full bg-emerald-500 py-3 rounded-xl font-bold" onclick="closeHelp()">わかった！</button>
+            <!-- クイズ -->
+            <div class="game-card">
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1606326608945-480e30f24932?q=80&w=2070&auto=format&fit=crop" alt="クイズ" class="w-full h-48 object-cover">
+                    <div class="absolute inset-0 bg-emerald-900/20 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+                        <a href="quiz.html" class="play-btn">💡 クイズに挑戦</a>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h2 class="text-xl font-bold mb-2">埼玉マスターへの道</h2>
+                    <p class="text-sm text-gray-600 mb-4">埼玉の知識を試す！全問正解で「埼玉博士」の称号を授与。</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs text-emerald-600 font-bold">難易度: ★☆☆</span>
+                        <button onclick="openHelp('quiz')" class="text-gray-400">❓</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <section class="mt-20 bg-emerald-900 text-white rounded-[40px] p-8 md:p-12 overflow-hidden relative">
+            <div class="relative z-10">
+                <h2 class="text-3xl font-bold mb-6 game-title !text-yellow-400">🏆 ハイスコア特典</h2>
+                <p class="text-lg mb-8 opacity-90">ゲームで一定以上のスコアを出すと、埼玉県の各施設で使える「秘密のクーポンコード」が表示されるぞ！</p>
+                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 inline-block">
+                    <p class="text-sm uppercase tracking-widest opacity-70 mb-2">現在の最高得点者</p>
+                    <p class="text-2xl font-black pixel-font">Player_Saitamania: 99,999 pts</p>
+                </div>
+            </div>
+            <div class="absolute -right-20 -bottom-20 text-[200px] opacity-10 pixel-font select-none">SAITAMA</div>
+        </section>
+    </main>
+
+    <!-- ヘルプ用ポップアップ -->
+    <div id="help-modal" class="fixed inset-0 bg-black/80 flex items-center justify-center z-[100] hidden p-6" onclick="closeHelp()">
+        <div class="bg-white rounded-3xl p-8 max-w-md w-full" onclick="event.stopPropagation()">
+            <h3 id="help-title" class="text-2xl font-bold mb-4 text-emerald-700"></h3>
+            <div id="help-content" class="text-gray-600 space-y-4"></div>
+            <button onclick="closeHelp()" class="mt-8 w-full bg-emerald-600 text-white font-bold py-3 rounded-xl">分かった！</button>
         </div>
     </div>
 
     <script>
         const helpData = {
-            'saitama-go': 'ドット絵の世界で埼玉を冒険！矢印キーまたは画面上のボタンで操作して、落ちているアイテムを集めよう。',
-            'pk': 'マウスまたはタップでボールを飛ばす方向を決めて放そう！キーパーの動きを読んで、隙間を狙うのがコツだ。',
-            'tea': '画面に現れるひし形の茶葉を素早くクリックまたはタップ！3秒で消えてしまうから気をつけて。'
+            'fishing': {
+                title: '長瀞フィッシングの遊び方',
+                content: '<p>1. タイミングよくボタンを押して、魚を釣り上げよう！</p><p>2. 大物を釣ると、埼玉の豆知識が手に入るぞ。</p><p>3. 制限時間内にたくさんの魚をゲットしよう。</p>'
+            },
+            'rpg': {
+                title: 'SAITAMA FANTASYの遊び方',
+                content: '<p>1. 矢印キーまたは画面上のボタンで移動しよう。</p><p>2. 町の人に話しかけてクエストを受けよう。</p><p>3. 埼玉の名産品を集めて、伝説の装備を手に入れろ！</p>'
+            },
+            'quiz': {
+                title: '埼玉マスターへの道の遊び方',
+                content: '<p>1. 次々に出題される4択クイズに答えよう。</p><p>2. 全10問。正解数に応じて称号が変わるぞ。</p><p>3. 制限時間内に素早く答えるとボーナス得点！</p>'
+            }
         };
 
-        function showHelp(id) {
-            document.getElementById('help-content').textContent = helpData[id];
+        function openHelp(game) {
+            const data = helpData[game];
+            document.getElementById('help-title').textContent = data.title;
+            document.getElementById('help-content').innerHTML = data.content;
             document.getElementById('help-modal').classList.remove('hidden');
-            document.getElementById('help-modal').classList.add('flex');
         }
 
         function closeHelp() {
             document.getElementById('help-modal').classList.add('hidden');
-            document.getElementById('help-modal').classList.remove('flex');
         }
-
-        // スタンプラリー連動
-        window.addEventListener('load', () => {
-            const stamps = JSON.parse(localStorage.getItem('saitama-stamps') || '{}');
-            const count = Object.keys(stamps).length;
-            if (count >= 5) {
-                document.getElementById('stamp-alert').classList.remove('hidden');
-            }
-        });
     </script>
 </body>
 </html>

@@ -8,17 +8,19 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Mochiy+Pop+One&family=DotGothic16&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
     <link rel="stylesheet" href="css/common.css">
     <style>
         :root {
-            --saitama-blue: var(--saitama-blue);
-            --saitama-green: #4CAF50;
+            --saitama-blue: #00ACC1;
+            --saitama-green: #2E7D32;
             --saitama-red: #F44336;
         }
         body {
             font-family: 'Noto Sans JP', sans-serif;
-            background: #fff;
-            color: #333;
+            background: #fdfdfb;
+            color: #2c3e50;
             transition: background-color 0.5s, color 0.5s;
             overflow-x: hidden;
         }
@@ -27,7 +29,7 @@
             color: #e0e0e0;
         }
         .header-main {
-            background: rgba(44, 62, 80, 0.9);
+            background: rgba(46, 125, 50, 0.9);
             backdrop-filter: blur(10px);
             color: #ecf0f1;
             padding: 1rem 2rem;
@@ -48,7 +50,7 @@
         .slide-bg.active { opacity: 1; }
         .hero-overlay {
             position: absolute; inset: 0;
-            background: rgba(0,0,0,0.3);
+            background: rgba(0,0,0,0.25);
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             color: white; text-align: center;
         }
@@ -74,7 +76,7 @@
         }
         .section-title::after {
             content: ''; display: block; width: 50px; height: 4px;
-            background: var(--saitama-blue); margin: 10px auto;
+            background: var(--saitama-green); margin: 10px auto;
         }
 
         /* 記事カード */
@@ -146,13 +148,13 @@
             padding: 10px 15px; border-radius: 10px; color: white;
         }
         .send-btn {
-            background: #10b981; color: white; border: none;
+            background: #2e7d32; color: white; border: none;
             padding: 0 20px; border-radius: 10px; cursor: pointer;
             font-weight: 700;
         }
         .chat-toggle-btn {
             position: fixed; bottom: 30px; right: 100px;
-            width: 60px; height: 60px; background: #1a202c;
+            width: 60px; height: 60px; background: #2e7d32;
             border-radius: 50%; display: flex; justify-content: center; align-items: center;
             cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 2000;
         }
@@ -175,7 +177,7 @@
         }
 
         footer {
-            background: #2c3e50; color: #ecf0f1; padding: 4rem 2rem;
+            background: #1b5e20; color: #ecf0f1; padding: 4rem 2rem;
             text-align: center;
         }
         .footer-links {
@@ -198,7 +200,7 @@
 
 <header class="header-main">
     <div class="flex items-center gap-4">
-        <h1 class="text-xl font-bold tracking-tighter" style="font-family: 'Mochiy Pop One';">SAITAMA 2026</h1>
+        <h1 class="text-xl font-bold tracking-tighter" style="font-family: 'Mochiy Pop One';">SAITAMA PARKS</h1>
         <div class="tts-control hidden md:flex">
             <span class="text-sm">アクセシビリティ</span>
             <button onclick="readPageText()" class="hover:text-emerald-400">🔊 音声読み上げ</button>
@@ -206,108 +208,121 @@
     </div>
     <nav class="flex items-center gap-6">
         <a id="coupon-menu-item" href="index.html?reward=true" class="hidden text-yellow-400 font-bold animate-pulse" title="クーポン獲得！">💎 特典</a>
-        <div class="hidden lg:flex items-center gap-2 bg-black/20 p-1 rounded-full px-3">
-            <span class="text-[10px] uppercase font-bold opacity-70">Saicolor:</span>
-            <button onclick="changeTheme('blue')" class="w-4 h-4 rounded-full bg-cyan-500 border-2 border-white/50" title="Saitama Blue"></button>
-            <button onclick="changeTheme('green')" class="w-4 h-4 rounded-full bg-emerald-500 border-2 border-white/50" title="Saitama Green"></button>
-            <button onclick="changeTheme('red')" class="w-4 h-4 rounded-full bg-red-500 border-2 border-white/50" title="Saitama Red"></button>
-        </div>
-        <a href="destinations/kawagoe.html" class="hover:text-emerald-400 font-bold">観光地</a>
+        <a href="destinations/maruyama.html" class="hover:text-emerald-400 font-bold">公園を探す</a>
         <a href="map.html" class="hover:text-emerald-400 font-bold">マップ</a>
         <a href="saitama-mini-game.html" class="hover:text-emerald-400 font-bold">ゲーム</a>
         <button id="dark-mode-toggle" class="text-xl">🌙</button>
     </nav>
 </header>
 
-<div class="hero-slider">
-    <div class="slide-bg active" style="background-image: url('images/kawagoe.jpg');"></div>
-    <div class="slide-bg" style="background-image: url('images/nagatoro.jpg');"></div>
-    <div class="slide-bg" style="background-image: url('images/densya.jpg');"></div>
+<div class="hero-slider" id="main-slider">
+    <!-- スライドはJSで生成されます -->
     <div class="hero-overlay">
         <div class="hero-text" style="font-family: 'Mochiy Pop One';">
-            東京の、となり。<br>心の、まんなか。
+            緑あふれる、<br>埼玉の公園へ。
         </div>
-        <p class="text-xl md:text-2xl mt-4 opacity-90">SAITAMA RENEWAL 2026</p>
+        <p class="text-xl md:text-2xl mt-4 opacity-90">SAITAMA NATURE 2026</p>
+
+        <!-- RSSスライダー風のミニ情報表示 -->
+        <div class="absolute bottom-10 left-0 right-0 px-4 flex justify-center">
+            <div id="rss-mini-slider" class="bg-black/40 backdrop-blur-md p-4 rounded-xl max-w-xl w-full flex items-center gap-4 border border-white/20">
+                <div class="bg-emerald-500 text-white text-[10px] font-bold px-2 py-1 rounded">NEWS</div>
+                <div id="rss-content" class="text-sm truncate flex-1">読み込み中...</div>
+                <button onclick="nextRss()" class="text-white hover:text-emerald-400">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+            </div>
+        </div>
     </div>
 </div>
 
-<section id="widgets" class="!py-12 bg-gray-50 dark:bg-gray-900 border-y border-gray-200 dark:border-gray-800">
+<section id="widgets" class="!py-12 bg-emerald-50 dark:bg-gray-900 border-y border-emerald-100 dark:border-gray-800">
     <h2 class="section-title !mb-12">リアルタイム埼玉</h2>
     <div class="widget-container">
         <div class="widget-card" id="weather-widget">
             <h3 class="font-bold mb-4">現在の天気（さいたま市）</h3>
-            <div id="weather-info" class="text-2xl font-bold text-blue-500">Loading...</div>
+            <div id="weather-info" class="text-2xl font-bold text-emerald-600">Loading...</div>
         </div>
         <div class="widget-card">
-            <h3 class="font-bold mb-4">お祭りカウントダウン</h3>
+            <h3 class="font-bold mb-4">イベントカウントダウン</h3>
             <div id="countdown" class="text-xl">
-                川越まつりまで あと <span id="days-to-festival" class="text-red-500 font-bold">--</span> 日
+                森林公園・紅葉ライトアップまで あと <span id="days-to-festival" class="text-red-500 font-bold">--</span> 日
             </div>
         </div>
     </div>
 </section>
 
 <section id="ai-concierge-intro">
-    <h2 class="section-title">AIサイタマニアくんに相談</h2>
+    <h2 class="section-title">公園コンシェルジュに相談</h2>
     <div class="text-center max-w-2xl mx-auto">
-        <p class="text-lg mb-8">「どこに行けばいいかわからない...」そんな時はAIサイタマニアくんにお任せ！<br>あなたの気分にぴったりのスポットを提案します。</p>
-        <button onclick="toggleChat()" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-4 px-8 rounded-full shadow-lg transition-all transform hover:scale-105">
+        <p class="text-lg mb-8">「子供と遊べる公園は？」「静かに散歩したい」<br>AIサイタマニアくんが、今の気分にぴったりの公園を提案します。</p>
+        <button onclick="toggleChat()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 px-8 rounded-full shadow-lg transition-all transform hover:scale-105">
             チャットで相談する
         </button>
     </div>
 </section>
 
 <section id="articles">
-    <h2 class="section-title">今週のイチオシ</h2>
+    <h2 class="section-title">今週のイチオシ公園</h2>
     <div class="article-grid">
-        <a href="newskiji/cafe.html" class="article-card">
-            <img src="newskiji/tyosyaimg/cafetyosya.jpg" alt="カフェ記事" class="w-full h-48 object-cover">
+        <a href="destinations/maruyama.html" class="article-card">
+            <img src="images/maruyama.jpeg" alt="公園記事" class="w-full h-48 object-cover">
             <div class="p-6">
-                <h3 class="text-xl font-bold mb-2">自然に癒やされる。埼玉の森と川のカフェ</h3>
-                <p class="text-gray-500 text-sm">美味しいコーヒーと共に最高の景色を味わおう！</p>
+                <h3 class="text-xl font-bold mb-2">上尾・丸山公園：水と緑のオアシス</h3>
+                <p class="text-gray-500 text-sm">小動物園や水遊び場など、一日中楽しめる総合公園。</p>
             </div>
         </a>
-        <a href="newskiji/nougyou.html" class="article-card">
-            <img src="newskiji/kijiimg/aiyasai.jpg" alt="農業記事" class="w-full h-48 object-cover">
+        <a href="destinations/omiya_park.html" class="article-card">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Omiya_Park_20220327_2.jpg/640px-Omiya_Park_20220327_2.jpg" alt="大宮公園" class="w-full h-48 object-cover">
             <div class="p-6">
-                <h3 class="text-xl font-bold mb-2">埼玉の農業イノベーション最前線</h3>
-                <p class="text-gray-500 text-sm">AI、水耕栽培、そして地元の誇り</p>
+                <h3 class="text-xl font-bold mb-2">大宮公園：歴史と桜の名所</h3>
+                <p class="text-gray-500 text-sm">日本さくら名所100選にも選ばれた、県内屈指の広大な公園。</p>
             </div>
         </a>
-        <a href="newskiji/saitamaseiti.html" class="article-card">
-            <img src="images/kawagoe.jpg" alt="聖地巡礼記事" class="w-full h-48 object-cover">
+        <a href="destinations/shinrin_park.html" class="article-card">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Musashi_Kyuryo_National_Government_Park_20111105.jpg" alt="森林公園" class="w-full h-48 object-cover">
             <div class="p-6">
-                <h3 class="text-xl font-bold mb-2">人気アニメ！埼玉聖地巡礼ガイド</h3>
-                <p class="text-gray-500 text-sm">あの感動をもう一度。物語の世界に浸る旅へ。</p>
+                <h3 class="text-xl font-bold mb-2">国営武蔵丘陵森林公園</h3>
+                <p class="text-gray-500 text-sm">東京ドーム65個分の広さ！サイクリングや大型遊具が充実。</p>
             </div>
         </a>
     </div>
 </section>
 
-<section id="movie" class="bg-gray-100 dark:bg-gray-800 rounded-3xl">
-    <h2 class="section-title">埼玉を紹介する動画</h2>
+<section id="movie" class="bg-emerald-50 dark:bg-gray-800 rounded-3xl">
+    <h2 class="section-title">埼玉の自然を感じる</h2>
     <div class="aspect-video max-w-4xl mx-auto rounded-2xl overflow-hidden shadow-2xl">
         <iframe width="100%" height="100%" src="https://www.youtube.com/embed/61qSijTSWKo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
     </div>
 </section>
 
 <section id="gallery">
-    <h2 class="section-title">#埼玉散歩 ギャラリー</h2>
+    <h2 class="section-title">#埼玉公園散歩 ギャラリー</h2>
     <div class="gallery-grid">
-        <div class="gallery-item"><img src="images/kawagoe.jpg" alt="埼玉の風景"></div>
-        <div class="gallery-item"><img src="images/nagatoro.jpg" alt="埼玉の風景"></div>
-        <div class="gallery-item"><img src="images/densya.jpg" alt="埼玉の風景"></div>
-        <div class="gallery-item"><img src="images/maruyama.jpeg" alt="埼玉の風景"></div>
-        <div class="gallery-item"><img src="images/hodosan.jpeg" alt="埼玉の風景"></div>
-        <div class="gallery-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/%E5%9F%BC%E7%8E%89%E3%82%B9%E3%82%BF%E3%82%B8%E3%82%A2%E3%83%A02002%EF%BC%88%E6%AD%A3%E9%9D%A2%EF%BC%89.jpg/330px-%E5%9F%BC%E7%8E%89%E3%82%B9%E3%82%BF%E3%82%B8%E3%82%A2%E3%83%A02002%EF%BC%88%E6%AD%A3%E9%9D%A2%EF%BC%89.jpg" alt="埼玉の風景"></div>
+        <div class="gallery-item"><img src="images/maruyama.jpeg" alt="丸山公園"></div>
+        <div class="gallery-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Omiya_Park_20220327_2.jpg/320px-Omiya_Park_20220327_2.jpg" alt="大宮公園"></div>
+        <div class="gallery-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Tokorozawa_Aviation_Memorial_Park_01.JPG/320px-Tokorozawa_Aviation_Memorial_Park_01.JPG" alt="所沢航空公園"></div>
+        <div class="gallery-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Musashi_Kyuryo_National_Government_Park_20111105.jpg/320px-Musashi_Kyuryo_National_Government_Park_20111105.jpg" alt="森林公園"></div>
+        <div class="gallery-item"><img src="images/nagatoro.jpg" alt="長瀞"></div>
+        <div class="gallery-item"><img src="images/hodosan.jpeg" alt="宝登山"></div>
     </div>
 </section>
 
+<section id="simple-map" class="bg-emerald-50 dark:bg-slate-900 rounded-3xl overflow-hidden shadow-xl border border-emerald-200 dark:border-slate-800">
+    <div class="p-8 md:p-12 text-center">
+        <h2 class="section-title !mb-4">近くの公園を探す</h2>
+        <p class="text-emerald-700 mb-8 font-bold">身近な自然をマップでチェック！</p>
+        <div id="home-mini-map" class="w-full h-[400px] rounded-2xl mb-8 z-0"></div>
+        <a href="map.html" class="inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 px-10 rounded-full shadow-lg transition-all hover:scale-105">
+            🗺️ 全画面マップで詳しく探す
+        </a>
+    </div>
+</section>
 
 <footer>
     <div class="max-w-6xl mx-auto">
-        <h2 class="text-2xl font-bold mb-4" style="font-family: 'Mochiy Pop One';">SAITAMA 2026</h2>
-        <p>© 2026 埼玉県大紹介ポータル - 遊び尽くせ、彩の国。</p>
+        <h2 class="text-2xl font-bold mb-4" style="font-family: 'Mochiy Pop One';">SAITAMA PARKS</h2>
+        <p>© 2026 埼玉県公園ガイドポータル - 自然と共に生きる。</p>
         <div class="footer-links">
             <a onclick="openModal('about')">サイトについて</a>
             <a onclick="openModal('access')">アクセス</a>
@@ -327,18 +342,18 @@
                 <div class="text-xs text-gray-400">Status: Online_</div>
             </div>
         </div>
-        <button onclick="toggleChat()" class="text-gray-400 hover:text-white">消去</button>
+        <button onclick="clearChat()" class="text-gray-400 hover:text-white">消去</button>
     </div>
     <div id="chat-messages" class="chat-messages">
         <!-- メッセージがここに追加される -->
     </div>
     <div id="mood-selector" class="px-4 py-2 border-t border-gray-700 flex flex-wrap gap-2 justify-center">
-        <button onclick="selectMood('hungry')" class="text-[10px] bg-amber-600/20 text-amber-400 border border-amber-600/50 px-2 py-1 rounded-full hover:bg-amber-600 hover:text-white transition-all">🍕 お腹が空いた</button>
-        <button onclick="selectMood('walk')" class="text-[10px] bg-sky-600/20 text-sky-400 border border-sky-600/50 px-2 py-1 rounded-full hover:bg-sky-600 hover:text-white transition-all">👟 歩きたい</button>
-        <button onclick="selectMood('learn')" class="text-[10px] bg-emerald-600/20 text-emerald-400 border border-emerald-600/50 px-2 py-1 rounded-full hover:bg-emerald-600 hover:text-white transition-all">📚 学びたい</button>
+        <button onclick="selectMood('walk')" class="text-[10px] bg-sky-600/20 text-sky-400 border border-sky-600/50 px-2 py-1 rounded-full hover:bg-sky-600 hover:text-white transition-all">👟 散歩したい</button>
+        <button onclick="selectMood('kids')" class="text-[10px] bg-amber-600/20 text-amber-400 border border-amber-600/50 px-2 py-1 rounded-full hover:bg-amber-600 hover:text-white transition-all">🧒 子供と遊びたい</button>
+        <button onclick="selectMood('sports')" class="text-[10px] bg-emerald-600/20 text-emerald-400 border border-emerald-600/50 px-2 py-1 rounded-full hover:bg-emerald-600 hover:text-white transition-all">⚽ スポーツしたい</button>
     </div>
     <div class="chat-input-area">
-        <input type="text" id="user-input" class="chat-input" placeholder="挨拶や質問をどうぞ...">
+        <input type="text" id="user-input" class="chat-input" placeholder="公園のおすすめは？">
         <button id="send-btn" class="send-btn">送信</button>
     </div>
     <div class="px-4 pb-4 text-[10px] text-gray-500 text-center">
@@ -363,16 +378,86 @@
 <script src="js/common.js"></script>
 <script type="module" src="js/ai-concierge.js"></script>
 <script>
-    // スライダー
-    const slides = document.querySelectorAll('.slide-bg');
-    let currentSlide = 0;
-    setInterval(() => {
-        slides[currentSlide].classList.remove('active');
-        currentSlide = (currentSlide + 1) % slides.length;
-        slides[currentSlide].classList.add('active');
-    }, 5000);
+    // メイン背景スライダー & RSS統合
+    let rssItems = [];
+    let currentRssIdx = 0;
+    let currentHeroIdx = 0;
+    const heroImages = [
+        'images/maruyama.jpeg',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Omiya_Park_20220327_2.jpg/1200px-Omiya_Park_20220327_2.jpg',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Tokorozawa_Aviation_Memorial_Park_01.JPG/1200px-Tokorozawa_Aviation_Memorial_Park_01.JPG',
+        'https://upload.wikimedia.org/wikipedia/commons/4/4b/Musashi_Kyuryo_National_Government_Park_20111105.jpg'
+    ];
 
-    // ダークモード & サイカラー
+    async function initSliders() {
+        const sliderContainer = document.getElementById('main-slider');
+        heroImages.forEach((img, i) => {
+            const div = document.createElement('div');
+            div.className = `slide-bg ${i === 0 ? 'active' : ''}`;
+            div.style.backgroundImage = `url('${img}')`;
+            sliderContainer.prepend(div);
+        });
+
+        const heroSlides = document.querySelectorAll('.slide-bg');
+        setInterval(() => {
+            heroSlides[currentHeroIdx].classList.remove('active');
+            currentHeroIdx = (currentHeroIdx + 1) % heroSlides.length;
+            heroSlides[currentHeroIdx].classList.add('active');
+        }, 8000);
+
+        try {
+            const res = await fetch('js/slider-content.json');
+            rssItems = await res.json();
+            updateRssDisplay();
+            setInterval(nextRss, 10000);
+        } catch (e) {
+            console.error('RSS content load error:', e);
+            document.getElementById('rss-content').textContent = 'お知らせはありません';
+        }
+    }
+
+    function updateRssDisplay() {
+        if (!rssItems.length) return;
+        const item = rssItems[currentRssIdx];
+        const container = document.getElementById('rss-content');
+        container.style.opacity = 0;
+        setTimeout(() => {
+            container.innerHTML = `<a href="${item.link}" class="hover:underline">${item.title}</a>`;
+            container.style.opacity = 1;
+        }, 300);
+    }
+
+    function nextRss() {
+        currentRssIdx = (currentRssIdx + 1) % rssItems.length;
+        updateRssDisplay();
+    }
+
+    initSliders();
+
+    // 簡易マップ (大宮駅中心)
+    function initMiniMap() {
+        const miniMap = L.map('home-mini-map', {
+            zoomControl: false,
+            dragging: false,
+            touchZoom: false,
+            scrollWheelZoom: false,
+            doubleClickZoom: false
+        }).setView([35.9064, 139.6238], 15);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap'
+        }).addTo(miniMap);
+
+        const parkIcon = L.divIcon({
+            html: `<div style="background: #2E7D32; width: 20px; height: 20px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.3);"></div>`,
+            className: '', iconSize: [20, 20], iconAnchor: [10, 10]
+        });
+        L.marker([35.9224, 139.6338], { icon: parkIcon }).addTo(miniMap)
+            .bindPopup("<b>大宮公園</b><br>埼玉を代表する広大な公園").openPopup();
+    }
+    initMiniMap();
+
+    // ダークモード
     const darkBtn = document.getElementById('dark-mode-toggle');
     darkBtn.addEventListener('click', () => {
         document.body.classList.toggle('dark-mode');
@@ -384,57 +469,16 @@
         darkBtn.textContent = '☀️';
     }
 
-    function changeTheme(color) {
-        document.body.classList.remove('theme-blue', 'theme-green', 'theme-red');
-        document.body.classList.add(`theme-${color}`);
-        localStorage.setItem('saitama-theme', color);
-
-        // CSS変数の更新
-        const roots = {
-            blue: { main: 'var(--saitama-blue)', hover: '#008ba3' },
-            green: { main: '#10b981', hover: '#059669' },
-            red: { main: '#f43f5e', hover: '#e11d48' }
-        };
-        document.documentElement.style.setProperty('--saitama-blue', roots[color].main);
-        const titles = document.querySelectorAll('.section-title::after');
-        // ::afterはJSから直接触れないので、styleタグで上書きするのが一般的だが、ここではクラス切り替えで対応
-    }
-    const savedTheme = localStorage.getItem('saitama-theme');
-    if (savedTheme) changeTheme(savedTheme);
-
-    // カウントダウン (川越まつり: 毎年10月第3土日)
-    // クーポン演出 (スタンプコンプリート済みの場合)
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('reward') === 'true') {
-        setTimeout(() => {
-            const overlay = document.createElement('div');
-            overlay.className = "fixed inset-0 bg-black/80 flex items-center justify-center z-[10000] p-4";
-            overlay.innerHTML = `
-                <div class="bg-gradient-to-br from-yellow-400 to-amber-600 rounded-3xl p-8 max-w-md w-full text-center shadow-[0_0_50px_rgba(251,191,36,0.5)] border-4 border-white text-white">
-                    <div class="text-7xl mb-6">🏆</div>
-                    <h2 class="text-3xl font-bold mb-4">COMPLETE REWARD</h2>
-                    <p class="text-xl mb-8">スタンプ制覇おめでとう！<br>以下のコードを提携店舗で提示してね。</p>
-                    <div class="bg-white/20 backdrop-blur-md rounded-2xl py-6 mb-8">
-                        <p class="text-xs uppercase tracking-widest opacity-80 mb-2">Secret Code</p>
-                        <p class="text-4xl font-black tracking-tighter">SAITAMANIA_2026</p>
-                    </div>
-                    <button onclick="this.closest('.fixed').remove()" class="w-full bg-white text-amber-600 font-bold py-4 px-6 rounded-2xl hover:bg-opacity-90 transition-all">OK</button>
-                </div>
-            `;
-            document.body.appendChild(overlay);
-        }, 500);
-    }
-
-    const nextFestival = new Date('2026-10-17');
+    const nextFestival = new Date('2026-11-01');
     const today = new Date();
     const diff = Math.ceil((nextFestival - today) / (1000 * 60 * 60 * 24));
     document.getElementById('days-to-festival').textContent = diff > 0 ? diff : '開催中!';
 
     // 天気API & エフェクト
-    const WEATHER_API_KEY = '45c9c252b90b42c0972105021261702'; // 提供されたキー
     async function initWeather() {
         try {
-            const apiUrl = `https://api.weatherapi.com/v1/current.json?key=${WEATHER_API_KEY}&q=Saitama&lang=ja`;
+            const { CONFIG } = await import('./js/config.js');
+            const apiUrl = `https://api.weatherapi.com/v1/current.json?key=${CONFIG.WEATHER_API_KEY}&q=Saitama&lang=ja`;
             const res = await fetch(`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(apiUrl)}`);
             const data = await res.json();
 
@@ -455,7 +499,6 @@
     function startWeatherEffect(code) {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        // シンプルな雨のエフェクト (1063, 1180-1201 などが雨)
         if ([1063, 1183, 1186, 1189, 1192, 1195, 1240, 1243, 1246].includes(code)) {
             createRain();
         } else if ([1066, 1114, 1210, 1213, 1216, 1219, 1222, 1225, 1255, 1258].includes(code)) {
@@ -496,40 +539,40 @@
         if(document.getElementById('chat-messages').children.length === 0) addWelcomeMessage();
     }
 
+    function clearChat() {
+        const chatMessages = document.getElementById('chat-messages');
+        chatMessages.innerHTML = '';
+        addWelcomeMessage();
+    }
+
     // モーダル
     const modalContents = {
         about: `
-            <h2 class="text-2xl font-bold mb-4">彩の国ポータルについて</h2>
-            <p class="mb-4">「SAITAMA 2026」は、埼玉県の多彩な魅力を全世界に発信するために構築された次世代ポータルサイトです。</p>
-            <p>伝統的な蔵造りの町並みから、最新のAI農業、そして熱気溢れるスタジアムまで、私たちが愛する埼玉の「今」を凝縮してお届けします。</p>
+            <h2 class="text-2xl font-bold mb-4">SAITAMA PARKS について</h2>
+            <p class="mb-4">「SAITAMA PARKS 2026」は、埼玉県の豊かな自然と公園の魅力を発信するためのポータルサイトです。</p>
+            <p>日本初の飛行場跡地である航空公園から、広大な国営公園まで、埼玉には個性豊かな公園がたくさんあります。週末の行き先探しにぜひご活用ください。</p>
         `,
         access: `
-            <h2 class="text-2xl font-bold mb-4">アクセスガイド</h2>
+            <h2 class="text-2xl font-bold mb-4">公園へのアクセス</h2>
             <div class="space-y-4">
-                <p><strong>🚄 電車で:</strong> 東京駅から大宮駅まで新幹線で約25分、JR上野東京ラインで約30分。</p>
-                <p><strong>🚗 車で:</strong> 関越自動車道、東北自動車道、首都高速道路が県内を縦横に走り、都心からのドライブにも最適です。</p>
-                <p>埼玉県のハブである「大宮駅」を中心としたアクセスが便利です。</p>
-                <iframe src="https://www.google.com/maps?q=大宮駅&output=embed" class="w-full h-64 rounded-xl border-0"></iframe>
-                <p class="text-sm">各スポットの詳細な行き方は、個別の観光地ページをご確認ください。</p>
+                <p>埼玉県の公園は、多くが駅から徒歩圏内、または駅からバスでアクセス可能です。</p>
+                <p><strong>🚆 主要な公園の最寄り駅:</strong></p>
+                <ul class="list-disc list-inside">
+                    <li>大宮公園: 東武アーバンパークライン「大宮公園駅」徒歩10分</li>
+                    <li>所沢航空公園: 西武新宿線「航空公園駅」直結</li>
+                    <li>森林公園: 東武東上線「森林公園駅」からバス</li>
+                </ul>
             </div>
         `,
         copyright: `
             <h2 class="text-2xl font-bold mb-4">著作権・免責事項</h2>
-            <p class="mb-4">© 2026 埼玉県大紹介プロジェクト / SAITAMA RENEWAL 2026. All Rights Reserved.</p>
-            <p class="text-sm">当サイトに使用されている画像、文章、およびゲームコンテンツの無断転載・複製を禁じます。掲載情報は2026年時点のものであり、最新の情報と異なる場合があります。</p>
+            <p class="mb-4">© 2026 埼玉公園ポータルプロジェクト. All Rights Reserved.</p>
+            <p class="text-sm">当サイトの情報の正確性には万全を期しておりますが、利用者が当サイトの情報を用いて行う一切の行為について、責任を負うものではありません。</p>
         `,
         recruit: `
-            <h2 class="text-2xl font-bold mb-4 text-emerald-600">クーポン加盟店 大募集！</h2>
-            <p class="mb-4">当サイトのゲームコーナー（PLAY-HUB）で発行される「秘密のクーポンコード」を取り扱っていただける店舗・施設様を募集しています。</p>
-            <div class="bg-gray-100 p-4 rounded-xl mb-4">
-                <p class="font-bold mb-2">加盟のメリット:</p>
-                <ul class="list-disc list-inside text-sm">
-                    <li>サイト内での店舗紹介・誘導</li>
-                    <li>若年層・ファミリー層へのリーチ拡大</li>
-                    <li>地域コミュニティとの連携強化</li>
-                </ul>
-            </div>
-            <p class="text-center font-bold">お問い合わせ: recruit@saitama-2026-portal.jp</p>
+            <h2 class="text-2xl font-bold mb-4 text-emerald-600">公園内店舗・イベント 加盟募集</h2>
+            <p class="mb-4">公園内のカフェ、売店、期間限定イベントの情報を当サイトで紹介しませんか？</p>
+            <p class="text-center font-bold">お問い合わせ: parks-recruit@saitama-2026.jp</p>
         `
     };
     function openModal(type) {
@@ -545,16 +588,15 @@
 
 <script>
     function addWelcomeMessage() {
-        if(typeof addMessage === 'function') {
-            addMessage('model', "ﾋﾟﾎﾟｯ...System_Boot...完了...コードネーム『サイタマニア』起動...質問をどうぞ...");
-        } else {
-            // モジュールロード前
-            const chatMessages = document.getElementById('chat-messages');
-            const div = document.createElement('div');
-            div.className = "mb-4 text-left";
-            div.innerHTML = `<div class="inline-block p-3 rounded-2xl bg-gray-700 text-gray-200">ﾋﾟﾎﾟｯ...System_Boot...完了...コードネーム『サイタマニア』起動...質問をどうぞ...</div>`;
-            chatMessages.appendChild(div);
-        }
+        const chatMessages = document.getElementById('chat-messages');
+        const div = document.createElement('div');
+        div.className = "mb-4 text-left";
+        div.innerHTML = `
+            <div class="text-[10px] text-gray-500 mb-1">AIサイタマニアくん</div>
+            <div class="inline-block p-3 rounded-2xl bg-gray-700 text-gray-200">ﾋﾟﾎﾟｯ...System_Boot...完了。公園コンシェルジュ『サイタマニア』起動した。埼玉の公園について何でも聞いてほしい。</div>
+        `;
+        chatMessages.appendChild(div);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 </script>
 </body>
