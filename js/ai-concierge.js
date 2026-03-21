@@ -53,12 +53,12 @@ function updateStatus(text) {
     if (statusText) statusText.textContent = `Status: ${text}`;
 }
 
-async function handleChat() {
-    const msg = userInput.value.trim();
+async function handleChat(overrideMsg = null) {
+    const msg = overrideMsg || userInput.value.trim();
     if (!msg) return;
 
     addMessage('user', msg);
-    userInput.value = '';
+    if (!overrideMsg) userInput.value = '';
 
     if (!engine) {
         const loadingMsg = addMessage('model', "ﾋﾟﾎﾟｯ...AIエンジンが準備中である。バックグラウンドでシステムをロードしている...少々待たれよ。 (0%)");
@@ -140,11 +140,17 @@ function addMessage(role, text) {
 function fallbackResponse(msg) {
     let response = "ﾋﾟﾋﾟｯ...簡易スキャン完了。";
     if(msg.match(/腹|食べ|カフェ|うどん/)) {
-        response += "美味しいお店なら『自然に癒やされる。埼玉の森と川のカフェ』記事を推奨する。";
-    } else if(msg.match(/歩|散策|川越/)) {
-        response += "歴史散策なら『川越の蔵造りの町並み』ページが最適だ。";
+        response += "お腹が空いたなら、美味しいお店の情報が詰まった『カフェ』や『農業』の記事を推奨する。";
+    } else if(msg.match(/歩|散歩|ウォーキング/)) {
+        response += "散歩なら『大宮公園』や『所沢航空記念公園』の広大な敷地がおすすめである。";
+    } else if(msg.match(/子供|遊び|遊具/)) {
+        response += "子供連れなら、巨大遊具のある『森林公園』や、小動物園のある『丸山公園』が最適だ。";
+    } else if(msg.match(/学|歴史|勉強/)) {
+        response += "歴史を学びたいなら『大宮公園』の博物館や、『所沢航空記念公園』の記念館、または『聖地巡礼』の記事を推奨する。";
+    } else if(msg.match(/スポーツ|サッカー/)) {
+        response += "スポーツを楽しむなら、競技場が充実している『秋ヶ瀬公園』や『大宮公園』が良いだろう。";
     } else {
-        response += "埼玉には多彩な魅力がある。まずは主な見どころページをチェックしてほしい。";
+        response += "埼玉には多彩な魅力がある。公園を探すページやニュース一覧をチェックしてほしい。";
     }
     addMessage('model', response);
 }
@@ -177,10 +183,11 @@ window.selectMood = function(mood) {
     const moodMap = {
         'walk': '静かに散歩ができるおすすめの公園は？',
         'kids': '子供が思いっきり遊べる遊具の充実した公園を教えて。',
-        'sports': 'サッカーやジョギングなどのスポーツができる公園はどこ？'
+        'sports': 'サッカーやジョギングなどのスポーツができる公園はどこ？',
+        'learn': '埼玉の歴史や文化を学べるスポットはどこ？',
+        'hungry': 'お腹が空いた。埼玉のおいしいものが知りたい。'
     };
-    userInput.value = moodMap[mood];
-    handleChat();
+    handleChat(moodMap[mood]);
 };
 
 // グローバルに公開

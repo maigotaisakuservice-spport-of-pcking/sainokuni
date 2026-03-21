@@ -10,13 +10,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/common.css">
     <style>
-        body {
-            font-family: 'Noto Sans JP', sans-serif;
-            background-color: #f9f9f9;
+        .header-main {
+            background: var(--header-bg);
+            backdrop-filter: blur(10px);
+            color: #ecf0f1;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0; width: 100%; z-index: 1000;
+            display: flex; justify-content: space-between; align-items: center;
         }
         .note-container {
             max-width: 720px; /* note-like content width */
             margin: 0 auto;
+            background-color: var(--card-bg);
         }
         .article-title {
             font-size: 2.5rem;
@@ -92,20 +98,51 @@
     <div id="reading-progress-container"><div id="reading-progress-bar"></div></div>
 
     <!-- ヘッダー -->
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-10">
-        <div class="note-container px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center gap-4">
-                <a href="../index.html" class="flex items-center gap-2 text-gray-600 hover:text-blue-500 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-                    <span class="font-bold text-lg hidden sm:inline">ホーム</span>
-                </a>
+    <header class="header-main">
+        <div class="flex items-center gap-4">
+            <button onclick="toggleMenu()" class="text-2xl md:hidden">☰</button>
+            <h1 class="text-xl font-bold tracking-tighter" style="font-family: 'Mochiy Pop One';"><a href="../index.html" style="color: inherit; text-decoration: none;">SAITAMA PARKS</a></h1>
+            <div class="tts-control hidden md:flex">
+                <span class="text-sm">アクセシビリティ</span>
+                <button onclick="readPageText()" class="hover:text-emerald-400">🔊 音声読み上げ</button>
             </div>
-            <button id="follow-button-header" class="follow-button bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full text-sm transition-colors">フォロー</button>
         </div>
+        <nav class="hidden md:flex items-center gap-6">
+            <a id="coupon-menu-item" href="../index.html?reward=true" class="hidden text-yellow-400 font-bold animate-pulse" title="クーポン獲得！">💎 特典</a>
+            <a href="../news.html" class="hover:text-emerald-400 font-bold">NEWS</a>
+            <a href="../destinations/maruyama.html" class="hover:text-emerald-400 font-bold">公園を探す</a>
+            <a href="../map.html" class="hover:text-emerald-400 font-bold">マップ</a>
+            <a href="../saitama-mini-game.html" class="hover:text-emerald-400 font-bold">ゲーム</a>
+            <a href="../gallery.html" class="hover:text-emerald-400 font-bold">ギャラリー</a>
+            <button onclick="toggleTheme()" class="theme-toggle-btn text-xl" id="theme-toggle-icon">🌙</button>
+        </nav>
     </header>
 
+    <!-- モバイルメニュー -->
+    <div id="menu-overlay" class="menu-overlay" onclick="toggleMenu()"></div>
+    <div id="menu-content" class="menu-content">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-xl font-bold" style="font-family: 'Mochiy Pop One';">MENU</h2>
+                <button onclick="toggleMenu()" class="text-2xl">&times;</button>
+            </div>
+            <nav class="flex flex-col gap-6 text-lg">
+                <a href="../index.html" class="flex items-center gap-3">🏠 ホーム</a>
+                <a href="../news.html" class="flex items-center gap-3">📰 NEWS</a>
+                <a href="../destinations/maruyama.html" class="flex items-center gap-3">🌳 公園を探す</a>
+                <a href="../map.html" class="flex items-center gap-3">🗺️ マップ</a>
+                <a href="../saitama-mini-game.html" class="flex items-center gap-3">🎮 ゲーム</a>
+                <a href="../gallery.html" class="flex items-center gap-3">🖼️ ギャラリー</a>
+                <hr class="border-slate-700">
+                <button onclick="toggleTheme()" class="flex items-center gap-3 w-full text-left">
+                    <span id="theme-toggle-icon-mobile">🌙</span> テーマ切り替え
+                </button>
+            </nav>
+        </div>
+    </div>
+
     <!-- メインコンテンツ -->
-    <main class="note-container px-4 py-12 md:py-16">
+    <main class="note-container px-4 py-24 md:py-32">
         <article>
             <!-- ハッシュタグ -->
             <div class="mb-4">
@@ -151,7 +188,7 @@
                     カメラを片手に、お気に入りのシーンを追体験してみませんか？
                 </p>
 
-                <img src="../images/kawagoe.jpg" alt="川越のイメージ" class="w-full h-auto object-cover">
+                <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=2070&auto=format&fit=crop" alt="川越のイメージ" class="w-full h-auto object-cover">
 
                 <h2>#01 川越エリア：情緒あふれる小江戸の町並み</h2>
                 <p>

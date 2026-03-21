@@ -9,10 +9,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/common.css">
     <style>
-        body { font-family: 'Noto Sans JP', sans-serif; margin: 0; padding: 0; background: #fff; color: #333; line-height: 1.8; font-size: clamp(14px, 2vw, 18px); }
-        header { background: #2e7d32; color: #ecf0f1; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
-        header h1 { margin: 0; font-size: 1.2rem; }
-        header a { color: #ecf0f1; text-decoration: none; font-weight: 700; }
+        .header-main {
+            background: var(--header-bg);
+            backdrop-filter: blur(10px);
+            color: #ecf0f1;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0; width: 100%; z-index: 1000;
+            display: flex; justify-content: space-between; align-items: center;
+        }
         main { max-width: 900px; margin: 0 auto 4rem; padding: 0 1.5rem; }
         section { margin-top: 3rem; }
         h2 { font-size: 2rem; border-bottom: 4px solid var(--saitama-green); padding-bottom: 0.5rem; margin-bottom: 1.5rem; }
@@ -27,46 +32,106 @@
 </head>
 <body>
 <div id="reading-progress-container"><div id="reading-progress-bar"></div></div>
-<header>
-    <h1><a href="../index.html">SAITAMA PARKS</a></h1>
-    <div class="flex items-center gap-4"><button class="tts-btn" onclick="readPageText()">🔊 音声読み上げ</button><button class="hamburger-btn" onclick="toggleMenu()">☰</button></div>
+<header class="header-main">
+    <div class="flex items-center gap-4">
+        <button onclick="toggleMenu()" class="text-2xl md:hidden">☰</button>
+        <h1 class="text-xl font-bold tracking-tighter" style="font-family: 'Mochiy Pop One';"><a href="../index.html" style="color: inherit; text-decoration: none;">SAITAMA PARKS</a></h1>
+        <div class="tts-control hidden md:flex">
+            <span class="text-sm">アクセシビリティ</span>
+            <button onclick="readPageText()" class="hover:text-emerald-400">🔊 音声読み上げ</button>
+        </div>
+    </div>
+    <nav class="hidden md:flex items-center gap-6">
+        <div class="flex items-center gap-2 px-3 border-r border-white/20 mr-2">
+            <button onclick="setSaicolor('green')" class="saicolor-btn saicolor-green" title="緑（自然）"></button>
+            <button onclick="setSaicolor('blue')" class="saicolor-btn saicolor-blue" title="青（水・空）"></button>
+            <button onclick="setSaicolor('red')" class="saicolor-btn saicolor-red" title="赤（情熱）"></button>
+        </div>
+        <a id="coupon-menu-item" href="../index.html?reward=true" class="hidden text-yellow-400 font-bold animate-pulse" title="クーポン獲得！">💎 特典</a>
+        <a href="../news.html" class="hover:text-emerald-400 font-bold">NEWS</a>
+        <a href="maruyama.html" class="hover:text-emerald-400 font-bold">公園を探す</a>
+        <a href="../map.html" class="hover:text-emerald-400 font-bold">マップ</a>
+        <a href="../saitama-mini-game.html" class="hover:text-emerald-400 font-bold">ゲーム</a>
+        <a href="../gallery.html" class="hover:text-emerald-400 font-bold">ギャラリー</a>
+        <button onclick="toggleTheme()" class="theme-toggle-btn text-xl" id="theme-toggle-icon">🌙</button>
+    </nav>
 </header>
+
+<!-- モバイルメニュー -->
 <div id="menu-overlay" class="menu-overlay" onclick="toggleMenu()"></div>
 <div id="menu-content" class="menu-content">
-    <nav>
-        <div class="menu-title">Main Menu</div>
-        <ul class="menu-list">
-            <li><a href="../index.html">🏠 Home</a></li>
-            <li><a href="../map.html">🗺️ Map</a></li>
-            <li><a href="../saitama-mini-game.html">🎮 Game Hub</a></li>
-        </ul>
-        <div class="menu-title">Famous Parks</div>
-        <ul class="menu-list">
-            <li><a href="omiya_park.html">🌳 大宮公園</a></li>
-            <li><a href="tokorozawa_park.html">✈️ 所沢航空公園</a></li>
-            <li><a href="shinrin_park.html">🚲 森林公園</a></li>
-            <li><a href="akigase_park.html">🦅 秋ヶ瀬公園</a></li>
-            <li><a href="maruyama.html">🐿️ 丸山公園</a></li>
-        </ul>
-    </nav>
+    <div class="p-6">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-xl font-bold" style="font-family: 'Mochiy Pop One';">MENU</h2>
+            <button onclick="toggleMenu()" class="text-2xl">&times;</button>
+        </div>
+        <nav class="flex flex-col gap-6 text-lg">
+            <a href="../index.html" class="flex items-center gap-3">🏠 ホーム</a>
+            <a href="../news.html" class="flex items-center gap-3">📰 NEWS</a>
+            <a href="maruyama.html" class="flex items-center gap-3">🌳 公園を探す</a>
+            <a href="../map.html" class="flex items-center gap-3">🗺️ マップ</a>
+            <a href="../saitama-mini-game.html" class="flex items-center gap-3">🎮 ゲーム</a>
+            <a href="../gallery.html" class="flex items-center gap-3">🖼️ ギャラリー</a>
+            <hr class="border-slate-700">
+            <div class="flex items-center justify-around py-2">
+                <button onclick="setSaicolor('green')" class="saicolor-btn saicolor-green"></button>
+                <button onclick="setSaicolor('blue')" class="saicolor-btn saicolor-blue"></button>
+                <button onclick="setSaicolor('red')" class="saicolor-btn saicolor-red"></button>
+            </div>
+            <button onclick="toggleTheme()" class="flex items-center gap-3 w-full text-left">
+                <span id="theme-toggle-icon-mobile">🌙</span> ダークモード切替
+            </button>
+        </nav>
+    </div>
 </div>
-<div class="hero-image-container">
+<div class="hero-image-container mt-[60px]">
     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Tokorozawa_Aviation_Memorial_Park_01.JPG/1200px-Tokorozawa_Aviation_Memorial_Park_01.JPG" alt="所沢航空公園">
     <h2 class="hero-title">所沢航空記念公園</h2>
 </div>
 <main>
     <section>
         <h2>日本の航空発祥の地に広がる記念公園</h2>
-        <p>日本で初めての飛行場が建設された場所として知られ、現在は広大な県営公園となっています。園内には航空発祥記念館もあり、空の歴史を学ぶことができます。</p>
+        <p>明治44年、日本で最初の飛行場が誕生した記念すべき場所です。現在は約50ヘクタールの広大な敷地を持つ県営公園として親しまれています。空を身近に感じられる工夫が随所に施されており、歴史とレジャーが融合したユニークな公園です。</p>
         <div class="content-card">
             <h3>🛩️ 航空発祥記念館と実物機</h3>
-            <p>記念館には貴重な機体が展示されているほか、園内にも実物の飛行機が展示されており、航空ファンだけでなくファミリーにも人気です。</p>
+            <p>記念館には本物の飛行機やヘリコプターが展示されているほか、フライトシミュレーターなどの体験コーナーも充実。公園のシンボルであるYS-11中型旅客機の前は絶好のフォトスポットです。</p>
         </div>
         <div class="content-card">
             <h3>🚶 充実のウォーキング・ドッグラン</h3>
-            <p>美しく整備された並木道や芝生広場はウォーキングやジョギングに最適。大型・中小型犬に分かれたドッグランもあり、ペット連れでも一日中楽しめます。</p>
+            <p>美しく整備された並木道や芝生広場はウォーキングやジョギングに最適。大型・中小型犬に分かれたドッグランもあり、ペット連れでも一日中楽しめます。週末には多くの愛犬家が集まる賑やかなスポットです。</p>
         </div>
     </section>
+
+    <section>
+        <h2>✨ 所沢航空記念公園の楽しみ方</h2>
+        <div class="grid md:grid-cols-2 gap-6">
+            <div class="bg-white/50 p-6 rounded-2xl shadow-sm">
+                <h3 class="mt-0">🍵 彩翔亭（さいしょうてい）での一服</h3>
+                <p class="text-sm">本格的な和室と美しい日本庭園を備えた茶室です。季節の和菓子とお抹茶を、庭を眺めながらゆっくりと楽しむことができます。</p>
+            </div>
+            <div class="bg-white/50 p-6 rounded-2xl shadow-sm">
+                <h3 class="mt-0">🎭 野外ステージとイベント</h3>
+                <p class="text-sm">音楽ライブやフリーマーケット、市民フェスティバルなど、一年を通じて多種多様なイベントが開催されます。</p>
+            </div>
+            <div class="bg-white/50 p-6 rounded-2xl shadow-sm">
+                <h3 class="mt-0">🧺 ピクニックと水遊び</h3>
+                <p class="text-sm">広大な芝生広場ではお弁当を広げる家族連れが多数。夏場には「むさし野の池」周辺で子供たちが楽しく水遊びをする光景も見られます。</p>
+            </div>
+            <div class="bg-white/50 p-6 rounded-2xl shadow-sm">
+                <h3 class="mt-0">🎾 多彩なスポーツ施設</h3>
+                <p class="text-sm">テニスコート、野球場、バスケットボールコートなど、運動施設も充実。仕事帰りや休日に汗を流す人々で賑わいます。</p>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>💡 訪問のヒント</h2>
+        <div class="content-card" style="background: #f3e5f5; border-left: 5px solid #9c27b0;">
+            <p><strong>アクセス抜群：</strong> 駅の改札を出て目の前が公園！これほどアクセスが良い大規模公園は珍しく、思い立ったらすぐに行けるのが魅力です。</p>
+            <p><strong>お土産：</strong> 記念館のショップには航空グッズが満載。航空機ファンならずとも欲しくなるアイテムがたくさんあります。</p>
+        </div>
+    </section>
+
     <section>
         <h2>アクセス・基本情報</h2>
         <ul class="info-list">
@@ -103,7 +168,18 @@
         </div>
     </section>
 </main>
-<footer>&copy; 2026 埼玉公園ガイドポータル</footer>
+<footer>
+    <div class="max-w-6xl mx-auto">
+        <h2 class="text-xl font-bold mb-4" style="font-family: 'Mochiy Pop One';">SAITAMA PARKS</h2>
+        <p class="text-sm opacity-80">© 2026 埼玉県公園ガイドポータル - 自然と共に生きる。</p>
+        <div class="footer-links mt-6 flex justify-center gap-6 text-sm flex-wrap">
+            <a onclick="openModal('about')" class="hover:underline cursor-pointer">サイトについて</a>
+            <a onclick="openModal('access')" class="hover:underline cursor-pointer">アクセス</a>
+            <a onclick="openModal('copyright')" class="hover:underline cursor-pointer">著作権</a>
+            <a onclick="openModal('recruit')" class="hover:underline cursor-pointer text-emerald-400 font-bold">加盟店募集</a>
+        </div>
+    </div>
+</footer>
 <button onclick="scrollToTop()" class="go-to-top-button" aria-label="トップへ戻る">↑</button>
 <script src="../js/common.js"></script>
 <script>document.addEventListener('DOMContentLoaded', () => { updateStampButton('tokorozawa_park'); });</script>

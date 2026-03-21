@@ -1,4 +1,37 @@
 
+// ダークモード・Saicolor管理
+function initTheme() {
+    const savedMode = localStorage.getItem('saitama-mode') || 'light';
+    const savedColor = localStorage.getItem('saitama-color') || 'green';
+
+    document.documentElement.setAttribute('data-mode', savedMode);
+    document.documentElement.setAttribute('data-theme', savedColor);
+
+    updateThemeIcon(savedMode);
+}
+
+function toggleTheme() {
+    const currentMode = document.documentElement.getAttribute('data-mode');
+    const newMode = currentMode === 'dark' ? 'light' : 'dark';
+
+    document.documentElement.setAttribute('data-mode', newMode);
+    localStorage.setItem('saitama-mode', newMode);
+    updateThemeIcon(newMode);
+}
+
+function setSaicolor(color) {
+    document.documentElement.setAttribute('data-theme', color);
+    localStorage.setItem('saitama-color', color);
+}
+
+function updateThemeIcon(mode) {
+    const themeIcon = document.getElementById('theme-toggle-icon');
+    const themeIconMobile = document.getElementById('theme-toggle-icon-mobile');
+    const icon = mode === 'dark' ? '☀️' : '🌙';
+    if (themeIcon) themeIcon.textContent = icon;
+    if (themeIconMobile) themeIconMobile.textContent = icon;
+}
+
 // SNSシェア機能
 function shareSNS(platform) {
     const url = encodeURIComponent(window.location.href);
@@ -25,25 +58,28 @@ function shareSNS(platform) {
 // 読了インジケーターの更新
 window.addEventListener('scroll', () => {
     const progressBar = document.getElementById('reading-progress-bar');
-    if (!progressBar) return;
-
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    const progress = (scrollTop / scrollHeight) * 100;
-    progressBar.style.width = progress + '%';
+    if (progressBar) {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const progress = (scrollTop / scrollHeight) * 100;
+        progressBar.style.width = progress + '%';
+    }
 
     // FAB の表示制御
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
     const goTopBtn = document.querySelector('.go-to-top-button');
-    if (scrollTop > 500) {
-        goTopBtn.classList.add('visible');
-        goTopBtn.style.display = 'flex';
-    } else {
-        goTopBtn.classList.remove('visible');
-        setTimeout(() => {
-            if (!goTopBtn.classList.contains('visible')) {
-                goTopBtn.style.display = 'none';
-            }
-        }, 300);
+    if (goTopBtn) {
+        if (scrollTop > 500) {
+            goTopBtn.classList.add('visible');
+            goTopBtn.style.display = 'flex';
+        } else {
+            goTopBtn.classList.remove('visible');
+            setTimeout(() => {
+                if (!goTopBtn.classList.contains('visible')) {
+                    goTopBtn.style.display = 'none';
+                }
+            }, 300);
+        }
     }
 });
 
@@ -67,7 +103,6 @@ function handleStamp(spotId) {
 
         if (collectedCount === totalSpots) {
             localStorage.setItem('saitama-coupon-unlocked', 'true');
-            // クーポンメニューを表示
             const couponLink = document.getElementById('coupon-menu-item');
             if (couponLink) couponLink.classList.remove('hidden');
         }
@@ -83,7 +118,7 @@ function showStampDialog(count, total) {
         rewardHtml = `
             <div class="mt-6 p-4 bg-yellow-50 border-2 border-yellow-400 rounded-2xl animate-bounce">
                 <p class="text-yellow-800 font-bold mb-2">🎉 コンプリート達成！</p>
-                <p class="text-sm text-yellow-700 mb-4">秘密のクーポンが発行されました。ハンバーガーメニューからいつでも確認できます。</p>
+                <p class="text-sm text-yellow-700 mb-4">秘密のクーポンが発行されました。</p>
                 <a href="../saitama-mini-game.html" class="inline-block bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-6 rounded-full transition-colors">ゲームセンターで使う</a>
             </div>
         `;
@@ -115,16 +150,14 @@ function updateStampButton(spotId) {
     }
 }
 
-// 読み上げ機能の強化（共通化）
+// 読み上げ機能
 function readPageText() {
     if (window.speechSynthesis.speaking) {
         window.speechSynthesis.cancel();
     } else {
-        // mainタグがない場合はbody全体から取得
         const mainEl = document.querySelector('main') || document.body;
-        // スクリプトやスタイル、メニューなどを除いたテキストのみを取得
         const clone = mainEl.cloneNode(true);
-        const scripts = clone.querySelectorAll('script, style, #menu-content, header, footer');
+        const scripts = clone.querySelectorAll('script, style, #menu-content, header, footer, .theme-toggle-btn');
         scripts.forEach(s => s.remove());
 
         const textToRead = clone.innerText || clone.textContent;
@@ -132,7 +165,6 @@ function readPageText() {
         utterance.lang = 'ja-JP';
         utterance.rate = 1.0;
 
-        // ブラウザによっては初回クリック時に発音しない場合があるため、明示的にresumeを試みる
         window.speechSynthesis.resume();
         window.speechSynthesis.speak(utterance);
     }
@@ -142,12 +174,72 @@ function readPageText() {
 function toggleMenu() {
     const menu = document.getElementById('menu-content');
     const overlay = document.getElementById('menu-overlay');
-    menu.classList.toggle('active');
-    overlay.classList.toggle('active');
+    if (menu && overlay) {
+        menu.classList.toggle('active');
+        overlay.classList.toggle('active');
+    }
+}
+
+// モーダル機能
+const modalContents = {
+    about: `
+        <h2 class="text-2xl font-bold mb-4">SAITAMA PARKS について</h2>
+        <p class="mb-4">「SAITAMA PARKS 2026」は、埼玉県の豊かな自然と公園の魅力を発信するためのポータルサイトです。</p>
+        <p>日本初の飛行場跡地である航空公園から、広大な国営公園まで、埼玉には個性豊かな公園がたくさんあります。週末の行き先探しにぜひご活用ください。</p>
+    `,
+    access: `
+        <h2 class="text-2xl font-bold mb-4">公園へのアクセス</h2>
+        <div class="space-y-4">
+            <p>埼玉県の公園は、多くが駅から徒歩圏内、または駅からバスでアクセス可能です。</p>
+            <p><strong>🚆 主要な公園の最寄り駅:</strong></p>
+            <ul class="list-disc list-inside">
+                <li>大宮公園: 東武アーバンパークライン「大宮公園駅」徒歩10分</li>
+                <li>所沢航空公園: 西武新宿線「航空公園駅」直結</li>
+                <li>森林公園: 東武東上線「森林公園駅」からバス</li>
+            </ul>
+        </div>
+    `,
+    copyright: `
+        <h2 class="text-2xl font-bold mb-4">著作権・免責事項</h2>
+        <p class="mb-4">© 2026 埼玉公園ポータルプロジェクト. All Rights Reserved.</p>
+        <p class="text-sm">当サイトの情報の正確性には万全を期しておりますが、利用者が当サイトの情報を用いて行う一切の行為について、責任を負うものではありません。</p>
+    `,
+    recruit: `
+        <h2 class="text-2xl font-bold mb-4">公園内店舗・イベント 加盟募集</h2>
+        <p class="mb-4">公園内のカフェ、売店、期間限定イベントの情報を当サイトで紹介しませんか？</p>
+        <p class="text-center font-bold">お問い合わせ: parks-recruit@saitama-2026.jp</p>
+    `
+};
+
+function openModal(type) {
+    let modal = document.getElementById('info-modal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'info-modal';
+        modal.className = 'modal';
+        modal.onclick = (e) => { if(e.target === modal) closeModal(); };
+        modal.innerHTML = `
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <span class="modal-close" onclick="closeModal()">&times;</span>
+                <div id="modal-body"></div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+
+    const body = document.getElementById('modal-body');
+    if (body) body.innerHTML = modalContents[type] || 'コンテンツがありません。';
+    modal.style.display = 'flex';
+}
+
+function closeModal() {
+    const modal = document.getElementById('info-modal');
+    if (modal) modal.style.display = 'none';
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    // クーポン解除状態の確認
+    initTheme();
+
     const couponLink = document.getElementById('coupon-menu-item');
     if (couponLink) {
         const isUnlocked = localStorage.getItem('saitama-coupon-unlocked') === 'true';

@@ -8,8 +8,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/common.css">
     <style>
-        body { font-family: 'Noto Sans JP', sans-serif; overflow: hidden; background: #e0f2f1; }
+        body { font-family: 'Noto Sans JP', sans-serif; overflow: hidden; }
         canvas { display: block; background: linear-gradient(#4fc3f7, #0288d1); margin: 0 auto; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
         .ui-layer { position: absolute; inset: 0; pointer-events: none; padding: 20px; }
         .btn-action { pointer-events: auto; background: #ff5722; color: white; border-radius: 50%; width: 80px; height: 80px; display: flex; items: center; justify-content: center; font-weight: bold; border: 4px solid #fbe9e7; box-shadow: 0 4px 10px rgba(0,0,0,0.3); cursor: pointer; user-select: none; }
@@ -40,6 +41,7 @@
         </div>
     </div>
 
+    <script src="js/common.js"></script>
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
@@ -165,7 +167,7 @@
                 ctx.fillText(`最終スコア: ${score}`, canvas.width/2, canvas.height/2 + 30);
                 if (score >= 2000) {
                     ctx.fillStyle = '#ffeb3b';
-                    ctx.fillText('クーポン獲得！: SAITAMANIA_2026', canvas.width/2, canvas.height/2 + 80);
+                    ctx.fillText('クーポン獲得！: SAITAMA2026KEBR', canvas.width/2, canvas.height/2 + 80);
                 }
             }
         }

@@ -9,10 +9,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/common.css">
     <style>
-        body { font-family: 'Noto Sans JP', sans-serif; margin: 0; padding: 0; background: #fff; color: #333; line-height: 1.8; font-size: clamp(14px, 2vw, 18px); }
-        header { background: #2e7d32; color: #ecf0f1; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
-        header h1 { margin: 0; font-size: 1.2rem; }
-        header a { color: #ecf0f1; text-decoration: none; font-weight: 700; }
+        .header-main {
+            background: var(--header-bg);
+            backdrop-filter: blur(10px);
+            color: #ecf0f1;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0; width: 100%; z-index: 1000;
+            display: flex; justify-content: space-between; align-items: center;
+        }
         main { max-width: 900px; margin: 0 auto 4rem; padding: 0 1.5rem; }
         section { margin-top: 3rem; }
         h2 { font-size: 2rem; border-bottom: 4px solid var(--saitama-green); padding-bottom: 0.5rem; margin-bottom: 1.5rem; }
@@ -27,46 +32,106 @@
 </head>
 <body>
 <div id="reading-progress-container"><div id="reading-progress-bar"></div></div>
-<header>
-    <h1><a href="../index.html">SAITAMA PARKS</a></h1>
-    <div class="flex items-center gap-4"><button class="tts-btn" onclick="readPageText()">🔊 音声読み上げ</button><button class="hamburger-btn" onclick="toggleMenu()">☰</button></div>
+<header class="header-main">
+    <div class="flex items-center gap-4">
+        <button onclick="toggleMenu()" class="text-2xl md:hidden">☰</button>
+        <h1 class="text-xl font-bold tracking-tighter" style="font-family: 'Mochiy Pop One';"><a href="../index.html" style="color: inherit; text-decoration: none;">SAITAMA PARKS</a></h1>
+        <div class="tts-control hidden md:flex">
+            <span class="text-sm">アクセシビリティ</span>
+            <button onclick="readPageText()" class="hover:text-emerald-400">🔊 音声読み上げ</button>
+        </div>
+    </div>
+    <nav class="hidden md:flex items-center gap-6">
+        <div class="flex items-center gap-2 px-3 border-r border-white/20 mr-2">
+            <button onclick="setSaicolor('green')" class="saicolor-btn saicolor-green" title="緑（自然）"></button>
+            <button onclick="setSaicolor('blue')" class="saicolor-btn saicolor-blue" title="青（水・空）"></button>
+            <button onclick="setSaicolor('red')" class="saicolor-btn saicolor-red" title="赤（情熱）"></button>
+        </div>
+        <a id="coupon-menu-item" href="../index.html?reward=true" class="hidden text-yellow-400 font-bold animate-pulse" title="クーポン獲得！">💎 特典</a>
+        <a href="../news.html" class="hover:text-emerald-400 font-bold">NEWS</a>
+        <a href="maruyama.html" class="hover:text-emerald-400 font-bold">公園を探す</a>
+        <a href="../map.html" class="hover:text-emerald-400 font-bold">マップ</a>
+        <a href="../saitama-mini-game.html" class="hover:text-emerald-400 font-bold">ゲーム</a>
+        <a href="../gallery.html" class="hover:text-emerald-400 font-bold">ギャラリー</a>
+        <button onclick="toggleTheme()" class="theme-toggle-btn text-xl" id="theme-toggle-icon">🌙</button>
+    </nav>
 </header>
+
+<!-- モバイルメニュー -->
 <div id="menu-overlay" class="menu-overlay" onclick="toggleMenu()"></div>
 <div id="menu-content" class="menu-content">
-    <nav>
-        <div class="menu-title">Main Menu</div>
-        <ul class="menu-list">
-            <li><a href="../index.html">🏠 Home</a></li>
-            <li><a href="../map.html">🗺️ Map</a></li>
-            <li><a href="../saitama-mini-game.html">🎮 Game Hub</a></li>
-        </ul>
-        <div class="menu-title">Famous Parks</div>
-        <ul class="menu-list">
-            <li><a href="omiya_park.html">🌳 大宮公園</a></li>
-            <li><a href="tokorozawa_park.html">✈️ 所沢航空公園</a></li>
-            <li><a href="shinrin_park.html">🚲 森林公園</a></li>
-            <li><a href="akigase_park.html">🦅 秋ヶ瀬公園</a></li>
-            <li><a href="maruyama.html">🐿️ 丸山公園</a></li>
-        </ul>
-    </nav>
+    <div class="p-6">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-xl font-bold" style="font-family: 'Mochiy Pop One';">MENU</h2>
+            <button onclick="toggleMenu()" class="text-2xl">&times;</button>
+        </div>
+        <nav class="flex flex-col gap-6 text-lg">
+            <a href="../index.html" class="flex items-center gap-3">🏠 ホーム</a>
+            <a href="../news.html" class="flex items-center gap-3">📰 NEWS</a>
+            <a href="maruyama.html" class="flex items-center gap-3">🌳 公園を探す</a>
+            <a href="../map.html" class="flex items-center gap-3">🗺️ マップ</a>
+            <a href="../saitama-mini-game.html" class="flex items-center gap-3">🎮 ゲーム</a>
+            <a href="../gallery.html" class="flex items-center gap-3">🖼️ ギャラリー</a>
+            <hr class="border-slate-700">
+            <div class="flex items-center justify-around py-2">
+                <button onclick="setSaicolor('green')" class="saicolor-btn saicolor-green"></button>
+                <button onclick="setSaicolor('blue')" class="saicolor-btn saicolor-blue"></button>
+                <button onclick="setSaicolor('red')" class="saicolor-btn saicolor-red"></button>
+            </div>
+            <button onclick="toggleTheme()" class="flex items-center gap-3 w-full text-left">
+                <span id="theme-toggle-icon-mobile">🌙</span> ダークモード切替
+            </button>
+        </nav>
+    </div>
 </div>
-<div class="hero-image-container">
+<div class="hero-image-container mt-[60px]">
     <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Musashi_Kyuryo_National_Government_Park_20111105.jpg" alt="森林公園">
     <h2 class="hero-title">国営武蔵丘陵森林公園</h2>
 </div>
 <main>
     <section>
         <h2>日本初の国営公園！広大な丘陵地の自然</h2>
-        <p>比企郡滑川町から熊谷市にまたがる広大な丘陵地に位置する、日本で初めての国営公園です。東京ドーム65個分という驚異的な広さを誇ります。</p>
+        <p>比企郡滑川町から熊谷市にまたがる広大な丘陵地に位置する、日本で初めての国営公園です。東京ドーム約65個分（約304ヘクタール）という驚異的な広さを誇ります。雑木林や湿地、池などの多様な自然環境が残されており、四季を通じて自然の美しさを堪能できます。</p>
         <div class="content-card">
             <h3>🚲 全長17kmのサイクリングコース</h3>
-            <p>起伏に富んだコースはサイクリングに最適。爽快な風を感じながら園内を移動できます。レンタサイクルも充実しています。</p>
+            <p>園内を一周するように整備されたサイクリングコースは、起伏に富んでおり爽快感抜群！レンタサイクルも充実していますが、自分の愛車を持ち込んで走る本格派ライダーも多いスポットです。</p>
         </div>
         <div class="content-card">
             <h3>🏰 日本最大級の巨大遊具「ポンポコ山」</h3>
-            <p>日本最大級のエアートランポリン「ポンポコ山」や、アスレチックコースなど、体を動かして遊べるスポットが満載です。</p>
+            <p>日本最大級のエアートランポリン「ポンポコ山」は、子供たちの憧れ！他にも巨大なアスレチックコース「冒険コース」など、一日中体を動かして遊べるエリアが満載です。</p>
         </div>
     </section>
+
+    <section>
+        <h2>✨ 森林公園の楽しみ方</h2>
+        <div class="grid md:grid-cols-2 gap-6">
+            <div class="bg-white/50 p-6 rounded-2xl shadow-sm">
+                <h3 class="mt-0">🪻 四季の植物観察</h3>
+                <p class="text-sm">ハーブガーデンやカエデ園など、季節ごとに異なる植物が楽しめます。特に秋のカエデの紅葉は、ライトアップイベントも行われるほどの美しさです。</p>
+            </div>
+            <div class="bg-white/50 p-6 rounded-2xl shadow-sm">
+                <h3 class="mt-0">🍖 展望レストランとバーベキュー</h3>
+                <p class="text-sm">園内には展望の良いレストランがあるほか、手ぶらでバーベキューが楽しめるエリアも。自然の中で食べる食事は格別です。</p>
+            </div>
+            <div class="bg-white/50 p-6 rounded-2xl shadow-sm">
+                <h3 class="mt-0">🐕‍🦺 充実のドッグラン</h3>
+                <p class="text-sm">県内屈指の広さを誇るドッグランがあり、愛犬家にも大人気。小型犬から大型犬まで、思いっきり走り回ることができます。</p>
+            </div>
+            <div class="bg-white/50 p-6 rounded-2xl shadow-sm">
+                <h3 class="mt-0">⭐ 星空観察とキャンプ</h3>
+                <p class="text-sm">期間限定でキャンプや夜間開園が行われることも。周囲に街灯が少ないため、美しい星空を眺めることができるのも森林公園の魅力です。</p>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>💡 訪問のヒント</h2>
+        <div class="content-card" style="background: #fff8e1; border-left: 5px solid #ffc107;">
+            <p><strong>園内移動：</strong> あまりにも広いため、徒歩での移動はかなり大変です。サイクリングか、各ゲートを結ぶ「園内バス」を賢く活用しましょう。</p>
+            <p><strong>入園料：</strong> 国営公園のため、入園料（大人450円 ※2024年現在）が必要です。年間パスポートも販売されています。</p>
+        </div>
+    </section>
+
     <section>
         <h2>アクセス・基本情報</h2>
         <ul class="info-list">
@@ -103,7 +168,18 @@
         </div>
     </section>
 </main>
-<footer>&copy; 2026 埼玉公園ガイドポータル</footer>
+<footer>
+    <div class="max-w-6xl mx-auto">
+        <h2 class="text-xl font-bold mb-4" style="font-family: 'Mochiy Pop One';">SAITAMA PARKS</h2>
+        <p class="text-sm opacity-80">© 2026 埼玉県公園ガイドポータル - 自然と共に生きる。</p>
+        <div class="footer-links mt-6 flex justify-center gap-6 text-sm flex-wrap">
+            <a onclick="openModal('about')" class="hover:underline cursor-pointer">サイトについて</a>
+            <a onclick="openModal('access')" class="hover:underline cursor-pointer">アクセス</a>
+            <a onclick="openModal('copyright')" class="hover:underline cursor-pointer">著作権</a>
+            <a onclick="openModal('recruit')" class="hover:underline cursor-pointer text-emerald-400 font-bold">加盟店募集</a>
+        </div>
+    </div>
+</footer>
 <button onclick="scrollToTop()" class="go-to-top-button" aria-label="トップへ戻る">↑</button>
 <script src="../js/common.js"></script>
 <script>document.addEventListener('DOMContentLoaded', () => { updateStampButton('shinrin_park'); });</script>

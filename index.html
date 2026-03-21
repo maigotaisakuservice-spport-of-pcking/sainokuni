@@ -12,24 +12,8 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
     <link rel="stylesheet" href="css/common.css">
     <style>
-        :root {
-            --saitama-blue: #00ACC1;
-            --saitama-green: #2E7D32;
-            --saitama-red: #F44336;
-        }
-        body {
-            font-family: 'Noto Sans JP', sans-serif;
-            background: #fdfdfb;
-            color: #2c3e50;
-            transition: background-color 0.5s, color 0.5s;
-            overflow-x: hidden;
-        }
-        body.dark-mode {
-            background-color: #121212;
-            color: #e0e0e0;
-        }
         .header-main {
-            background: rgba(46, 125, 50, 0.9);
+            background: var(--header-bg);
             backdrop-filter: blur(10px);
             color: #ecf0f1;
             padding: 1rem 2rem;
@@ -90,23 +74,6 @@
             transition: transform 0.3s;
         }
         .article-card:hover { transform: translateY(-10px); }
-        .dark-mode .article-card { background: #1e1e1e; color: #fff; }
-
-        /* フォトギャラリー */
-        .gallery-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 10px;
-        }
-        .gallery-item {
-            aspect-ratio: 1; overflow: hidden; position: relative;
-            cursor: pointer; border-radius: 8px;
-        }
-        .gallery-item img {
-            width: 100%; height: 100%; object-fit: cover;
-            transition: transform 0.5s;
-        }
-        .gallery-item:hover img { transform: scale(1.1); }
-
         /* ウィジェット */
         .widget-container {
             display: flex; flex-wrap: wrap; gap: 2rem; justify-content: center;
@@ -116,7 +83,6 @@
             min-width: 280px; text-align: center;
             box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
-        .dark-mode .widget-card { background: #252525; }
 
         /* チャットAI UI */
         #chat-widget-container {
@@ -170,7 +136,6 @@
             max-width: 600px; width: 100%; position: relative;
             color: #333;
         }
-        .dark-mode .modal-content { background: #1e1e1e; color: #fff; }
         .modal-close {
             position: absolute; top: 15px; right: 20px;
             font-size: 30px; cursor: pointer;
@@ -200,20 +165,56 @@
 
 <header class="header-main">
     <div class="flex items-center gap-4">
+        <button onclick="toggleMenu()" class="text-2xl md:hidden">☰</button>
         <h1 class="text-xl font-bold tracking-tighter" style="font-family: 'Mochiy Pop One';">SAITAMA PARKS</h1>
         <div class="tts-control hidden md:flex">
             <span class="text-sm">アクセシビリティ</span>
             <button onclick="readPageText()" class="hover:text-emerald-400">🔊 音声読み上げ</button>
         </div>
     </div>
-    <nav class="flex items-center gap-6">
+    <nav class="hidden md:flex items-center gap-6">
+        <div class="flex items-center gap-2 px-3 border-r border-white/20 mr-2">
+            <button onclick="setSaicolor('green')" class="saicolor-btn saicolor-green" title="緑（自然）"></button>
+            <button onclick="setSaicolor('blue')" class="saicolor-btn saicolor-blue" title="青（水・空）"></button>
+            <button onclick="setSaicolor('red')" class="saicolor-btn saicolor-red" title="赤（情熱）"></button>
+        </div>
         <a id="coupon-menu-item" href="index.html?reward=true" class="hidden text-yellow-400 font-bold animate-pulse" title="クーポン獲得！">💎 特典</a>
+        <a href="news.html" class="hover:text-emerald-400 font-bold">NEWS</a>
         <a href="destinations/maruyama.html" class="hover:text-emerald-400 font-bold">公園を探す</a>
         <a href="map.html" class="hover:text-emerald-400 font-bold">マップ</a>
         <a href="saitama-mini-game.html" class="hover:text-emerald-400 font-bold">ゲーム</a>
-        <button id="dark-mode-toggle" class="text-xl">🌙</button>
+        <a href="gallery.html" class="hover:text-emerald-400 font-bold">ギャラリー</a>
+        <button onclick="toggleTheme()" class="theme-toggle-btn text-xl" id="theme-toggle-icon">🌙</button>
     </nav>
 </header>
+
+<!-- モバイルメニュー -->
+<div id="menu-overlay" class="menu-overlay" onclick="toggleMenu()"></div>
+<div id="menu-content" class="menu-content">
+    <div class="p-6">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-xl font-bold" style="font-family: 'Mochiy Pop One';">MENU</h2>
+            <button onclick="toggleMenu()" class="text-2xl">&times;</button>
+        </div>
+        <nav class="flex flex-col gap-6 text-lg">
+            <a href="index.html" class="flex items-center gap-3">🏠 ホーム</a>
+            <a href="news.html" class="flex items-center gap-3">📰 NEWS</a>
+            <a href="destinations/maruyama.html" class="flex items-center gap-3">🌳 公園を探す</a>
+            <a href="map.html" class="flex items-center gap-3">🗺️ マップ</a>
+            <a href="saitama-mini-game.html" class="flex items-center gap-3">🎮 ゲーム</a>
+            <a href="gallery.html" class="flex items-center gap-3">🖼️ ギャラリー</a>
+            <hr class="border-slate-700">
+            <div class="flex items-center justify-around py-2">
+                <button onclick="setSaicolor('green')" class="saicolor-btn saicolor-green"></button>
+                <button onclick="setSaicolor('blue')" class="saicolor-btn saicolor-blue"></button>
+                <button onclick="setSaicolor('red')" class="saicolor-btn saicolor-red"></button>
+            </div>
+            <button onclick="toggleTheme()" class="flex items-center gap-3 w-full text-left">
+                <span id="theme-toggle-icon-mobile">🌙</span> ダークモード切替
+            </button>
+        </nav>
+    </div>
+</div>
 
 <div class="hero-slider" id="main-slider">
     <!-- スライドはJSで生成されます -->
@@ -303,8 +304,13 @@
         <div class="gallery-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Omiya_Park_20220327_2.jpg/320px-Omiya_Park_20220327_2.jpg" alt="大宮公園"></div>
         <div class="gallery-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Tokorozawa_Aviation_Memorial_Park_01.JPG/320px-Tokorozawa_Aviation_Memorial_Park_01.JPG" alt="所沢航空公園"></div>
         <div class="gallery-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Musashi_Kyuryo_National_Government_Park_20111105.jpg/320px-Musashi_Kyuryo_National_Government_Park_20111105.jpg" alt="森林公園"></div>
-        <div class="gallery-item"><img src="images/nagatoro.jpg" alt="長瀞"></div>
-        <div class="gallery-item"><img src="images/hodosan.jpeg" alt="宝登山"></div>
+        <div class="gallery-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Akigase_park.jpg/320px-Akigase_park.jpg" alt="秋ヶ瀬公園"></div>
+        <div class="gallery-item"><img src="images/densya.jpg" alt="鉄道博物館"></div>
+    </div>
+    <div class="text-center mt-10">
+        <a href="gallery.html" class="inline-block border-2 border-emerald-500 text-emerald-600 hover:bg-emerald-500 hover:text-white font-bold py-3 px-10 rounded-full transition-all">
+            📸 フォトギャラリーをもっと見る
+        </a>
     </div>
 </section>
 
@@ -351,6 +357,8 @@
         <button onclick="selectMood('walk')" class="text-[10px] bg-sky-600/20 text-sky-400 border border-sky-600/50 px-2 py-1 rounded-full hover:bg-sky-600 hover:text-white transition-all">👟 散歩したい</button>
         <button onclick="selectMood('kids')" class="text-[10px] bg-amber-600/20 text-amber-400 border border-amber-600/50 px-2 py-1 rounded-full hover:bg-amber-600 hover:text-white transition-all">🧒 子供と遊びたい</button>
         <button onclick="selectMood('sports')" class="text-[10px] bg-emerald-600/20 text-emerald-400 border border-emerald-600/50 px-2 py-1 rounded-full hover:bg-emerald-600 hover:text-white transition-all">⚽ スポーツしたい</button>
+        <button onclick="selectMood('learn')" class="text-[10px] bg-purple-600/20 text-purple-400 border border-purple-600/50 px-2 py-1 rounded-full hover:bg-purple-600 hover:text-white transition-all">📖 学びたい</button>
+        <button onclick="selectMood('hungry')" class="text-[10px] bg-red-600/20 text-red-400 border border-red-600/50 px-2 py-1 rounded-full hover:bg-red-600 hover:text-white transition-all">🍴 お腹が空いた</button>
     </div>
     <div class="chat-input-area">
         <input type="text" id="user-input" class="chat-input" placeholder="公園のおすすめは？">
@@ -457,17 +465,6 @@
     }
     initMiniMap();
 
-    // ダークモード
-    const darkBtn = document.getElementById('dark-mode-toggle');
-    darkBtn.addEventListener('click', () => {
-        document.body.classList.toggle('dark-mode');
-        darkBtn.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
-        localStorage.setItem('saitama-dark-mode', document.body.classList.contains('dark-mode'));
-    });
-    if (localStorage.getItem('saitama-dark-mode') === 'true') {
-        document.body.classList.add('dark-mode');
-        darkBtn.textContent = '☀️';
-    }
 
     const nextFestival = new Date('2026-11-01');
     const today = new Date();

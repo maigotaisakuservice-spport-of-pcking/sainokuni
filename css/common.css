@@ -1,12 +1,52 @@
 
 :root {
+    /* Base Colors */
     --saitama-blue: #00ACC1;
-    --saitama-green: #2E7D32; /* Nature-focused green */
-    --saitama-accent: #8BC34A; /* Light green accent */
+    --saitama-green: #2E7D32;
+    --saitama-red: #F44336;
+
+    /* Theme Defaults (Green/Nature) */
+    --primary-color: var(--saitama-green);
+    --bg-color: #ffffff;
+    --text-color: #1a202c;
+    --card-bg: #f8fafc;
+    --card-shadow: rgba(0, 0, 0, 0.1);
+    --header-bg: rgba(46, 125, 50, 0.9);
+    --footer-bg: #1b5e20;
+    --border-color: #e2e8f0;
+    --recommend-bg: #f0f4f8;
+}
+
+/* Saicolor Blue (Water/Sky) */
+[data-theme="blue"] {
+    --primary-color: var(--saitama-blue);
+    --header-bg: rgba(0, 172, 193, 0.9);
+    --footer-bg: #006064;
+    --recommend-bg: #e0f7fa;
+}
+
+/* Saicolor Red (Passion/Sports) */
+[data-theme="red"] {
+    --primary-color: var(--saitama-red);
+    --header-bg: rgba(244, 67, 54, 0.9);
+    --footer-bg: #b71c1c;
+    --recommend-bg: #ffebee;
+}
+
+/* Dark Mode Overlay */
+[data-mode="dark"] {
+    --bg-color: #0f172a;
+    --text-color: #f1f5f9;
+    --card-bg: #1e293b;
+    --card-shadow: rgba(0, 0, 0, 0.4);
+    --border-color: #334155;
 }
 
 body {
     font-size: clamp(14px, 2vw, 18px);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
 }
 
 /* 読了インジケーター */
@@ -90,8 +130,9 @@ body {
 .recommend-section {
     margin-top: 4rem;
     padding: 2rem;
-    background: #f0f4f8;
+    background: var(--recommend-bg);
     border-radius: 20px;
+    transition: background-color 0.3s;
 }
 .recommend-grid {
     display: grid;
@@ -100,13 +141,13 @@ body {
     margin-top: 1.5rem;
 }
 .recommend-card {
-    background: white;
+    background: var(--card-bg);
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 10px var(--card-shadow);
     text-decoration: none;
     color: inherit;
-    transition: transform 0.3s;
+    transition: transform 0.3s, background-color 0.3s;
     text-align: center;
 }
 .recommend-card:hover {
@@ -130,11 +171,11 @@ body {
     text-align: center;
     margin-top: 2rem;
     padding: 1.5rem;
-    border: 3px dashed #00ACC1;
+    border: 3px dashed var(--saitama-blue);
     border-radius: 15px;
 }
 .stamp-btn {
-    background: #00ACC1;
+    background: var(--saitama-blue);
     color: white;
     border: none;
     padding: 10px 20px;
@@ -148,14 +189,14 @@ body {
     cursor: default;
 }
 
-/* ハンバーガーメニュー (観光地ページ用) */
+/* ハンバーガーメニュー (共通) */
 .hamburger-menu {
     position: relative;
 }
 .hamburger-btn {
     background: none;
     border: none;
-    color: white;
+    color: inherit;
     font-size: 24px;
     cursor: pointer;
     z-index: 1100;
@@ -166,8 +207,8 @@ body {
     right: -300px;
     width: 300px;
     height: 100vh;
-    background: #1a202c;
-    color: white;
+    background: var(--header-bg);
+    color: var(--text-color);
     z-index: 1050;
     transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     padding: 80px 30px;
@@ -199,14 +240,14 @@ body {
     margin-bottom: 20px;
 }
 .menu-list a {
-    color: #e2e8f0;
+    color: inherit;
     text-decoration: none;
     font-size: 1.1rem;
     font-weight: 500;
     transition: color 0.2s;
 }
 .menu-list a:hover {
-    color: #00ACC1;
+    color: var(--saitama-blue);
 }
 .menu-title {
     font-size: 0.8rem;
@@ -216,3 +257,35 @@ body {
     margin-bottom: 10px;
     margin-top: 30px;
 }
+
+/* Saicolor Switcher Styles */
+.saicolor-btn {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid white;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.saicolor-btn:hover { transform: scale(1.2); }
+.saicolor-blue { background-color: var(--saitama-blue); }
+.saicolor-green { background-color: var(--saitama-green); }
+.saicolor-red { background-color: var(--saitama-red); }
+
+/* ヘッダー・フッター追加スタイル */
+header {
+    background-color: var(--header-bg);
+    color: #fff;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    transition: background-color 0.5s;
+}
+footer {
+    background-color: var(--footer-bg);
+    color: #fff;
+    transition: background-color 0.5s;
+}
+
+/* Elements using Primary Color */
+.section-title::after { background: var(--primary-color) !important; }
+.stamp-btn { background: var(--primary-color) !important; }
+.go-to-top-button { background-color: var(--primary-color) !important; }
