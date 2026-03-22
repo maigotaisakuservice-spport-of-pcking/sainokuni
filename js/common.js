@@ -35,6 +35,23 @@ function toggleDarkMode() {
     document.documentElement.setAttribute('data-mode', newMode);
     localStorage.setItem('saitama-mode', newMode);
     updateThemeIcon(newMode, document.documentElement.getAttribute('data-theme'));
+
+    // ウィジェット内のスイッチ状態を更新
+    const switchBtn = document.getElementById('dark-mode-switch');
+    if (switchBtn) {
+        const dot = switchBtn.querySelector('span');
+        if (newMode === 'dark') {
+            switchBtn.classList.add('bg-emerald-500');
+            switchBtn.classList.remove('bg-slate-200');
+            dot.classList.add('translate-x-6');
+            dot.classList.remove('translate-x-1');
+        } else {
+            switchBtn.classList.remove('bg-emerald-500');
+            switchBtn.classList.add('bg-slate-200');
+            dot.classList.remove('translate-x-6');
+            dot.classList.add('translate-x-1');
+        }
+    }
 }
 
 function updateThemeIcon(mode, theme) {
@@ -109,68 +126,6 @@ function scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// スタンプラリー機能
-function handleStamp(spotId) {
-    const stamps = JSON.parse(localStorage.getItem('saitama-stamps') || '{}');
-    if (!stamps[spotId]) {
-        stamps[spotId] = true;
-        localStorage.setItem('saitama-stamps', JSON.stringify(stamps));
-
-        const totalSpots = 5;
-        const collectedCount = Object.keys(stamps).length;
-
-        showStampDialog(collectedCount, totalSpots);
-        updateStampButton(spotId);
-
-        if (collectedCount === totalSpots) {
-            if (window.couponManager) {
-                window.couponManager.unlockCoupon('COUPON-STAMP-FULL');
-            }
-        }
-    }
-}
-
-function showStampDialog(count, total) {
-    const overlay = document.createElement('div');
-    overlay.className = "fixed inset-0 bg-black/60 flex items-center justify-center z-[5000] p-4 animate-in fade-in duration-300";
-
-    let rewardHtml = "";
-    if (count === total) {
-        rewardHtml = `
-            <div class="mt-6 p-4 bg-yellow-50 border-2 border-yellow-400 rounded-2xl animate-bounce">
-                <p class="text-yellow-800 font-bold mb-2">🎉 コンプリート達成！</p>
-                <p class="text-sm text-yellow-700 mb-4">秘密のクーポンが発行されました。</p>
-                <a href="../saitama-mini-game.html" class="inline-block bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-6 rounded-full transition-colors">ゲームセンターで使う</a>
-            </div>
-        `;
-    }
-
-    overlay.innerHTML = `
-        <div class="bg-white dark:bg-slate-900 rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl transform animate-in zoom-in duration-300">
-            <div class="text-6xl mb-4">✨</div>
-            <h2 class="text-2xl font-bold mb-2 text-slate-800 dark:text-white">スタンプ獲得！</h2>
-            <p class="text-slate-500 dark:text-slate-400 mb-6">現在の獲得数: <span class="text-emerald-500 font-bold text-xl">${count}</span> / ${total}</p>
-            <div class="w-full bg-slate-200 dark:bg-slate-800 h-3 rounded-full overflow-hidden mb-8">
-                <div class="style="background-color: var(--primary-color);" h-full transition-all duration-1000" style="width: ${(count/total)*100}%"></div>
-            </div>
-            ${rewardHtml}
-            <button onclick="this.closest('.fixed').remove()" class="mt-4 w-full style="background-color: var(--primary-color);" hover:opacity-90 text-white font-bold py-3 px-6 rounded-xl transition-colors">閉じる</button>
-        </div>
-    `;
-
-    document.body.appendChild(overlay);
-}
-
-function updateStampButton(spotId) {
-    const stamps = JSON.parse(localStorage.getItem('saitama-stamps') || '{}');
-    const stampBtn = document.getElementById('stamp-btn');
-    if (stampBtn && stamps[spotId]) {
-        stampBtn.textContent = '✨ スタンプ獲得済み！';
-        stampBtn.disabled = true;
-        stampBtn.classList.add('stamped');
-    }
-}
-
 // 読み上げ機能
 function readPageText() {
     if (window.speechSynthesis.speaking) {
@@ -198,7 +153,72 @@ function toggleMenu() {
     if (menu && overlay) {
         menu.classList.toggle('active');
         overlay.classList.toggle('active');
+        // メニューが開いているときはスクロール禁止
+        if (menu.classList.contains('active')) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
     }
+}
+
+// アクセシビリティ・ウィジェット
+function toggleAccessibilityPanel() {
+    let panel = document.getElementById('accessibility-panel');
+    if (!panel) {
+        panel = document.createElement('div');
+        panel.id = 'accessibility-panel';
+        panel.className = 'fixed bottom-24 right-6 w-72 bg-white dark:bg-slate-900 rounded-3xl shadow-2xl z-[3000] border border-slate-200 dark:border-slate-800 p-6 transform transition-all duration-300 translate-y-10 opacity-0 pointer-events-none';
+        panel.innerHTML = `
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="font-bold text-lg dark:text-white">表示設定</h3>
+                <button onclick="toggleAccessibilityPanel()" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-2xl">&times;</button>
+            </div>
+
+            <div class="space-y-6">
+                <!-- カラーテーマ -->
+                <div>
+                    <p class="text-xs text-slate-500 mb-3 uppercase tracking-widest font-bold">サイカラー選択</p>
+                    <div class="flex justify-between gap-2">
+                        <button onclick="setTheme('green')" class="flex-1 aspect-square rounded-2xl bg-emerald-600 border-4 border-white dark:border-slate-800 shadow-sm transition-transform hover:scale-110 active:scale-95" title="グリーン"></button>
+                        <button onclick="setTheme('blue')" class="flex-1 aspect-square rounded-2xl bg-sky-600 border-4 border-white dark:border-slate-800 shadow-sm transition-transform hover:scale-110 active:scale-95" title="ブルー"></button>
+                        <button onclick="setTheme('red')" class="flex-1 aspect-square rounded-2xl bg-red-600 border-4 border-white dark:border-slate-800 shadow-sm transition-transform hover:scale-110 active:scale-95" title="レッド"></button>
+                    </div>
+                </div>
+
+                <!-- ダークモード -->
+                <div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800 rounded-2xl">
+                    <span class="text-sm font-bold dark:text-white">🌙 ダークモード</span>
+                    <button onclick="toggleDarkMode()" id="dark-mode-switch" class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${localStorage.getItem('saitama-mode') === 'dark' ? 'bg-emerald-500' : 'bg-slate-200'}">
+                        <span class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${localStorage.getItem('saitama-mode') === 'dark' ? 'translate-x-6' : 'translate-x-1'}"></span>
+                    </button>
+                </div>
+
+                <!-- 音声読み上げ -->
+                <button onclick="readPageText()" class="w-full flex items-center justify-center gap-2 p-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-2xl transition-colors font-bold text-sm dark:text-white">
+                    🔊 ページを読み上げる
+                </button>
+            </div>
+        `;
+        document.body.appendChild(panel);
+
+        // 初回表示アニメーション
+        setTimeout(() => {
+            panel.classList.remove('translate-y-10', 'opacity-0', 'pointer-events-none');
+        }, 10);
+    } else {
+        if (panel.classList.contains('opacity-0')) {
+            panel.classList.remove('translate-y-10', 'opacity-0', 'pointer-events-none');
+        } else {
+            panel.classList.add('translate-y-10', 'opacity-0', 'pointer-events-none');
+        }
+    }
+}
+
+function setTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('saitama-theme', theme);
+    updateThemeIcon(document.documentElement.getAttribute('data-mode'), theme);
 }
 
 // モーダル機能
@@ -224,16 +244,6 @@ const modalContents = {
         <h2 class="text-2xl font-bold mb-4">著作権・免責事項</h2>
         <p class="mb-4">© 2026 埼玉公園ポータルプロジェクト. All Rights Reserved.</p>
         <p class="text-sm">当サイトの情報の正確性には万全を期しておりますが、利用者が当サイトの情報を用いて行う一切の行為について、責任を負うものではありません。</p>
-    `,
-    recruit: `
-        <h2 class="text-2xl font-bold mb-4 text-emerald-600">加盟店・イベント募集</h2>
-        <p class="mb-4">公園内のカフェ、売店、期間限定イベントの情報を当サイトで紹介しませんか？</p>
-        <div class="text-center">
-            <a href="merchants.html" class="inline-block style="background-color: var(--primary-color);" hover:opacity-90 text-white font-bold py-3 px-8 rounded-full transition-all">
-                詳しく見る・応募する
-            </a>
-            <p class="mt-4 text-xs text-gray-500">※リンク先は外部募集ページへ移動します（実際には内部ページ）</p>
-        </div>
     `
 };
 
@@ -263,6 +273,25 @@ function closeModal() {
     if (modal) modal.style.display = 'none';
 }
 
+// スクロール監視 (アニメーション用)
+const observerOptions = {
+    threshold: 0.1
+};
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('appear');
+        }
+    });
+}, observerOptions);
+
+function initAnimations() {
+    const fadeElements = document.querySelectorAll('.fade-in-up');
+    fadeElements.forEach(el => observer.observe(el));
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();
+    initAnimations();
 });

@@ -151,23 +151,14 @@
 
 <header class="header-main">
     <div class="flex items-center gap-4">
-        <button onclick="toggleMenu()" class="text-2xl md:hidden">☰</button>
         <h1 class="text-xl font-bold tracking-tighter" style="font-family: 'Mochiy Pop One';"><a href="index.html" style="color: inherit; text-decoration: none;">SAITAMA PARKS</a></h1>
-        <div class="tts-control hidden md:flex">
-            <span class="text-sm text-white/80">アクセシビリティ</span>
-            <button onclick="readPageText()" class="hover-accent-text text-white font-bold">🔊 音声読み上げ</button>
-        </div>
     </div>
-        <nav class="hidden md:flex items-center gap-6">
-        <a id="coupon-menu-item" href="coupons.html" class="hidden text-yellow-400 font-bold animate-pulse" title="クーポン獲得！">💎 特典</a>
-        <a href="news.html" class="hover-accent-text font-bold text-white">NEWS</a>
-        <a href="destinations/maruyama.html" class="hover-accent-text font-bold text-white">公園を探す</a>
-        <a href="map.html" class="hover-accent-text font-bold text-white">マップ</a>
-        <a href="saitama-mini-game.html" class="hover-accent-text font-bold text-white">ゲーム</a>
-        <a href="gallery.html" class="hover-accent-text font-bold text-white">ギャラリー</a>
+        <nav class="flex items-center gap-4 md:gap-8">
+        <a href="destinations/maruyama.html" class="hover-accent-text font-bold text-white text-sm md:text-base">公園を探す</a>
+        <a href="map.html" class="hover-accent-text font-bold text-white text-sm md:text-base">マップ</a>
+        <a href="saitama-mini-game.html" class="hover-accent-text font-bold text-white text-sm md:text-base">ゲーム</a>
         <div class="flex items-center gap-2 ml-2 border-l border-white/20 pl-4">
-            <button onclick="toggleTheme()" class="hover:scale-110 transition-transform" id="theme-toggle-icon" title="カラー変更">🌳</button>
-            <button onclick="toggleDarkMode()" class="hover:scale-110 transition-transform" title="ダークモード切替">🌓</button>
+            <button onclick="toggleAccessibilityPanel()" class="hover:scale-110 transition-transform" id="theme-toggle-icon" title="アクセシビリティ設定">⚙️</button>
         </div>
     </nav>
 </header>
@@ -182,11 +173,9 @@
         </div>
                                                         <nav class="flex flex-col gap-6 text-lg">
                 <a href="index.html" class="flex items-center gap-3">🏠 ホーム</a>
-                <a href="news.html" class="flex items-center gap-3">📰 NEWS</a>
                 <a href="destinations/maruyama.html" class="flex items-center gap-3">🌳 公園を探す</a>
                 <a href="map.html" class="flex items-center gap-3">🗺️ マップ</a>
                 <a href="saitama-mini-game.html" class="flex items-center gap-3">🎮 ゲーム</a>
-                <a href="gallery.html" class="flex items-center gap-3">🖼️ ギャラリー</a>
                 <hr class="border-slate-700">
                 <button onclick="toggleTheme()" class="flex items-center gap-3 w-full text-left"><span id="theme-toggle-icon-mobile">🌳</span> カラー変更</button>
                 <button onclick="toggleDarkMode()" class="flex items-center gap-3 w-full text-left"><span>🌓</span> ダークモード切替</button>
@@ -311,7 +300,6 @@
             <a onclick="openModal('about')" class="hover:underline cursor-pointer text-white">サイトについて</a>
             <a onclick="openModal('access')" class="hover:underline cursor-pointer text-white">アクセス</a>
             <a onclick="openModal('copyright')" class="hover:underline cursor-pointer text-white">著作権</a>
-            <a onclick="openModal('recruit')" class="hover:underline cursor-pointer font-bold font-bold" style="color: var(--accent-light);">加盟店募集</a>
         </div>
     </div>
 </footer>
@@ -377,7 +365,6 @@
 <button onclick="scrollToTop()" class="go-to-top-button" aria-label="トップへ戻る">↑</button>
 
 <script src="js/common.js"></script>
-<script src="js/coupon-manager.js"></script>
 <script type="module" src="js/ai-concierge.js"></script>
 <script>
     // メイン背景スライダー & RSS統合

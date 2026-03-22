@@ -54,12 +54,28 @@
 /* Dark Mode Overlay */
 [data-mode="dark"] {
     --bg-color: #0f172a;
-    --text-color: #f1f5f9;
+    --text-color: #f8fafc; /* Slightly brighter for better contrast */
     --card-bg: #1e293b;
-    --card-shadow: rgba(0, 0, 0, 0.4);
+    --card-shadow: rgba(0, 0, 0, 0.6);
     --border-color: #334155;
     --header-bg: #1e293b;
-    --footer-bg: #0f172a;
+    --footer-bg: #020617; /* Deeper black for footer in dark mode */
+}
+
+[data-mode="dark"] .text-slate-500 {
+    color: #94a3b8 !important; /* Brighter slate for readability */
+}
+
+[data-mode="dark"] .bg-slate-100 {
+    background-color: #334155 !important;
+}
+
+[data-mode="dark"] .bg-slate-50 {
+    background-color: #1e293b !important;
+}
+
+[data-mode="dark"] .bg-white {
+    background-color: #1e293b !important;
 }
 
 body {
@@ -312,18 +328,55 @@ footer a:hover { opacity: 1; text-decoration: underline !important; }
     display: flex;
     align-items: center;
     gap: 6px;
-    padding: 6px 14px;
-    border-radius: 20px;
+    padding: 8px 16px;
+    border-radius: 12px;
     background: var(--card-bg);
     border: 1px solid var(--border-color);
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-weight: 700;
     box-shadow: 0 2px 4px var(--card-shadow);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.feature-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px var(--card-shadow);
 }
 .feature-item.inactive {
     opacity: 0.4;
     filter: grayscale(1);
     font-weight: 400;
+}
+
+/* Animations */
+.fade-in-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+.fade-in-up.appear {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Family Specifics */
+.family-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+.family-info-card {
+    background: var(--card-bg);
+    padding: 1.5rem;
+    border-radius: 20px;
+    border-top: 4px solid var(--primary-color);
+    box-shadow: 0 4px 12px var(--card-shadow);
+}
+.toilet-rating {
+    display: inline-flex;
+    gap: 2px;
+    color: #fbbf24; /* amber-400 */
+    font-size: 1.2rem;
 }
 
 /* note-style news classes */

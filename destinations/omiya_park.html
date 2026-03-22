@@ -24,102 +24,33 @@
             top: 0; width: 100%; z-index: 1000;
             display: flex; justify-content: space-between; align-items: center;
         }
-
-        main {
-            max-width: 900px;
-            margin: 0 auto 4rem;
-            padding: 0 1.5rem;
-        }
-
-        section { margin-top: 3rem; }
-        h2 {
-            font-size: 2rem;
-            border-bottom: 4px solid var(--primary-color);
-            padding-bottom: 0.5rem;
-            margin-bottom: 1.5rem;
-        }
-        h3 {
-            font-size: 1.5rem;
-            color: var(--primary-color);
-            margin-top: 2rem;
-        }
-
-        .content-card {
-            background: var(--card-bg);
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px var(--card-shadow);
-            margin-bottom: 2rem;
-            border: 1px solid var(--border-color);
-        }
-
-        iframe {
-            width: 100%;
-            height: 400px;
-            border-radius: 20px;
-            border: none;
-            margin-top: 2rem;
-        }
-
+        main { max-width: 900px; margin: 0 auto 4rem; padding: 0 1.5rem; }
+        section { margin-top: 4rem; }
+        h2 { font-size: 2rem; border-bottom: 4px solid var(--primary-color); padding-bottom: 0.5rem; margin-bottom: 1.5rem; }
+        h3 { font-size: 1.5rem; color: var(--primary-color); margin-top: 2rem; }
+        .content-card { background: var(--card-bg); padding: 2rem; border-radius: 24px; box-shadow: 0 4px 15px var(--card-shadow); margin-bottom: 2rem; border: 1px solid var(--border-color); }
+        iframe { width: 100%; height: 400px; border-radius: 20px; border: none; margin-top: 2rem; }
         .info-list { list-style: none; padding: 0; }
-        .info-list li {
-            background: var(--card-bg);
-            padding: 1rem;
-            margin-bottom: 0.5rem;
-            border-radius: 10px;
-            border-left: 5px solid var(--primary-color);
-            box-shadow: 0 2px 5px var(--card-shadow);
-        }
-
-        .all-in-one-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            background: linear-gradient(45deg, #FFD700, #FFA500);
-            color: #fff;
-            padding: 5px 15px;
-            border-radius: 8px;
-            font-weight: 900;
-            font-size: 0.9rem;
-            margin-bottom: 15px;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.16);
-            animation: pulse-gold 2s infinite;
-        }
-        @keyframes pulse-gold {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
+        .info-list li { background: var(--card-bg); padding: 1.2rem; margin-bottom: 0.8rem; border-radius: 15px; border-left: 6px solid var(--primary-color); box-shadow: 0 2px 5px var(--card-shadow); }
     </style>
 </head>
 <body>
-
 <div id="reading-progress-container"><div id="reading-progress-bar"></div></div>
-
 <header class="header-main">
     <div class="flex items-center gap-4">
-        <button onclick="toggleMenu()" class="text-2xl md:hidden">☰</button>
         <h1 class="text-xl font-bold tracking-tighter" style="font-family: 'Mochiy Pop One';"><a href="../index.html" style="color: inherit; text-decoration: none;">SAITAMA PARKS</a></h1>
-        <div class="tts-control hidden md:flex">
-            <span class="text-sm text-white/80">アクセシビリティ</span>
-            <button onclick="readPageText()" class="hover-accent-text text-white font-bold">🔊 音声読み上げ</button>
-        </div>
     </div>
-        <nav class="hidden md:flex items-center gap-6">
-        <a id="coupon-menu-item" href="../coupons.html" class="hidden text-yellow-400 font-bold animate-pulse" title="クーポン獲得！">💎 特典</a>
-        <a href="../news.html" class="hover-accent-text font-bold text-white">NEWS</a>
-        <a href="maruyama.html" class="hover-accent-text font-bold text-white">公園を探す</a>
-        <a href="../map.html" class="hover-accent-text font-bold text-white">マップ</a>
-        <a href="../saitama-mini-game.html" class="hover-accent-text font-bold text-white">ゲーム</a>
-        <a href="../gallery.html" class="hover-accent-text font-bold text-white">ギャラリー</a>
+    <nav class="flex items-center gap-4 md:gap-8">
+        <a href="maruyama.html" class="hover-accent-text font-bold text-white text-sm md:text-base">公園を探す</a>
+        <a href="../map.html" class="hover-accent-text font-bold text-white text-sm md:text-base">マップ</a>
+        <a href="../saitama-mini-game.html" class="hover-accent-text font-bold text-white text-sm md:text-base">ゲーム</a>
+        <button onclick="toggleMenu()" class="hover-accent-text font-bold text-white text-sm md:text-base">MENU</button>
         <div class="flex items-center gap-2 ml-2 border-l border-white/20 pl-4">
-            <button onclick="toggleTheme()" class="hover:scale-110 transition-transform" id="theme-toggle-icon" title="カラー変更">🌳</button>
-            <button onclick="toggleDarkMode()" class="hover:scale-110 transition-transform" title="ダークモード切替">🌓</button>
+            <button onclick="toggleAccessibilityPanel()" class="hover:scale-110 transition-transform" id="theme-toggle-icon" title="アクセシビリティ設定">⚙️</button>
         </div>
     </nav>
 </header>
 
-<!-- モバイルメニュー -->
 <div id="menu-overlay" class="menu-overlay" onclick="toggleMenu()"></div>
 <div id="menu-content" class="menu-content">
     <div class="p-6">
@@ -127,96 +58,85 @@
             <h2 class="text-xl font-bold" style="font-family: 'Mochiy Pop One';">MENU</h2>
             <button onclick="toggleMenu()" class="text-2xl">&times;</button>
         </div>
-                                                        <nav class="flex flex-col gap-6 text-lg">
-                <a href="../index.html" class="flex items-center gap-3">🏠 ホーム</a>
-                <a href="../news.html" class="flex items-center gap-3">📰 NEWS</a>
-                <a href="maruyama.html" class="flex items-center gap-3">🌳 公園を探す</a>
-                <a href="../map.html" class="flex items-center gap-3">🗺️ マップ</a>
-                <a href="../saitama-mini-game.html" class="flex items-center gap-3">🎮 ゲーム</a>
-                <a href="../gallery.html" class="flex items-center gap-3">🖼️ ギャラリー</a>
-                <hr class="border-slate-700">
-                <button onclick="toggleTheme()" class="flex items-center gap-3 w-full text-left"><span id="theme-toggle-icon-mobile">🌳</span> カラー変更</button>
-                <button onclick="toggleDarkMode()" class="flex items-center gap-3 w-full text-left"><span>🌓</span> ダークモード切替</button>
-            </nav>
+        <nav class="flex flex-col gap-6 text-lg">
+            <a href="../index.html" class="flex items-center gap-3">🏠 ホーム</a>
+            <a href="maruyama.html" class="flex items-center gap-3">🌳 公園を探す</a>
+            <a href="../map.html" class="flex items-center gap-3">🗺️ マップ</a>
+            <a href="../saitama-mini-game.html" class="flex items-center gap-3">🎮 ゲーム</a>
+            <a href="../news.html" class="flex items-center gap-3">📰 NEWS</a>
+            <a href="../gallery.html" class="flex items-center gap-3">🖼️ ギャラリー</a>
+        </nav>
     </div>
 </div>
 
 <div class="hero-image-container mt-[60px]">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Omiya_Park_20220327_2.jpg/1200px-Omiya_Park_20220327_2.jpg" alt="大宮公園">
-    <h2 class="hero-title">大宮公園</h2>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Omiya_Park_20220327_2.jpg/1200px-Omiya_Park_20220327_2.jpg" alt="大宮公園" class="animate-in fade-in duration-1000">
+    <h2 class="hero-title animate-in slide-in-from-left duration-700">大宮公園</h2>
 </div>
 
 <main>
-    <div class="all-in-one-badge"><span>🏆</span> オールインワン・パーク</div>
-    <div class="feature-list">
-        <div class="feature-item"><span>🚻</span> トイレ完備</div>
-        <div class="feature-item"><span>🚉</span> 駅からすぐ</div>
-        <div class="feature-item"><span>🌸</span> 季節の見どころ</div>
+    <div class="feature-list fade-in-up">
+        <div class="feature-item"><span>🌸</span> 桜の名所</div>
+        <div class="feature-item"><span>🚆</span> 駅チカ</div>
+        <div class="feature-item"><span>🦁</span> 小さな動物園</div>
+        <div class="feature-item"><span>🏟️</span> 競技場併設</div>
         <div class="feature-item"><span>♿</span> バリアフリー</div>
     </div>
-    <section>
-        <h2>歴史と緑が息づく、県内屈指のオアシス</h2>
-        <p>明治18年に氷川神社の境内の一部を公園として整備された、埼玉県内で最も歴史のある県営公園です。「日本さくら名所100選」に選ばれた桜の名所としても知られ、春には約1,000本のソメイヨシノが咲き誇り、多くの花見客で賑わいます。広大な敷地内には、歴史的な趣と近代的なレジャー施設が絶妙に調和しています。</p>
 
+    <section class="fade-in-up">
+        <h2>歴史と活気が共存する、埼玉を代表する公園</h2>
+        <p class="mb-6">日本さくら名所100選にも選ばれている大宮公園は、明治18年に誕生した歴史ある公園です。スポーツ施設から児童遊園地まで、あらゆる世代が集まる埼玉のセントラルパークです。</p>
+
+        <div class="family-info-grid">
+            <div class="family-info-card">
+                <div class="text-3xl mb-3">🚻</div>
+                <h4 class="font-bold mb-2">トイレのキレイ度</h4>
+                <div class="toilet-rating">★★★☆☆</div>
+                <p class="text-xs text-slate-500 mt-2">歴史がある分、古いトイレもありますが、主要エリアのトイレは清掃が行き届いています。</p>
+            </div>
+            <div class="family-info-card">
+                <div class="text-3xl mb-3">🚉</div>
+                <h4 class="font-bold mb-2">アクセスの良さ</h4>
+                <div class="text-emerald-500 font-bold">駅から徒歩10分</div>
+                <p class="text-xs text-slate-500 mt-2">大宮公園駅・野田市駅（現：北大宮駅）から徒歩圏内。参道を歩いて氷川神社経由で来るのもおすすめです。</p>
+            </div>
+            <div class="family-info-card">
+                <div class="text-3xl mb-3">🦒</div>
+                <h4 class="font-bold mb-2">子どもが喜ぶスポット</h4>
+                <div class="text-emerald-500 font-bold">動物園・遊園地</div>
+                <p class="text-xs text-slate-500 mt-2">入園無料の小動物園や、レトロな乗り物が楽しめる児童遊園地があり、お子様連れでも一日楽しめます。</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="fade-in-up">
         <div class="content-card">
-            <h3>🏟️ 充実のスポーツ・文化施設</h3>
-            <p>園内には、プロ野球も開催される県営大宮球場、陸上競技場、競輪場などのスポーツ施設のほか、埼玉県の歴史を深く学べる「歴史と民俗の博物館」もあり、一日中飽きることがありません。</p>
+            <h3 class="mt-0">⛩️ 武蔵一宮 氷川神社と隣接</h3>
+            <p>日本全国にある氷川神社の総本社と隣接しています。約2km続く長い参道を歩きながら、埼玉の歴史を感じることができます。参拝と合わせて公園でピクニックを楽しむのが定番コースです。</p>
         </div>
-
         <div class="content-card">
-            <h3>🌸 四季折々の自然美</h3>
-            <p>春の桜はもちろん、樹齢100年を超えるアカマツ林の静寂、秋の紅葉、そして冬の梅林など、一年を通じて豊かな表情を見せてくれます。特に「自由広場」周辺の開放感は抜群です。</p>
+            <h3 class="mt-0">🎠 懐かしの児童遊園地</h3>
+            <p>10円、20円で動くレトロな乗り物や、昔ながらの遊具が並ぶエリア。パパ・ママ世代には懐かしく、子どもたちには新鮮な、ほのぼのとした時間を過ごせます。</p>
         </div>
     </section>
 
-    <section>
-        <h2>✨ 公園内のおすすめスポット</h2>
-        <div class="grid md:grid-cols-2 gap-6">
-            <div class="bg-white/50 dark:bg-slate-800/50 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700">
-                <h3 class="mt-0">🦩 大宮公園小動物園</h3>
-                <p class="text-sm">入園無料で楽しめる動物園！フラミンゴやカピバラ、ハイエナなど、意外にも多様な動物たちを間近で見ることができます。ファミリーに大人気のスポットです。</p>
-            </div>
-            <div class="bg-white/50 dark:bg-slate-800/50 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700">
-                <h3 class="mt-0">⛩️ 武蔵一宮 氷川神社</h3>
-                <p class="text-sm">公園に隣接する、2000年以上の歴史を持つ古社. 美しい参道は日本一の長さを誇り、公園散策と合わせて参拝するのが定番のルートです。</p>
-            </div>
-            <div class="bg-white/50 dark:bg-slate-800/50 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700">
-                <h3 class="mt-0">☕ 舟遊池（しゅうゆういけ）</h3>
-                <p class="text-sm">池の周りをゆっくり歩くだけで心が癒されます。最近では、周辺におしゃれなカフェやキッチンカーが登場することもあり、休憩にも最適です。</p>
-            </div>
-            <div class="bg-white/50 dark:bg-slate-800/50 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700">
-                <h3 class="mt-0">📖 歴史と民俗の博物館</h3>
-                <p class="text-sm">埼玉県の成り立ちを詳しく展示。国宝も収蔵されており、静かな環境でじっくりと文化に触れたい方におすすめです。</p>
-            </div>
-        </div>
-    </section>
-
-    <section>
-        <h2>💡 訪問のヒント</h2>
-        <div class="content-card" style="border-left: 5px solid #ff9800;">
-            <p><strong>ランチ情報：</strong> 公園内にはレトロな売店があり、焼きそばやソフトクリームを楽しめます。また、大宮駅周辺でお弁当を買って、芝生の上でピクニックするのも最高です！</p>
-            <p><strong>混雑回避：</strong> 桜のシーズンは非常に混雑するため、公共交通機関の利用を強くおすすめします。平日の午前中は比較的静かに散策できます。</p>
-        </div>
-    </section>
-
-    <section>
-        <h2>基本情報</h2>
+    <section class="fade-in-up">
+        <h2>アクセス・基本情報</h2>
         <ul class="info-list">
-            <li><strong>アクセス:</strong> 東武アーバンパークライン「大宮公園駅」または「北大宮駅」から徒歩10分。</li>
-            <li><strong>施設情報:</strong> 駐車場あり、多目的トイレあり、野球場・陸上競技場は要予約。</li>
+            <li><strong>アクセス:</strong> 東武アーバンパークライン「大宮公園駅」から徒歩約10分。</li>
+            <li><strong>入園料:</strong> 無料（一部施設を除く）</li>
+            <li><strong>施設情報:</strong> 駐車場あり、小動物園、児童遊園地、県営大宮球場、サッカー場。</li>
         </ul>
         <iframe src="https://www.google.com/maps?q=大宮公園&output=embed"></iframe>
     </section>
 
-    <div class="stamp-container">
-        <h3>🚩 デジタル・スタンプラリー</h3>
-        <p>このページを読んでスタンプをゲット！5つ集めると特典コードをプレゼント。</p>
-        <button id="stamp-btn" class="stamp-btn" onclick="handleStamp('omiya_park')">スタンプを押す！</button>
-    </div>
-
-    <section class="recommend-section">
-        <h3>ここに行った人はここもチェック！</h3>
+    <section class="recommend-section fade-in-up">
+        <h3 class="mt-0 mb-6">ここに行った人はここもチェック！</h3>
         <div class="recommend-grid">
+            <a href="maruyama.html" class="recommend-card">
+                <img src="../images/maruyama.jpeg" alt="丸山公園">
+                <p>丸山公園</p>
+            </a>
             <a href="tokorozawa_park.html" class="recommend-card">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Tokorozawa_Aviation_Memorial_Park_01.JPG/320px-Tokorozawa_Aviation_Memorial_Park_01.JPG" alt="所沢航空公園">
                 <p>所沢航空公園</p>
@@ -228,10 +148,6 @@
             <a href="akigase_park.html" class="recommend-card">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Akigase_park.jpg/320px-Akigase_park.jpg" alt="秋ヶ瀬公園">
                 <p>秋ヶ瀬公園</p>
-            </a>
-            <a href="maruyama.html" class="recommend-card">
-                <img src="../images/maruyama.jpeg" alt="丸山公園">
-                <p>丸山公園</p>
             </a>
         </div>
     </section>
@@ -245,19 +161,10 @@
             <a onclick="openModal('about')" class="hover:underline cursor-pointer text-white">サイトについて</a>
             <a onclick="openModal('access')" class="hover:underline cursor-pointer text-white">アクセス</a>
             <a onclick="openModal('copyright')" class="hover:underline cursor-pointer text-white">著作権</a>
-            <a onclick="openModal('recruit')" class="hover:underline cursor-pointer font-bold font-bold" style="color: var(--accent-light);">加盟店募集</a>
         </div>
     </div>
 </footer>
-
 <button onclick="scrollToTop()" class="go-to-top-button" aria-label="トップへ戻る">↑</button>
-
 <script src="../js/common.js"></script>
-<script src="../js/coupon-manager.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        updateStampButton('omiya_park');
-    });
-</script>
 </body>
 </html>
