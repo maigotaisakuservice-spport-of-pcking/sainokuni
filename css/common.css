@@ -204,29 +204,6 @@ body {
     margin: 0;
 }
 
-/* スタンプラリー */
-.stamp-container {
-    text-align: center;
-    margin-top: 2rem;
-    padding: 1.5rem;
-    border: 3px dashed var(--saitama-blue);
-    border-radius: 15px;
-}
-.stamp-btn {
-    background: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 25px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background 0.3s;
-}
-.stamp-btn:disabled {
-    background: #ccc !important;
-    cursor: default;
-}
-
 /* ハンバーガーメニュー (共通) */
 .hamburger-menu {
     position: relative;
