@@ -6,6 +6,11 @@
     <title>さいたま周辺施設マップ | 2026年版</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "selector"
+        }
+    </script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
@@ -54,11 +59,11 @@
         </div>
             <nav class="hidden md:flex items-center gap-6">
         <a id="coupon-menu-item" href="coupons.html" class="hidden text-yellow-400 font-bold animate-pulse" title="クーポン獲得！">💎 特典</a>
-        <a href="news.html" class="hover:text-emerald-400 font-bold">NEWS</a>
-        <a href="destinations/maruyama.html" class="hover:text-emerald-400 font-bold">公園を探す</a>
-        <a href="map.html" class="hover:text-emerald-400 font-bold">マップ</a>
-        <a href="saitama-mini-game.html" class="hover:text-emerald-400 font-bold">ゲーム</a>
-        <a href="gallery.html" class="hover:text-emerald-400 font-bold">ギャラリー</a>
+        <a href="news.html" class="hover-accent-text font-bold">NEWS</a>
+        <a href="destinations/maruyama.html" class="hover-accent-text font-bold">公園を探す</a>
+        <a href="map.html" class="hover-accent-text font-bold">マップ</a>
+        <a href="saitama-mini-game.html" class="hover-accent-text font-bold">ゲーム</a>
+        <a href="gallery.html" class="hover-accent-text font-bold">ギャラリー</a>
         <div class="flex items-center gap-2 ml-2 border-l border-white/20 pl-4">
             <button onclick="toggleTheme()" class="hover:scale-110 transition-transform" id="theme-toggle-icon" title="カラー変更">🌳</button>
             <button onclick="toggleDarkMode()" class="hover:scale-110 transition-transform" title="ダークモード切替">🌓</button>
@@ -104,7 +109,7 @@
         <div id="map"></div>
         <div id="loading-overlay" class="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center z-[2000] hidden">
             <div class="text-center">
-                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500 mx-auto mb-2"></div>
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 style="border-color: var(--primary-color);" mx-auto mb-2"></div>
                 <p class="font-bold text-gray-700">データを取得中...</p>
             </div>
         </div>
@@ -144,8 +149,8 @@
                 marker.bindPopup(`
                     <div class="p-2">
                         <b class="text-lg">${p.name}</b><br>
-                        <span class="text-xs text-emerald-600 font-bold">埼玉5大公園の1つ</span><br>
-                        <a href="${p.url}" class="inline-block mt-2 bg-emerald-500 text-white text-xs px-2 py-1 rounded">詳細ページを見る</a>
+                        <span class="text-xs font-bold font-bold">埼玉5大公園の1つ</span><br>
+                        <a href="${p.url}" class="inline-block mt-2 style="background-color: var(--primary-color);" text-white text-xs px-2 py-1 rounded">詳細ページを見る</a>
                     </div>
                 `);
             });

@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>大宮公園 | 埼玉県公園ガイド 2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "selector"
+        }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Mochiy+Pop+One&family=DotGothic16&display=swap" rel="stylesheet">
@@ -97,16 +102,16 @@
         <h1 class="text-xl font-bold tracking-tighter" style="font-family: 'Mochiy Pop One';"><a href="../index.html" style="color: inherit; text-decoration: none;">SAITAMA PARKS</a></h1>
         <div class="tts-control hidden md:flex">
             <span class="text-sm text-white/80">アクセシビリティ</span>
-            <button onclick="readPageText()" class="hover:text-emerald-400 text-white font-bold">🔊 音声読み上げ</button>
+            <button onclick="readPageText()" class="hover-accent-text text-white font-bold">🔊 音声読み上げ</button>
         </div>
     </div>
         <nav class="hidden md:flex items-center gap-6">
         <a id="coupon-menu-item" href="../coupons.html" class="hidden text-yellow-400 font-bold animate-pulse" title="クーポン獲得！">💎 特典</a>
-        <a href="../news.html" class="hover:text-emerald-400 font-bold text-white">NEWS</a>
-        <a href="maruyama.html" class="hover:text-emerald-400 font-bold text-white">公園を探す</a>
-        <a href="../map.html" class="hover:text-emerald-400 font-bold text-white">マップ</a>
-        <a href="../saitama-mini-game.html" class="hover:text-emerald-400 font-bold text-white">ゲーム</a>
-        <a href="../gallery.html" class="hover:text-emerald-400 font-bold text-white">ギャラリー</a>
+        <a href="../news.html" class="hover-accent-text font-bold text-white">NEWS</a>
+        <a href="maruyama.html" class="hover-accent-text font-bold text-white">公園を探す</a>
+        <a href="../map.html" class="hover-accent-text font-bold text-white">マップ</a>
+        <a href="../saitama-mini-game.html" class="hover-accent-text font-bold text-white">ゲーム</a>
+        <a href="../gallery.html" class="hover-accent-text font-bold text-white">ギャラリー</a>
         <div class="flex items-center gap-2 ml-2 border-l border-white/20 pl-4">
             <button onclick="toggleTheme()" class="hover:scale-110 transition-transform" id="theme-toggle-icon" title="カラー変更">🌳</button>
             <button onclick="toggleDarkMode()" class="hover:scale-110 transition-transform" title="ダークモード切替">🌓</button>
@@ -240,7 +245,7 @@
             <a onclick="openModal('about')" class="hover:underline cursor-pointer text-white">サイトについて</a>
             <a onclick="openModal('access')" class="hover:underline cursor-pointer text-white">アクセス</a>
             <a onclick="openModal('copyright')" class="hover:underline cursor-pointer text-white">著作権</a>
-            <a onclick="openModal('recruit')" class="hover:underline cursor-pointer text-emerald-400 font-bold">加盟店募集</a>
+            <a onclick="openModal('recruit')" class="hover:underline cursor-pointer font-bold font-bold" style="color: var(--accent-light);">加盟店募集</a>
         </div>
     </div>
 </footer>

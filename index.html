@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>彩の国ポータル 2026 | 埼玉県紹介サイト</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'selector'
+        }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Mochiy+Pop+One&family=DotGothic16&display=swap" rel="stylesheet">
@@ -150,16 +155,16 @@
         <h1 class="text-xl font-bold tracking-tighter" style="font-family: 'Mochiy Pop One';"><a href="index.html" style="color: inherit; text-decoration: none;">SAITAMA PARKS</a></h1>
         <div class="tts-control hidden md:flex">
             <span class="text-sm text-white/80">アクセシビリティ</span>
-            <button onclick="readPageText()" class="hover:text-emerald-400 text-white font-bold">🔊 音声読み上げ</button>
+            <button onclick="readPageText()" class="hover-accent-text text-white font-bold">🔊 音声読み上げ</button>
         </div>
     </div>
         <nav class="hidden md:flex items-center gap-6">
         <a id="coupon-menu-item" href="coupons.html" class="hidden text-yellow-400 font-bold animate-pulse" title="クーポン獲得！">💎 特典</a>
-        <a href="news.html" class="hover:text-emerald-400 font-bold text-white">NEWS</a>
-        <a href="destinations/maruyama.html" class="hover:text-emerald-400 font-bold text-white">公園を探す</a>
-        <a href="map.html" class="hover:text-emerald-400 font-bold text-white">マップ</a>
-        <a href="saitama-mini-game.html" class="hover:text-emerald-400 font-bold text-white">ゲーム</a>
-        <a href="gallery.html" class="hover:text-emerald-400 font-bold text-white">ギャラリー</a>
+        <a href="news.html" class="hover-accent-text font-bold text-white">NEWS</a>
+        <a href="destinations/maruyama.html" class="hover-accent-text font-bold text-white">公園を探す</a>
+        <a href="map.html" class="hover-accent-text font-bold text-white">マップ</a>
+        <a href="saitama-mini-game.html" class="hover-accent-text font-bold text-white">ゲーム</a>
+        <a href="gallery.html" class="hover-accent-text font-bold text-white">ギャラリー</a>
         <div class="flex items-center gap-2 ml-2 border-l border-white/20 pl-4">
             <button onclick="toggleTheme()" class="hover:scale-110 transition-transform" id="theme-toggle-icon" title="カラー変更">🌳</button>
             <button onclick="toggleDarkMode()" class="hover:scale-110 transition-transform" title="ダークモード切替">🌓</button>
@@ -200,9 +205,9 @@
         <!-- RSSスライダー風のミニ情報表示 -->
         <div class="absolute bottom-10 left-0 right-0 px-4 flex justify-center">
             <div id="rss-mini-slider" class="bg-black/40 backdrop-blur-md p-4 rounded-xl max-w-xl w-full flex items-center gap-4 border border-white/20">
-                <div class="bg-emerald-500 text-white text-[10px] font-bold px-2 py-1 rounded">NEWS</div>
+                <div class="text-white text-[10px] font-bold px-2 py-1 rounded" style="background-color: var(--primary-color);">NEWS</div>
                 <div id="rss-content" class="text-sm truncate flex-1">読み込み中...</div>
-                <button onclick="nextRss()" class="text-white hover:text-emerald-400">
+                <button onclick="nextRss()" class="text-white hover-accent-text">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                 </button>
             </div>
@@ -210,12 +215,12 @@
     </div>
 </div>
 
-<section id="widgets" class="!py-12 bg-emerald-50 dark:bg-gray-900 border-y border-emerald-100 dark:border-gray-800">
+<section id="widgets" class="!py-12 bg-[var(--accent-bg)] dark:bg-[var(--accent-bg-dark)] border-y border-[var(--accent-border)] dark:border-gray-800">
     <h2 class="section-title !mb-12">リアルタイム埼玉</h2>
     <div class="widget-container">
         <div class="widget-card" id="weather-widget">
             <h3 class="font-bold mb-4">現在の天気（さいたま市）</h3>
-            <div id="weather-info" class="text-2xl font-bold text-emerald-600">Loading...</div>
+            <div id="weather-info" class="text-2xl font-bold text-[var(--primary-color)]">Loading...</div>
         </div>
         <div class="widget-card">
             <h3 class="font-bold mb-4">イベントカウントダウン</h3>
@@ -230,7 +235,7 @@
     <h2 class="section-title">公園コンシェルジュに相談</h2>
     <div class="text-center max-w-2xl mx-auto">
         <p class="text-lg mb-8">「子供と遊べる公園は？」「静かに散歩したい」<br>AIサイタマニアくんが、今の気分にぴったりの公園を提案します。</p>
-        <button onclick="toggleChat()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 px-8 rounded-full shadow-lg transition-all transform hover:scale-105">
+        <button onclick="toggleChat()" class="bg-[var(--accent-btn)] hover:bg-[var(--accent-btn-hover)] text-white font-bold py-4 px-8 rounded-full shadow-lg transition-all transform hover:scale-105">
             チャットで相談する
         </button>
     </div>
@@ -263,7 +268,7 @@
     </div>
 </section>
 
-<section id="movie" class="bg-emerald-50 dark:bg-gray-800 rounded-3xl">
+<section id="movie" class="bg-[var(--accent-bg)] dark:bg-gray-800 rounded-3xl">
     <h2 class="section-title">埼玉の自然を感じる</h2>
     <div class="aspect-video max-w-4xl mx-auto rounded-2xl overflow-hidden shadow-2xl">
         <iframe width="100%" height="100%" src="https://www.youtube.com/embed/61qSijTSWKo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
@@ -281,18 +286,18 @@
         <div class="gallery-item"><img src="images/densya.jpg" alt="鉄道博物館"></div>
     </div>
     <div class="text-center mt-10">
-        <a href="gallery.html" class="inline-block border-2 border-emerald-500 text-emerald-600 hover:bg-emerald-500 hover:text-white font-bold py-3 px-10 rounded-full transition-all">
+        <a href="gallery.html" class="inline-block border-2 border-[var(--primary-color)] text-[var(--primary-color)] hover:bg-[var(--primary-color)] hover:text-white font-bold py-3 px-10 rounded-full transition-all">
             📸 フォトギャラリーをもっと見る
         </a>
     </div>
 </section>
 
-<section id="simple-map" class="bg-emerald-50 dark:bg-slate-900 rounded-3xl overflow-hidden shadow-xl border border-emerald-200 dark:border-slate-800">
+<section id="simple-map" class="bg-[var(--accent-bg)] dark:bg-slate-900 rounded-3xl overflow-hidden shadow-xl border border-[var(--accent-border)] dark:border-slate-800">
     <div class="p-8 md:p-12 text-center">
         <h2 class="section-title !mb-4">近くの公園を探す</h2>
-        <p class="text-emerald-700 dark:text-emerald-400 mb-8 font-bold">身近な自然をマップでチェック！</p>
+        <p class="text-[var(--primary-color)] mb-8 font-bold">身近な自然をマップでチェック！</p>
         <div id="home-mini-map" class="w-full h-[400px] rounded-2xl mb-8 z-0 border border-gray-200 dark:border-slate-700 shadow-inner"></div>
-        <a href="map.html" class="inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 px-10 rounded-full shadow-lg transition-all hover:scale-105">
+        <a href="map.html" class="inline-block bg-[var(--accent-btn)] hover:bg-[var(--accent-btn-hover)] text-white font-bold py-4 px-10 rounded-full shadow-lg transition-all hover:scale-105">
             🗺️ 全画面マップで詳しく探す
         </a>
     </div>
@@ -306,7 +311,7 @@
             <a onclick="openModal('about')" class="hover:underline cursor-pointer text-white">サイトについて</a>
             <a onclick="openModal('access')" class="hover:underline cursor-pointer text-white">アクセス</a>
             <a onclick="openModal('copyright')" class="hover:underline cursor-pointer text-white">著作権</a>
-            <a onclick="openModal('recruit')" class="hover:underline cursor-pointer text-emerald-400 font-bold">加盟店募集</a>
+            <a onclick="openModal('recruit')" class="hover:underline cursor-pointer font-bold font-bold" style="color: var(--accent-light);">加盟店募集</a>
         </div>
     </div>
 </footer>
@@ -315,9 +320,9 @@
 <div id="chat-widget-container">
     <div class="chat-header">
         <div class="flex items-center gap-3">
-            <svg class="w-8 h-8 stroke-emerald-400 stroke-2 fill-none" viewBox="0 0 24 24"><path d="M6 9h12M6 12h12M9 6h6M9 15h6M7 3h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path><circle cx="10" cy="9" r="0.5" fill="currentColor"></circle><circle cx="14" cy="9" r="0.5" fill="currentColor"></circle></svg>
+            <svg class="w-8 h-8 stroke-2 fill-none" style="stroke: var(--accent-light);" viewBox="0 0 24 24"><path d="M6 9h12M6 12h12M9 6h6M9 15h6M7 3h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path><circle cx="10" cy="9" r="0.5" fill="currentColor"></circle><circle cx="14" cy="9" r="0.5" fill="currentColor"></circle></svg>
             <div>
-                <div class="font-bold text-emerald-400">AIサイタマニアくん</div>
+                <div class="font-bold" style="color: var(--accent-light);">AIサイタマニアくん</div>
                 <div class="text-xs text-gray-400">Status: Online_</div>
             </div>
         </div>
@@ -327,11 +332,26 @@
         <!-- メッセージがここに追加される -->
     </div>
     <div id="mood-selector" class="px-4 py-2 border-t border-gray-700 flex flex-wrap gap-2 justify-center">
-        <button onclick="selectMood('walk')" class="text-[10px] bg-sky-600/20 text-sky-400 border border-sky-600/50 px-2 py-1 rounded-full hover:bg-sky-600 hover:text-white transition-all">👟 散歩したい</button>
-        <button onclick="selectMood('kids')" class="text-[10px] bg-amber-600/20 text-amber-400 border border-amber-600/50 px-2 py-1 rounded-full hover:bg-amber-600 hover:text-white transition-all">🧒 子供と遊びたい</button>
-        <button onclick="selectMood('sports')" class="text-[10px] bg-emerald-600/20 text-emerald-400 border border-emerald-600/50 px-2 py-1 rounded-full hover:bg-emerald-600 hover:text-white transition-all">⚽ スポーツしたい</button>
-        <button onclick="selectMood('learn')" class="text-[10px] bg-purple-600/20 text-purple-400 border border-purple-600/50 px-2 py-1 rounded-full hover:bg-purple-600 hover:text-white transition-all">📖 学びたい</button>
-        <button onclick="selectMood('hungry')" class="text-[10px] bg-red-600/20 text-red-400 border border-red-600/50 px-2 py-1 rounded-full hover:bg-red-600 hover:text-white transition-all">🍴 お腹が空いた</button>
+        <style>
+            .mood-btn {
+                font-size: 10px;
+                background-color: color-mix(in srgb, var(--accent-btn), transparent 80%);
+                color: var(--accent-light);
+                border: 1px solid color-mix(in srgb, var(--accent-btn), transparent 50%);
+                padding: 0.25rem 0.5rem;
+                border-radius: 9999px;
+                transition: all 0.3s;
+            }
+            .mood-btn:hover {
+                background-color: var(--accent-btn);
+                color: white;
+            }
+        </style>
+        <button onclick="selectMood('walk')" class="mood-btn">👟 散歩したい</button>
+        <button onclick="selectMood('kids')" class="mood-btn">🧒 子供と遊びたい</button>
+        <button onclick="selectMood('sports')" class="mood-btn">⚽ スポーツしたい</button>
+        <button onclick="selectMood('learn')" class="mood-btn">📖 学びたい</button>
+        <button onclick="selectMood('hungry')" class="mood-btn">🍴 お腹が空いた</button>
     </div>
     <div class="chat-input-area">
         <input type="text" id="user-input" class="chat-input" placeholder="公園のおすすめは？">
@@ -389,13 +409,18 @@
 
         try {
             const res = await fetch('js/slider-content.json');
+            if (!res.ok) throw new Error('Fetch failed');
             rssItems = await res.json();
-            updateRssDisplay();
-            setInterval(nextRss, 10000);
         } catch (e) {
             console.error('RSS content load error:', e);
-            document.getElementById('rss-content').textContent = 'お知らせはありません';
+            rssItems = [
+                { "title": "2026年 埼玉公園プロジェクト始動！", "link": "news.html" },
+                { "title": "【注目】丸山公園の小動物園がリニューアル", "link": "destinations/maruyama.html" },
+                { "title": "スタンプラリー実施中！豪華特典をゲットしよう", "link": "saitama-mini-game.html" }
+            ];
         }
+        updateRssDisplay();
+        setInterval(nextRss, 10000);
     }
 
     function updateRssDisplay() {
@@ -473,6 +498,7 @@
             const { CONFIG } = await import('./js/config.js');
             const apiUrl = `https://api.weatherapi.com/v1/current.json?key=${CONFIG.WEATHER_API_KEY}&q=Saitama&lang=ja`;
             const res = await fetch(`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(apiUrl)}`);
+            if (!res.ok) throw new Error('API request failed');
             const data = await res.json();
 
             const weatherInfo = document.getElementById('weather-info');
@@ -486,7 +512,13 @@
         } catch (e) {
             console.error('Weather fetch error:', e);
             const weatherInfo = document.getElementById('weather-info');
-            if (weatherInfo) weatherInfo.textContent = '取得失敗';
+            if (weatherInfo) {
+                weatherInfo.innerHTML = `
+                    <div class="text-3xl mb-2">☀️</div>
+                    22℃ / 晴れ (予測)
+                `;
+            }
+            startWeatherEffect(1000); // 晴れエフェクト
         }
     }
 

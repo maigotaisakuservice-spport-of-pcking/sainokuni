@@ -15,6 +15,12 @@
     --footer-bg: #1b5e20;
     --border-color: #e2e8f0;
     --recommend-bg: #f0f4f8;
+    --accent-bg: #ecfdf5; /* emerald-50 equivalent */
+    --accent-bg-dark: #111827; /* gray-900 equivalent for dark */
+    --accent-btn: #059669; /* emerald-600 equivalent */
+    --accent-btn-hover: #047857; /* emerald-700 equivalent */
+    --accent-border: #d1fae5; /* emerald-100 equivalent */
+    --accent-light: #34d399; /* emerald-400 equivalent */
 }
 
 /* Blue Theme */
@@ -22,6 +28,11 @@
     --primary-color: var(--saitama-blue);
     --header-bg: #007c91;
     --footer-bg: #007c91;
+    --accent-bg: #f0f9ff; /* sky-50 equivalent */
+    --accent-btn: #0284c7; /* sky-600 equivalent */
+    --accent-btn-hover: #0369a1; /* sky-700 equivalent */
+    --accent-border: #e0f2fe; /* sky-100 equivalent */
+    --accent-light: #38bdf8; /* sky-400 equivalent */
 }
 
 /* Red Theme */
@@ -29,6 +40,15 @@
     --primary-color: var(--saitama-red);
     --header-bg: #b91d1d;
     --footer-bg: #b91d1d;
+    --accent-bg: #fef2f2; /* red-50 equivalent */
+    --accent-btn: #dc2626; /* red-600 equivalent */
+    --accent-btn-hover: #b91c1c; /* red-700 equivalent */
+    --accent-border: #fee2e2; /* red-100 equivalent */
+    --accent-light: #f87171; /* red-400 equivalent */
+}
+
+.hover-accent-text:hover {
+    color: var(--accent-light) !important;
 }
 
 /* Dark Mode Overlay */

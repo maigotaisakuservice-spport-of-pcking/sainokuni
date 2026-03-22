@@ -8,7 +8,9 @@ class CouponManager {
         this.couponsKey = 'saitama-earned-coupons';
         this.resetDateKey = 'saitama-coupon-reset-date';
         // Determine the correct path to the JSON file based on current page depth
-        const pathPrefix = window.location.pathname.includes('/destinations/') ? '../' : '';
+        // URLの末尾が .html で終わる場合やスラッシュで終わる場合を考慮
+        const isSubDir = window.location.pathname.includes('/destinations/');
+        const pathPrefix = isSubDir ? '../' : '';
         this.dataUrl = pathPrefix + 'js/coupons-data.json';
         this.couponsData = [];
         this.init();

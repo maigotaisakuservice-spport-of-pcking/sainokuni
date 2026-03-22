@@ -41,7 +41,7 @@ async function initWebLLM(onProgress) {
     }
 }
 
-// チャットUIとの統合
+// セレクタの存在確認を事前に行う
 const chatMessages = document.getElementById('chat-messages');
 const userInput = document.getElementById('user-input');
 const sendBtn = document.getElementById('send-btn');
@@ -52,11 +52,11 @@ function updateStatus(text) {
 }
 
 async function handleChat(overrideMsg = null) {
-    const msg = overrideMsg || userInput.value.trim();
+    const msg = overrideMsg || (userInput ? userInput.value.trim() : "");
     if (!msg) return;
 
     addMessage('user', msg);
-    if (!overrideMsg) userInput.value = '';
+    if (!overrideMsg && userInput) userInput.value = '';
 
     if (!engine) {
         const loadingMsg = addMessage('model', "ﾋﾟﾎﾟｯ...AIエンジンが準備中である。バックグラウンドでシステムをロードしている...少々待たれよ。 (0%)");
@@ -121,10 +121,12 @@ async function handleChat(overrideMsg = null) {
 }
 
 function addMessage(role, text) {
+    if (!chatMessages) return document.createElement('div');
     const div = document.createElement('div');
     div.className = `mb-4 ${role === 'user' ? 'text-right' : 'text-left'}`;
     const inner = document.createElement('div');
-    inner.className = `inline-block p-3 rounded-2xl ${role === 'user' ? 'bg-emerald-500 text-white' : 'bg-gray-700 text-gray-200'} max-w-[80%] break-words`;
+    // テーマ変数を反映するように変更
+    inner.className = `inline-block p-3 rounded-2xl ${role === 'user' ? 'bg-[var(--primary-color)] text-white' : 'bg-gray-700 text-gray-200'} max-w-[80%] break-words`;
     inner.textContent = text;
 
     if (role === 'model') {
@@ -160,6 +162,9 @@ function fallbackResponse(msg) {
 
 // ページロード時にひっそりと初期化開始
 window.addEventListener('load', () => {
+    // セレクタがない場合は何もしない
+    if (!chatMessages) return;
+
     // ユーザーがチャットを開かなくてもダウンロードを開始（バックグラウンドロード）
     setTimeout(() => {
         initWebLLM((progress) => {

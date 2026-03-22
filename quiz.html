@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>埼玉マスタークイズ | 2026 Saitama Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "selector"
+        }
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Mochiy+Pop+One&family=DotGothic16&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/common.css">
     <style>
@@ -29,7 +34,7 @@
         <div id="start-screen" class="text-center">
             <h1 class="text-4xl accent-font mb-6">埼玉マスターへの道</h1>
             <p class="text-lg mb-8">あなたは埼玉のことをどれだけ知っていますか？<br>全5問のクイズに答えて、伝説の「埼玉マスター」を目指しましょう！</p>
-            <button onclick="startQuiz()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-12 rounded-full text-xl transition-transform hover:scale-105">
+            <button onclick="startQuiz()" class="style="background-color: var(--primary-color);" hover:bg-green-700 text-white font-bold py-4 px-12 rounded-full text-xl transition-transform hover:scale-105">
                 挑戦をはじめる
             </button>
             <div class="mt-8 text-sm opacity-60">全問正解で「秘密のクーポン」をゲット！</div>
@@ -46,7 +51,7 @@
 
         <div id="result-screen" class="hidden text-center">
             <h2 class="text-3xl accent-font mb-4">結果発表！</h2>
-            <div id="final-score" class="text-6xl font-black text-green-600 mb-6"></div>
+            <div id="final-score" class="text-6xl font-black style="color: var(--primary-color);" mb-6"></div>
             <p id="rank-text" class="text-xl font-bold mb-8"></p>
 
             <div id="coupon-area" class="hidden bg-yellow-50 border-2 border-yellow-200 p-6 rounded-2xl mb-8">
@@ -58,8 +63,8 @@
             </div>
 
             <div class="flex flex-col gap-4">
-                <button onclick="location.reload()" class="bg-green-600 text-white font-bold py-3 rounded-xl">もう一度挑戦</button>
-                <a href="saitama-mini-game.html" class="text-green-600 font-bold py-2 underline">ゲームセンターへ戻る</a>
+                <button onclick="location.reload()" class="style="background-color: var(--primary-color);" text-white font-bold py-3 rounded-xl">もう一度挑戦</button>
+                <a href="saitama-mini-game.html" class="style="color: var(--primary-color);" font-bold py-2 underline">ゲームセンターへ戻る</a>
             </div>
         </div>
     </div>
@@ -67,13 +72,13 @@
     <!-- ヘルプ用ポップアップ -->
     <div id="help-modal" class="fixed inset-0 bg-black/80 flex items-center justify-center z-[100] hidden p-6" onclick="closeHelp()">
         <div class="bg-white rounded-3xl p-8 max-w-md w-full" onclick="event.stopPropagation()">
-            <h3 id="help-title" class="text-2xl font-bold mb-4 text-emerald-700">埼玉マスタークイズの遊び方</h3>
+            <h3 id="help-title" class="text-2xl font-bold mb-4 style="color: var(--primary-color);"">埼玉マスタークイズの遊び方</h3>
             <div id="help-content" class="text-gray-600 space-y-4">
                 <p>1. 次々に出題される4択クイズに答えよう。</p>
                 <p>2. 全5問。正解数に応じて称号が変わるぞ。</p>
                 <p>3. 全問正解すると、秘密のクーポンが手に入る！</p>
             </div>
-            <button onclick="closeHelp()" class="mt-8 w-full bg-emerald-600 text-white font-bold py-3 rounded-xl">分かった！</button>
+            <button onclick="closeHelp()" class="mt-8 w-full style="background-color: var(--accent-btn);" text-white font-bold py-3 rounded-xl">分かった！</button>
         </div>
     </div>
 

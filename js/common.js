@@ -1,4 +1,11 @@
 
+// Tailwind ダークモード設定 (セレクタ方式)
+if (window.tailwind) {
+    tailwind.config = {
+        darkMode: 'selector'
+    };
+}
+
 // テーマ・モード管理
 function initTheme() {
     const savedMode = localStorage.getItem('saitama-mode') || 'light';
@@ -144,10 +151,10 @@ function showStampDialog(count, total) {
             <h2 class="text-2xl font-bold mb-2 text-slate-800 dark:text-white">スタンプ獲得！</h2>
             <p class="text-slate-500 dark:text-slate-400 mb-6">現在の獲得数: <span class="text-emerald-500 font-bold text-xl">${count}</span> / ${total}</p>
             <div class="w-full bg-slate-200 dark:bg-slate-800 h-3 rounded-full overflow-hidden mb-8">
-                <div class="bg-emerald-500 h-full transition-all duration-1000" style="width: ${(count/total)*100}%"></div>
+                <div class="style="background-color: var(--primary-color);" h-full transition-all duration-1000" style="width: ${(count/total)*100}%"></div>
             </div>
             ${rewardHtml}
-            <button onclick="this.closest('.fixed').remove()" class="mt-4 w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-6 rounded-xl transition-colors">閉じる</button>
+            <button onclick="this.closest('.fixed').remove()" class="mt-4 w-full style="background-color: var(--primary-color);" hover:opacity-90 text-white font-bold py-3 px-6 rounded-xl transition-colors">閉じる</button>
         </div>
     `;
 
@@ -222,7 +229,7 @@ const modalContents = {
         <h2 class="text-2xl font-bold mb-4 text-emerald-600">加盟店・イベント募集</h2>
         <p class="mb-4">公園内のカフェ、売店、期間限定イベントの情報を当サイトで紹介しませんか？</p>
         <div class="text-center">
-            <a href="merchants.html" class="inline-block bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-8 rounded-full transition-all">
+            <a href="merchants.html" class="inline-block style="background-color: var(--primary-color);" hover:opacity-90 text-white font-bold py-3 px-8 rounded-full transition-all">
                 詳しく見る・応募する
             </a>
             <p class="mt-4 text-xs text-gray-500">※リンク先は外部募集ページへ移動します（実際には内部ページ）</p>
