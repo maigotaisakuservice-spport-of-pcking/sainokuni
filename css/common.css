@@ -75,7 +75,7 @@ body {
     right: 30px;
     width: 60px;
     height: 60px;
-    background-color: var(--saitama-green);
+    background-color: var(--primary-color);
     color: white;
     border: none;
     border-radius: 50%;
@@ -99,8 +99,8 @@ body {
     to { opacity: 1; transform: translateY(0); }
 }
 .go-to-top-button:hover {
-    background-color: #008ba3;
     transform: scale(1.1);
+    opacity: 0.9;
 }
 
 /* 観光地ページテンプレート用追加スタイル */
@@ -177,7 +177,7 @@ body {
     border-radius: 15px;
 }
 .stamp-btn {
-    background: var(--saitama-blue);
+    background: var(--primary-color);
     color: white;
     border: none;
     padding: 10px 20px;
@@ -187,7 +187,7 @@ body {
     transition: background 0.3s;
 }
 .stamp-btn:disabled {
-    background: #ccc;
+    background: #ccc !important;
     cursor: default;
 }
 
@@ -210,7 +210,7 @@ body {
     width: 300px;
     height: 100vh;
     background: var(--header-bg);
-    color: var(--text-color);
+    color: #fff;
     z-index: 1050;
     transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     padding: 80px 30px;
@@ -253,14 +253,12 @@ body {
 }
 .menu-title {
     font-size: 0.8rem;
-    color: #718096;
+    color: #cbd5e0;
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-bottom: 10px;
     margin-top: 30px;
 }
-
-/* Removed Saicolor Switcher Styles */
 
 /* ヘッダー・フッター追加スタイル */
 header {
@@ -282,8 +280,6 @@ footer a:hover { opacity: 1; text-decoration: underline !important; }
 
 /* Elements using Primary Color */
 .section-title::after { background: var(--primary-color) !important; }
-.stamp-btn { background: var(--primary-color) !important; }
-.go-to-top-button { background-color: var(--primary-color) !important; }
 
 /* Park Feature Icons */
 .feature-list {
@@ -309,22 +305,82 @@ footer a:hover { opacity: 1; text-decoration: underline !important; }
     filter: grayscale(1);
     font-weight: 400;
 }
-.all-in-one-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    background: linear-gradient(45deg, #FFD700, #FFA500);
-    color: #fff;
-    padding: 5px 15px;
-    border-radius: 8px;
-    font-weight: 900;
-    font-size: 0.9rem;
-    margin-bottom: 15px;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16);
-    animation: pulse-gold 2s infinite;
+
+/* note-style news classes */
+.note-container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 40px 20px;
 }
-@keyframes pulse-gold {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
+.note-article {
+    margin-bottom: 60px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--border-color);
+}
+.note-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+.note-meta {
+    font-size: 0.85rem;
+    color: #718096;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.note-thumbnail {
+    width: 100%;
+    aspect-ratio: 1.91 / 1;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+.note-excerpt {
+    font-size: 1rem;
+    color: var(--text-color);
+    line-height: 1.7;
+    margin-bottom: 20px;
+}
+.note-link {
+    color: var(--primary-color);
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+.note-link:hover {
+    text-decoration: underline;
+}
+
+/* Modal styles for consistency */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 5000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+}
+.modal-content {
+    background-color: var(--bg-color);
+    padding: 2.5rem;
+    border-radius: 24px;
+    max-width: 600px;
+    width: 90%;
+    position: relative;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+.modal-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 28px;
+    cursor: pointer;
+    color: #718096;
 }

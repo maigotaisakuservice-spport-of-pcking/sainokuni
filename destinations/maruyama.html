@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>丸山公園 | 埼玉県公園ガイド 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Mochiy+Pop+One&family=DotGothic16&display=swap" rel="stylesheet">
@@ -20,14 +21,12 @@
         }
         main { max-width: 900px; margin: 0 auto 4rem; padding: 0 1.5rem; }
         section { margin-top: 3rem; }
-        h2 { font-size: 2rem; border-bottom: 4px solid var(--saitama-green); padding-bottom: 0.5rem; margin-bottom: 1.5rem; }
-        h3 { font-size: 1.5rem; color: var(--saitama-green); margin-top: 2rem; }
-        .content-card { background: #f1f8e9; padding: 2rem; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 2rem; }
+        h2 { font-size: 2rem; border-bottom: 4px solid var(--primary-color); padding-bottom: 0.5rem; margin-bottom: 1.5rem; }
+        h3 { font-size: 1.5rem; color: var(--primary-color); margin-top: 2rem; }
+        .content-card { background: var(--card-bg); padding: 2rem; border-radius: 15px; box-shadow: 0 4px 15px var(--card-shadow); margin-bottom: 2rem; border: 1px solid var(--border-color); }
         iframe { width: 100%; height: 400px; border-radius: 20px; border: none; margin-top: 2rem; }
-        footer { text-align: center; padding: 3rem; background: #1b5e20; color: #bdc3c7; }
-        .tts-btn { background: none; border: 2px solid #ecf0f1; color: #ecf0f1; padding: 5px 15px; border-radius: 20px; cursor: pointer; font-weight: 600; }
         .info-list { list-style: none; padding: 0; }
-        .info-list li { background: #fff; padding: 1rem; margin-bottom: 0.5rem; border-radius: 10px; border-left: 5px solid var(--saitama-green); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .info-list li { background: var(--card-bg); padding: 1rem; margin-bottom: 0.5rem; border-radius: 10px; border-left: 5px solid var(--primary-color); box-shadow: 0 2px 5px var(--card-shadow); }
     </style>
 </head>
 <body>
@@ -37,17 +36,17 @@
         <button onclick="toggleMenu()" class="text-2xl md:hidden">☰</button>
         <h1 class="text-xl font-bold tracking-tighter" style="font-family: 'Mochiy Pop One';"><a href="../index.html" style="color: inherit; text-decoration: none;">SAITAMA PARKS</a></h1>
         <div class="tts-control hidden md:flex">
-            <span class="text-sm">アクセシビリティ</span>
-            <button onclick="readPageText()" class="hover:text-emerald-400">🔊 音声読み上げ</button>
+            <span class="text-sm text-white/80">アクセシビリティ</span>
+            <button onclick="readPageText()" class="hover:text-emerald-400 text-white font-bold">🔊 音声読み上げ</button>
         </div>
     </div>
         <nav class="hidden md:flex items-center gap-6">
         <a id="coupon-menu-item" href="../coupons.html" class="hidden text-yellow-400 font-bold animate-pulse" title="クーポン獲得！">💎 特典</a>
-        <a href="../news.html" class="hover:text-emerald-400 font-bold">NEWS</a>
-        <a href="maruyama.html" class="hover:text-emerald-400 font-bold">公園を探す</a>
-        <a href="../map.html" class="hover:text-emerald-400 font-bold">マップ</a>
-        <a href="../saitama-mini-game.html" class="hover:text-emerald-400 font-bold">ゲーム</a>
-        <a href="../gallery.html" class="hover:text-emerald-400 font-bold">ギャラリー</a>
+        <a href="../news.html" class="hover:text-emerald-400 font-bold text-white">NEWS</a>
+        <a href="maruyama.html" class="hover:text-emerald-400 font-bold text-white">公園を探す</a>
+        <a href="../map.html" class="hover:text-emerald-400 font-bold text-white">マップ</a>
+        <a href="../saitama-mini-game.html" class="hover:text-emerald-400 font-bold text-white">ゲーム</a>
+        <a href="../gallery.html" class="hover:text-emerald-400 font-bold text-white">ギャラリー</a>
         <div class="flex items-center gap-2 ml-2 border-l border-white/20 pl-4">
             <button onclick="toggleTheme()" class="hover:scale-110 transition-transform" id="theme-toggle-icon" title="カラー変更">🌳</button>
             <button onclick="toggleDarkMode()" class="hover:scale-110 transition-transform" title="ダークモード切替">🌓</button>
@@ -104,19 +103,19 @@
     <section>
         <h2>✨ 丸山公園の楽しみ方</h2>
         <div class="grid md:grid-cols-2 gap-6">
-            <div class="bg-white/50 p-6 rounded-2xl shadow-sm">
+            <div class="bg-white/50 dark:bg-slate-800/50 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700">
                 <h3 class="mt-0">🌲 自然学習館・天文台</h3>
                 <p class="text-sm">園内にある上尾市自然学習館では、地域の動植物について詳しく学べるほか、天文台も併設されており、天体観測イベントなども開催されます。</p>
             </div>
-            <div class="bg-white/50 p-6 rounded-2xl shadow-sm">
+            <div class="bg-white/50 dark:bg-slate-800/50 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700">
                 <h3 class="mt-0">🪷 水生植物園と四季の花々</h3>
                 <p class="text-sm">ハスやスイレンなどが咲く水生植物園があり、カメラを構える愛好家も多いスポットです。春の桜、秋の紅葉も非常に美しいです。</p>
             </div>
-            <div class="bg-white/50 p-6 rounded-2xl shadow-sm">
+            <div class="bg-white/50 dark:bg-slate-800/50 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700">
                 <h3 class="mt-0">🧺 芝生広場でピクニック</h3>
-                <p class="text-sm">ゆったりとした芝生広場が点在しており、お弁当を広げるのに最適。木陰も多いため、夏場でも比較的涼しく過ごせます。</p>
+                <p class="text-sm">ゆったりとした芝生広場が点在しており、お弁当を広げるのに最適. 木陰も多いため、夏場でも比較的涼しく過ごせます。</p>
             </div>
-            <div class="bg-white/50 p-6 rounded-2xl shadow-sm">
+            <div class="bg-white/50 dark:bg-slate-800/50 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700">
                 <h3 class="mt-0">🪵 滝とせせらぎ散策</h3>
                 <p class="text-sm">公園の奥には人工の滝やせせらぎがあり、水の音を聞きながら散策できます。夏場には子供たちの水遊びスポットとしても賑わいます。</p>
             </div>
@@ -125,7 +124,7 @@
 
     <section>
         <h2>💡 訪問のヒント</h2>
-        <div class="content-card" style="background: #e8f5e9; border-left: 5px solid #4caf50;">
+        <div class="content-card" style="border-left: 5px solid #4caf50;">
             <p><strong>ランチ：</strong> 公園内に大きな売店はありませんが、周辺に飲食店やコンビニがあります。お弁当を持参して、園内でゆっくり食べるのが一番のおすすめです！</p>
             <p><strong>学習館：</strong> 自然学習館は雨の日の休憩スポットとしても活用できます（月曜休館など、事前に確認してください）。</p>
         </div>
@@ -168,13 +167,13 @@
     </section>
 </main>
 <footer>
-    <div class="max-w-6xl mx-auto px-6">
+    <div class="max-w-6xl mx-auto px-6 text-white">
         <h2 class="text-2xl font-bold mb-4" style="font-family: 'Mochiy Pop One';">SAITAMA PARKS</h2>
         <p class="text-sm opacity-80">© 2026 埼玉県公園ガイドポータル - 自然と共に生きる。</p>
         <div class="footer-links mt-6 flex justify-center gap-6 text-sm flex-wrap">
-            <a onclick="openModal('about')" class="hover:underline cursor-pointer">サイトについて</a>
-            <a onclick="openModal('access')" class="hover:underline cursor-pointer">アクセス</a>
-            <a onclick="openModal('copyright')" class="hover:underline cursor-pointer">著作権</a>
+            <a onclick="openModal('about')" class="hover:underline cursor-pointer text-white">サイトについて</a>
+            <a onclick="openModal('access')" class="hover:underline cursor-pointer text-white">アクセス</a>
+            <a onclick="openModal('copyright')" class="hover:underline cursor-pointer text-white">著作権</a>
             <a onclick="openModal('recruit')" class="hover:underline cursor-pointer text-emerald-400 font-bold">加盟店募集</a>
         </div>
     </div>

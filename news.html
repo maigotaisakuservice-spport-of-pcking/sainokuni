@@ -19,37 +19,6 @@
             top: 0; width: 100%; z-index: 1000;
             display: flex; justify-content: space-between; align-items: center;
         }
-        .news-hero {
-            height: 40vh;
-            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=2070&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            text-align: center;
-            margin-top: 60px;
-        }
-        .news-card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px var(--card-shadow);
-            transition: transform 0.3s;
-            display: flex;
-            flex-direction: column;
-        }
-        .news-card:hover { transform: translateY(-5px); }
-        .news-tag {
-            background: var(--primary-color);
-            color: white;
-            font-size: 0.7rem;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-weight: bold;
-        }
     </style>
 </head>
 <body class="min-h-screen">
@@ -95,68 +64,80 @@
         </div>
     </div>
 
-    <div class="news-hero">
-        <h2 class="text-4xl md:text-6xl font-bold mb-4" style="font-family: 'Mochiy Pop One';">PARK NEWS</h2>
-        <p class="text-xl opacity-90">埼玉の自然と遊びの最新情報</p>
-    </div>
+    <main class="note-container mt-[80px]">
+        <h2 class="text-3xl font-bold mb-10 text-center" style="font-family: 'Mochiy Pop One';">PARK NEWS</h2>
 
-    <main class="max-w-6xl mx-auto px-6 py-16">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-            <!-- 記事1 -->
-            <a href="destinations/omiya_park.html" class="news-card">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Omiya_Park_20220327_2.jpg/640px-Omiya_Park_20220327_2.jpg" alt="大宮公園さくら祭り" class="w-full h-48 object-cover">
-                <div class="p-6">
-                    <div class="flex items-center gap-2 mb-3">
-                        <span class="news-tag">EVENT</span>
-                        <span class="text-xs text-gray-500">2026.03.15</span>
-                    </div>
-                    <h3 class="text-xl font-bold mb-2">大宮公園：春のさくら祭り2026 開催決定！</h3>
-                    <p class="text-sm text-gray-500 line-clamp-2">日本さくら名所100選にも選ばれた大宮公園。今年の桜まつりは、夜桜ライトアップとキッチンカーが勢揃いします。</p>
-                </div>
+        <!-- Note Style Article 1 -->
+        <article class="note-article">
+            <div class="note-meta">
+                <span class="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded text-xs font-bold">EVENT</span>
+                <span>2026年3月15日</span>
+            </div>
+            <a href="destinations/omiya_park.html">
+                <h3 class="note-title">大宮公園：春のさくら祭り2026 開催決定！夜桜ライトアップも。</h3>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Omiya_Park_20220327_2.jpg/1200px-Omiya_Park_20220327_2.jpg" alt="大宮公園さくら祭り" class="note-thumbnail">
             </a>
-
-            <!-- 記事2 -->
-            <a href="destinations/shinrin_park.html" class="news-card">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Musashi_Kyuryo_National_Government_Park_20111105.jpg" alt="森林公園リニューアル" class="w-full h-48 object-cover">
-                <div class="p-6">
-                    <div class="flex items-center gap-2 mb-3">
-                        <span class="news-tag">FACILITY</span>
-                        <span class="text-xs text-gray-500">2026.03.10</span>
-                    </div>
-                    <h3 class="text-xl font-bold mb-2">森林公園：最新アスレチック「冒険コース」リニューアル</h3>
-                    <p class="text-sm text-gray-500 line-clamp-2">子供たちに大人気の冒険コースがさらにパワーアップ！日本最大級のネット遊具が登場し、より安全に遊べるようになりました。</p>
+            <p class="note-excerpt">日本さくら名所100選にも選ばれた大宮公園。今年の桜まつりは、例年以上の規模で開催されます。幻想的な夜桜ライトアップに加え、県内屈指の人気店が集結するキッチンカーエリアも登場。家族や友人と、春のひとときを楽しみませんか？</p>
+            <div class="flex justify-between items-center">
+                <a href="destinations/omiya_park.html" class="note-link">続きを読む</a>
+                <div class="flex gap-4 text-gray-400">
+                    <span>❤️ 128</span>
+                    <span>💬 12</span>
                 </div>
+            </div>
+        </article>
+
+        <!-- Note Style Article 2 -->
+        <article class="note-article">
+            <div class="note-meta">
+                <span class="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 px-2 py-0.5 rounded text-xs font-bold">FACILITY</span>
+                <span>2026年3月10日</span>
+            </div>
+            <a href="destinations/shinrin_park.html">
+                <h3 class="note-title">森林公園：最新アスレチック「冒険コース」がリニューアルオープン！</h3>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Musashi_Kyuryo_National_Government_Park_20111105.jpg" alt="森林公園リニューアル" class="note-thumbnail">
             </a>
-
-            <!-- 記事3 -->
-            <a href="destinations/tokorozawa_park.html" class="news-card">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Tokorozawa_Aviation_Memorial_Park_01.JPG/640px-Tokorozawa_Aviation_Memorial_Park_01.JPG" alt="航空公園テニス大会" class="w-full h-48 object-cover">
-                <div class="p-6">
-                    <div class="flex items-center gap-2 mb-3">
-                        <span class="news-tag">SPORTS</span>
-                        <span class="text-xs text-gray-500">2026.03.01</span>
-                    </div>
-                    <h3 class="text-xl font-bold mb-2">所沢航空公園：市民テニス大会のエントリー開始</h3>
-                    <p class="text-sm text-gray-500 line-clamp-2">新緑の美しい航空公園でテニスを楽しみませんか？初心者から上級者まで、どなたでも参加できるクラスを用意しています。</p>
+            <p class="note-excerpt">子供たちに絶大な人気を誇る森林公園の「冒険コース」が、この春、大幅にパワーアップしました。日本最大級のネット遊具「空の散歩道」が新登場し、より安全に、よりスリル満点に遊べるようになっています。春休みの行き先候補にぜひ。</p>
+            <div class="flex justify-between items-center">
+                <a href="destinations/shinrin_park.html" class="note-link">続きを読む</a>
+                <div class="flex gap-4 text-gray-400">
+                    <span>❤️ 95</span>
+                    <span>💬 8</span>
                 </div>
+            </div>
+        </article>
+
+        <!-- Note Style Article 3 -->
+        <article class="note-article">
+            <div class="note-meta">
+                <span class="bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 px-2 py-0.5 rounded text-xs font-bold">SPORTS</span>
+                <span>2026年3月1日</span>
+            </div>
+            <a href="destinations/tokorozawa_park.html">
+                <h3 class="note-title">所沢航空公園：市民テニス大会のエントリーを開始します。</h3>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Tokorozawa_Aviation_Memorial_Park_01.JPG/1200px-Tokorozawa_Aviation_Memorial_Park_01.JPG" alt="航空公園テニス大会" class="note-thumbnail">
             </a>
-
-            <!-- 外部ニュース1 -->
-            <a href="https://www.pref.saitama.lg.jp/news/index.html" target="_blank" class="news-card">
-                <div class="aspect-video bg-emerald-100 flex items-center justify-center p-8">
-                    <span class="text-emerald-800 font-bold text-center">埼玉県公式サイト<br>最新ニュース</span>
+            <p class="note-excerpt">新緑の美しい航空公園でテニスを楽しみませんか？初心者から上級者まで、どなたでも参加できるクラスを用意しています。参加者全員に公園オリジナルグッズのプレゼントも！先着順ですので、お早めのエントリーをお願いします。</p>
+            <div class="flex justify-between items-center">
+                <a href="destinations/tokorozawa_park.html" class="note-link">続きを読む</a>
+                <div class="flex gap-4 text-gray-400">
+                    <span>❤️ 64</span>
+                    <span>💬 5</span>
                 </div>
-                <div class="p-6">
-                    <div class="flex items-center gap-2 mb-3">
-                        <span class="news-tag">OFFICIAL</span>
-                        <span class="text-xs text-gray-500">External Link</span>
-                    </div>
-                    <h3 class="text-xl font-bold mb-2">彩の国 ニュース 埼玉県公式サイト</h3>
-                    <p class="text-sm text-gray-500 line-clamp-2">埼玉県の取り組みや生活に役立つ情報を、県の最新ニュースからお届けします。</p>
-                </div>
-            </a>
+            </div>
+        </article>
 
+        <!-- External Link Section -->
+        <div class="bg-gray-50 dark:bg-slate-800 p-8 rounded-2xl border border-gray-100 dark:border-slate-700">
+            <h4 class="font-bold mb-4">埼玉県公式ニュース（外部サイト）</h4>
+            <ul class="space-y-4">
+                <li>
+                    <a href="https://www.pref.saitama.lg.jp/news/index.html" target="_blank" class="flex justify-between items-center group">
+                        <span class="group-hover:text-emerald-500 transition-colors">彩の国 ニュース 埼玉県公式サイトへ</span>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                    </a>
+                </li>
+            </ul>
         </div>
     </main>
 

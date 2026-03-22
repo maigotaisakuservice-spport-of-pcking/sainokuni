@@ -1,10 +1,7 @@
 
-// WebLLM (mlc-ai) を使用したAIサイタマニアくんの実装
-// 注意: 初回起動時にモデルのダウンロード（約1.5GB〜）が発生します。
-
 import * as webllm from "https://esm.run/@mlc-ai/web-llm";
 
-const SELECTED_MODEL = "gemma-2-2b-it-q4f16_1-MLC"; // 軽量かつ埼玉の知識があるモデル
+const SELECTED_MODEL = "gemma-2-2b-it-q4f16_1-MLC";
 
 const SYSTEM_PROMPT = `
 あなたは「AIサイタマニアくん」という、埼玉県が大好きな埴輪型AIガイドです。
@@ -40,6 +37,7 @@ async function initWebLLM(onProgress) {
     } catch (e) {
         console.error("WebLLMの初期化に失敗しました。フォールバックロジックに切り替えます。", e);
         isConfiguring = false;
+        // フォールバック用のフラグを立てるか、engineをnullのままにする
     }
 }
 
@@ -113,7 +111,12 @@ async function handleChat(overrideMsg = null) {
 
     } catch (e) {
         console.error(e);
-        addMessage('model', "ﾋﾟﾋﾟｯ...システムエラー。再試行を推奨する。");
+        // エラー時はフォールバック
+        const errorInner = chatMessages.lastElementChild.querySelector('.inline-block');
+        if (errorInner) {
+            errorInner.textContent = "ﾋﾟﾋﾟｯ...システムエラーが発生した。スキャンモードに切り替える。";
+        }
+        fallbackResponse(msg);
     }
 }
 
@@ -185,7 +188,7 @@ window.selectMood = function(mood) {
         'kids': '子供が思いっきり遊べる遊具の充実した公園を教えて。',
         'sports': 'サッカーやジョギングなどのスポーツができる公園はどこ？',
         'learn': '埼玉の歴史や文化を学べるスポットはどこ？',
-        'hungry': 'お腹が空いた。埼玉のおいしいものが知りたい。'
+        'hungry': 'お腹が空いた. 埼玉のおいしいものが知りたい。'
     };
     handleChat(moodMap[mood]);
 };
@@ -193,5 +196,5 @@ window.selectMood = function(mood) {
 // グローバルに公開
 window.handleChat = handleChat;
 
-sendBtn.addEventListener('click', handleChat);
-userInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') handleChat(); });
+if (sendBtn) sendBtn.addEventListener('click', () => handleChat());
+if (userInput) userInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') handleChat(); });
