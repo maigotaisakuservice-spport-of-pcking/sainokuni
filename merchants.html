@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>加盟店・イベント募集 | SAITAMA PARKS 2026</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Mochiy+Pop+One&family=DotGothic16&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        .header-main {
+            background: var(--header-bg);
+            backdrop-filter: blur(10px);
+            color: #ecf0f1;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0; width: 100%; z-index: 1000;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        main { max-width: 900px; margin: 80px auto 4rem; padding: 2rem 1.5rem; }
+        .hero-section { text-align: center; padding: 4rem 0; background: linear-gradient(135deg, var(--saitama-green), var(--saitama-blue)); color: white; border-radius: 30px; margin-bottom: 3rem; }
+        .hero-section h2 { font-family: 'Mochiy Pop One'; font-size: 2.5rem; margin-bottom: 1rem; }
+        .benefit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin: 3rem 0; }
+        .benefit-card { background: var(--card-bg); padding: 2rem; border-radius: 20px; box-shadow: 0 4px 15px var(--card-shadow); text-align: center; }
+        .benefit-card .icon { font-size: 3rem; margin-bottom: 1rem; display: block; }
+        .apply-btn { display: inline-block; background: var(--saitama-red); color: white; font-weight: 700; padding: 1.2rem 3rem; border-radius: 50px; text-decoration: none; font-size: 1.2rem; transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; border: none; }
+        .apply-btn:hover { transform: scale(1.05); box-shadow: 0 10px 20px rgba(244, 67, 54, 0.3); }
+
+        /* Form Modal Styles */
+        #registration-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; padding: 20px; }
+        .form-container { background: white; width: 100%; max-width: 600px; padding: 2.5rem; border-radius: 25px; position: relative; color: #333; max-height: 90vh; overflow-y: auto; }
+        .form-close { position: absolute; top: 15px; right: 20px; font-size: 30px; cursor: pointer; color: #999; }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; font-weight: 700; margin-bottom: 0.5rem; color: #444; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.8rem; border: 2px solid #eee; border-radius: 10px; font-family: inherit; font-size: 1rem; }
+        .form-group input:focus { border-color: var(--saitama-green); outline: none; }
+        .submit-btn { width: 100%; background: var(--saitama-green); color: white; border: none; padding: 1rem; border-radius: 10px; font-weight: 700; font-size: 1.1rem; cursor: pointer; margin-top: 1rem; }
+
+        .success-message { display: none; text-align: center; padding: 2rem; }
+        .success-message h3 { color: var(--saitama-green); font-size: 1.5rem; margin-bottom: 1rem; }
+    </style>
+</head>
+<body>
+<header class="header-main">
+    <h1 class="text-xl font-bold tracking-tighter" style="font-family: 'Mochiy Pop One';"><a href="index.html" style="color: inherit; text-decoration: none;">SAITAMA PARKS</a></h1>
+        <nav class="hidden md:flex items-center gap-6">
+        <a id="coupon-menu-item" href="coupons.html" class="hidden text-yellow-400 font-bold animate-pulse" title="クーポン獲得！">💎 特典</a>
+        <a href="news.html" class="hover:text-emerald-400 font-bold">NEWS</a>
+        <a href="destinations/maruyama.html" class="hover:text-emerald-400 font-bold">公園を探す</a>
+        <a href="map.html" class="hover:text-emerald-400 font-bold">マップ</a>
+        <a href="saitama-mini-game.html" class="hover:text-emerald-400 font-bold">ゲーム</a>
+        <a href="gallery.html" class="hover:text-emerald-400 font-bold">ギャラリー</a>
+        <div class="flex items-center gap-2 ml-2 border-l border-white/20 pl-4">
+            <button onclick="toggleTheme()" class="hover:scale-110 transition-transform" id="theme-toggle-icon" title="カラー変更">🌳</button>
+            <button onclick="toggleDarkMode()" class="hover:scale-110 transition-transform" title="ダークモード切替">🌓</button>
+        </div>
+    </nav>
+</header>
+
+<main>
+    <div class="hero-section">
+        <h2>公園を、もっと楽しく。<br>加盟店・イベント募集中！</h2>
+        <p>あなたのビジネスやアイディアを、埼玉の豊かな自然の中で形にしませんか？</p>
+    </div>
+
+    <section>
+        <h3 class="text-2xl font-bold text-center mb-8">参加するメリット</h3>
+        <div class="benefit-grid">
+            <div class="benefit-card">
+                <span class="icon">📈</span>
+                <h4 class="font-bold mb-2">圧倒的な集客力</h4>
+                <p class="text-sm">年間数百万人が訪れる埼玉の主要公園で、あなたの店やイベントをアピールできます。</p>
+            </div>
+            <div class="benefit-card">
+                <span class="icon">📱</span>
+                <h4 class="font-bold mb-2">デジタル連携</h4>
+                <p class="text-sm">当ポータルサイトやアプリ、SNSを通じて、ターゲット層に直接情報を届けます。</p>
+            </div>
+            <div class="benefit-card">
+                <span class="icon">💎</span>
+                <h4 class="font-bold mb-2">クーポンシステム</h4>
+                <p class="text-sm">独自のクーポン機能を利用して、リピーター獲得や新規顧客の誘導が可能です。</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="text-center my-12">
+        <button onclick="openRegistrationModal()" class="apply-btn">今すぐエントリーする</button>
+    </div>
+
+    <section class="bg-slate-50 dark:bg-slate-800 p-8 rounded-2xl">
+        <h3 class="font-bold mb-4">募集カテゴリー</h3>
+        <ul class="list-disc list-inside space-y-2 text-sm">
+            <li><strong>移動販売・キッチンカー:</strong> 週末の広場やイベント時の出店。</li>
+            <li><strong>常設カフェ・売店:</strong> 公園内の施設運営パートナー。</li>
+            <li><strong>ワークショップ・体験イベント:</strong> 自然体験、スポーツ教室、クラフトなど。</li>
+            <li><strong>法人サポーター:</strong> 公園の環境維持や設備寄贈を通じたブランディング。</li>
+        </ul>
+    </section>
+</main>
+
+<footer>
+    <div class="max-w-6xl mx-auto px-6">
+        <h2 class="text-2xl font-bold mb-4" style="font-family: 'Mochiy Pop One';">SAITAMA PARKS</h2>
+        <p class="text-sm opacity-80">© 2026 埼玉県公園ガイドポータル - 自然と共に生きる。</p>
+        <div class="footer-links mt-6 flex justify-center gap-6 text-sm flex-wrap">
+            <a onclick="openModal('about')" class="hover:underline cursor-pointer">サイトについて</a>
+            <a onclick="openModal('access')" class="hover:underline cursor-pointer">アクセス</a>
+            <a onclick="openModal('copyright')" class="hover:underline cursor-pointer">著作権</a>
+            <a onclick="openModal('recruit')" class="hover:underline cursor-pointer text-emerald-400 font-bold">加盟店募集</a>
+        </div>
+    </div>
+</footer>
+
+<!-- 登録モーダル -->
+<div id="registration-modal">
+    <div class="form-container">
+        <span class="form-close" onclick="closeRegistrationModal()">&times;</span>
+        <div id="form-content">
+            <h3 class="text-2xl font-bold mb-6 text-center">パートナー登録エントリー</h3>
+            <form id="merchant-form" onsubmit="handleMerchantSubmit(event)">
+                <div class="form-group">
+                    <label>事業者名 / 団体名</label>
+                    <input type="text" name="org_name" required placeholder="例：サイタマカフェ株式会社">
+                </div>
+                <div class="form-group">
+                    <label>募集カテゴリー</label>
+                    <select name="category" required>
+                        <option value="">選択してください</option>
+                        <option value="food">飲食・キッチンカー</option>
+                        <option value="event">イベント・ワークショップ</option>
+                        <option value="shop">物販・サービス</option>
+                        <option value="other">その他</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>代表者名</label>
+                    <input type="text" name="name" required placeholder="埼玉 太郎">
+                </div>
+                <div class="form-group">
+                    <label>メールアドレス</label>
+                    <input type="email" name="email" required placeholder="example@saitama-parks.jp">
+                </div>
+                <div class="form-group">
+                    <label>メッセージ・意気込み</label>
+                    <textarea name="message" rows="4" placeholder="あなたのアイディアを教えてください！"></textarea>
+                </div>
+                <button type="submit" class="submit-btn">内容を確認して送信</button>
+            </form>
+        </div>
+        <div id="success-content" class="success-message">
+            <div class="text-6xl mb-4">✉️</div>
+            <h3>送信完了しました！</h3>
+            <p class="text-sm text-gray-600">内容を確認の上、担当者より5営業日以内にご連絡いたします。<br>埼玉の公園を一緒に盛り上げましょう！</p>
+            <button onclick="closeRegistrationModal()" class="submit-btn !bg-gray-500 mt-6">閉じる</button>
+        </div>
+    </div>
+</div>
+
+<script src="js/common.js"></script>
+<script>
+    function openRegistrationModal() {
+        document.getElementById('registration-modal').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+    function closeRegistrationModal() {
+        document.getElementById('registration-modal').style.display = 'none';
+        document.body.style.overflow = 'auto';
+        // 成功メッセージが出ていた場合はリセット
+        document.getElementById('form-content').style.display = 'block';
+        document.getElementById('success-content').style.display = 'none';
+    }
+    function handleMerchantSubmit(e) {
+        e.preventDefault();
+        // 実際にはここでAPI送信
+        document.getElementById('form-content').style.display = 'none';
+        document.getElementById('success-content').style.display = 'block';
+    }
+</script>
+</body>
+</html>

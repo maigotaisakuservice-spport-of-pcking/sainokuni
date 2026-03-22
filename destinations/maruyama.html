@@ -6,7 +6,7 @@
     <title>丸山公園 | 埼玉県公園ガイド 2026</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Mochiy+Pop+One&family=DotGothic16&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/common.css">
     <style>
         .header-main {
@@ -41,19 +41,17 @@
             <button onclick="readPageText()" class="hover:text-emerald-400">🔊 音声読み上げ</button>
         </div>
     </div>
-    <nav class="hidden md:flex items-center gap-6">
-        <div class="flex items-center gap-2 px-3 border-r border-white/20 mr-2">
-            <button onclick="setSaicolor('green')" class="saicolor-btn saicolor-green" title="緑（自然）"></button>
-            <button onclick="setSaicolor('blue')" class="saicolor-btn saicolor-blue" title="青（水・空）"></button>
-            <button onclick="setSaicolor('red')" class="saicolor-btn saicolor-red" title="赤（情熱）"></button>
-        </div>
-        <a id="coupon-menu-item" href="../index.html?reward=true" class="hidden text-yellow-400 font-bold animate-pulse" title="クーポン獲得！">💎 特典</a>
+        <nav class="hidden md:flex items-center gap-6">
+        <a id="coupon-menu-item" href="../coupons.html" class="hidden text-yellow-400 font-bold animate-pulse" title="クーポン獲得！">💎 特典</a>
         <a href="../news.html" class="hover:text-emerald-400 font-bold">NEWS</a>
         <a href="maruyama.html" class="hover:text-emerald-400 font-bold">公園を探す</a>
         <a href="../map.html" class="hover:text-emerald-400 font-bold">マップ</a>
         <a href="../saitama-mini-game.html" class="hover:text-emerald-400 font-bold">ゲーム</a>
         <a href="../gallery.html" class="hover:text-emerald-400 font-bold">ギャラリー</a>
-        <button onclick="toggleTheme()" class="theme-toggle-btn text-xl" id="theme-toggle-icon">🌙</button>
+        <div class="flex items-center gap-2 ml-2 border-l border-white/20 pl-4">
+            <button onclick="toggleTheme()" class="hover:scale-110 transition-transform" id="theme-toggle-icon" title="カラー変更">🌳</button>
+            <button onclick="toggleDarkMode()" class="hover:scale-110 transition-transform" title="ダークモード切替">🌓</button>
+        </div>
     </nav>
 </header>
 
@@ -65,23 +63,17 @@
             <h2 class="text-xl font-bold" style="font-family: 'Mochiy Pop One';">MENU</h2>
             <button onclick="toggleMenu()" class="text-2xl">&times;</button>
         </div>
-        <nav class="flex flex-col gap-6 text-lg">
-            <a href="../index.html" class="flex items-center gap-3">🏠 ホーム</a>
-            <a href="../news.html" class="flex items-center gap-3">📰 NEWS</a>
-            <a href="maruyama.html" class="flex items-center gap-3">🌳 公園を探す</a>
-            <a href="../map.html" class="flex items-center gap-3">🗺️ マップ</a>
-            <a href="../saitama-mini-game.html" class="flex items-center gap-3">🎮 ゲーム</a>
-            <a href="../gallery.html" class="flex items-center gap-3">🖼️ ギャラリー</a>
-            <hr class="border-slate-700">
-            <div class="flex items-center justify-around py-2">
-                <button onclick="setSaicolor('green')" class="saicolor-btn saicolor-green"></button>
-                <button onclick="setSaicolor('blue')" class="saicolor-btn saicolor-blue"></button>
-                <button onclick="setSaicolor('red')" class="saicolor-btn saicolor-red"></button>
-            </div>
-            <button onclick="toggleTheme()" class="flex items-center gap-3 w-full text-left">
-                <span id="theme-toggle-icon-mobile">🌙</span> ダークモード切替
-            </button>
-        </nav>
+                                                        <nav class="flex flex-col gap-6 text-lg">
+                <a href="../index.html" class="flex items-center gap-3">🏠 ホーム</a>
+                <a href="../news.html" class="flex items-center gap-3">📰 NEWS</a>
+                <a href="maruyama.html" class="flex items-center gap-3">🌳 公園を探す</a>
+                <a href="../map.html" class="flex items-center gap-3">🗺️ マップ</a>
+                <a href="../saitama-mini-game.html" class="flex items-center gap-3">🎮 ゲーム</a>
+                <a href="../gallery.html" class="flex items-center gap-3">🖼️ ギャラリー</a>
+                <hr class="border-slate-700">
+                <button onclick="toggleTheme()" class="flex items-center gap-3 w-full text-left"><span id="theme-toggle-icon-mobile">🌳</span> カラー変更</button>
+                <button onclick="toggleDarkMode()" class="flex items-center gap-3 w-full text-left"><span>🌓</span> ダークモード切替</button>
+            </nav>
     </div>
 </div>
 <div class="hero-image-container mt-[60px]">
@@ -89,6 +81,13 @@
     <h2 class="hero-title">丸山公園（上尾）</h2>
 </div>
 <main>
+    <div class="feature-list">
+        <div class="feature-item"><span>🚻</span> トイレ完備</div>
+        <div class="feature-item"><span>📸</span> フォトジェニック</div>
+        <div class="feature-item"><span>☔</span> 雨天OK</div>
+        <div class="feature-item"><span>🌸</span> 季節の見どころ</div>
+        <div class="feature-item"><span>♿</span> バリアフリー</div>
+    </div>
     <section>
         <h2>水と緑の調和、家族で楽しむ総合公園</h2>
         <p>上尾市にある丸山公園は、約15ヘクタールの敷地を持つ自然豊かな公園です。大きな池を中心に、豊かな樹林地や小川が整備されており、「水と緑の調和」がテーマ。園内は非常によく手入れされており、のんびりと過ごすのに最適なスポットです。</p>
@@ -169,8 +168,8 @@
     </section>
 </main>
 <footer>
-    <div class="max-w-6xl mx-auto">
-        <h2 class="text-xl font-bold mb-4" style="font-family: 'Mochiy Pop One';">SAITAMA PARKS</h2>
+    <div class="max-w-6xl mx-auto px-6">
+        <h2 class="text-2xl font-bold mb-4" style="font-family: 'Mochiy Pop One';">SAITAMA PARKS</h2>
         <p class="text-sm opacity-80">© 2026 埼玉県公園ガイドポータル - 自然と共に生きる。</p>
         <div class="footer-links mt-6 flex justify-center gap-6 text-sm flex-wrap">
             <a onclick="openModal('about')" class="hover:underline cursor-pointer">サイトについて</a>
@@ -182,6 +181,7 @@
 </footer>
 <button onclick="scrollToTop()" class="go-to-top-button" aria-label="トップへ戻る">↑</button>
 <script src="../js/common.js"></script>
+<script src="../js/coupon-manager.js"></script>
 <script>document.addEventListener('DOMContentLoaded', () => { updateStampButton('maruyama'); });</script>
 </body>
 </html>

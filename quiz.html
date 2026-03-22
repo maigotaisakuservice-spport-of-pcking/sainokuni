@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>埼玉マスタークイズ | 2026 Saitama Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Mochiy+Pop+One&family=DotGothic16&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/common.css">
     <style>
         body { font-family: 'Noto Sans JP', sans-serif; color: #166534; }
@@ -23,6 +23,7 @@
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-4">
     <a href="saitama-mini-game.html" class="fixed top-6 left-6 bg-white dark:bg-slate-800 p-2 px-4 rounded-full shadow-lg font-bold z-50">🔙 戻る</a>
+    <button onclick="openHelp('quiz')" class="fixed top-6 right-6 bg-white dark:bg-slate-800 p-2 px-4 rounded-full shadow-lg font-bold z-50">❓ 遊び方</button>
 
     <div id="quiz-app" class="quiz-container max-w-2xl w-full p-8 md:p-12">
         <div id="start-screen" class="text-center">
@@ -63,8 +64,24 @@
         </div>
     </div>
 
+    <!-- ヘルプ用ポップアップ -->
+    <div id="help-modal" class="fixed inset-0 bg-black/80 flex items-center justify-center z-[100] hidden p-6" onclick="closeHelp()">
+        <div class="bg-white rounded-3xl p-8 max-w-md w-full" onclick="event.stopPropagation()">
+            <h3 id="help-title" class="text-2xl font-bold mb-4 text-emerald-700">埼玉マスタークイズの遊び方</h3>
+            <div id="help-content" class="text-gray-600 space-y-4">
+                <p>1. 次々に出題される4択クイズに答えよう。</p>
+                <p>2. 全5問。正解数に応じて称号が変わるぞ。</p>
+                <p>3. 全問正解すると、秘密のクーポンが手に入る！</p>
+            </div>
+            <button onclick="closeHelp()" class="mt-8 w-full bg-emerald-600 text-white font-bold py-3 rounded-xl">分かった！</button>
+        </div>
+    </div>
+
     <script src="js/common.js"></script>
     <script>
+        function openHelp() { document.getElementById('help-modal').classList.remove('hidden'); }
+        function closeHelp() { document.getElementById('help-modal').classList.add('hidden'); }
+
         const quizData = [
             {
                 q: "埼玉県の大宮公園にある、日本最古級の飼育施設があるのは？",

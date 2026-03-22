@@ -166,25 +166,23 @@
 <header class="header-main">
     <div class="flex items-center gap-4">
         <button onclick="toggleMenu()" class="text-2xl md:hidden">☰</button>
-        <h1 class="text-xl font-bold tracking-tighter" style="font-family: 'Mochiy Pop One';">SAITAMA PARKS</h1>
+        <h1 class="text-xl font-bold tracking-tighter" style="font-family: 'Mochiy Pop One';"><a href="index.html" style="color: inherit; text-decoration: none;">SAITAMA PARKS</a></h1>
         <div class="tts-control hidden md:flex">
             <span class="text-sm">アクセシビリティ</span>
             <button onclick="readPageText()" class="hover:text-emerald-400">🔊 音声読み上げ</button>
         </div>
     </div>
-    <nav class="hidden md:flex items-center gap-6">
-        <div class="flex items-center gap-2 px-3 border-r border-white/20 mr-2">
-            <button onclick="setSaicolor('green')" class="saicolor-btn saicolor-green" title="緑（自然）"></button>
-            <button onclick="setSaicolor('blue')" class="saicolor-btn saicolor-blue" title="青（水・空）"></button>
-            <button onclick="setSaicolor('red')" class="saicolor-btn saicolor-red" title="赤（情熱）"></button>
-        </div>
-        <a id="coupon-menu-item" href="index.html?reward=true" class="hidden text-yellow-400 font-bold animate-pulse" title="クーポン獲得！">💎 特典</a>
+        <nav class="hidden md:flex items-center gap-6">
+        <a id="coupon-menu-item" href="coupons.html" class="hidden text-yellow-400 font-bold animate-pulse" title="クーポン獲得！">💎 特典</a>
         <a href="news.html" class="hover:text-emerald-400 font-bold">NEWS</a>
         <a href="destinations/maruyama.html" class="hover:text-emerald-400 font-bold">公園を探す</a>
         <a href="map.html" class="hover:text-emerald-400 font-bold">マップ</a>
         <a href="saitama-mini-game.html" class="hover:text-emerald-400 font-bold">ゲーム</a>
         <a href="gallery.html" class="hover:text-emerald-400 font-bold">ギャラリー</a>
-        <button onclick="toggleTheme()" class="theme-toggle-btn text-xl" id="theme-toggle-icon">🌙</button>
+        <div class="flex items-center gap-2 ml-2 border-l border-white/20 pl-4">
+            <button onclick="toggleTheme()" class="hover:scale-110 transition-transform" id="theme-toggle-icon" title="カラー変更">🌳</button>
+            <button onclick="toggleDarkMode()" class="hover:scale-110 transition-transform" title="ダークモード切替">🌓</button>
+        </div>
     </nav>
 </header>
 
@@ -196,23 +194,17 @@
             <h2 class="text-xl font-bold" style="font-family: 'Mochiy Pop One';">MENU</h2>
             <button onclick="toggleMenu()" class="text-2xl">&times;</button>
         </div>
-        <nav class="flex flex-col gap-6 text-lg">
-            <a href="index.html" class="flex items-center gap-3">🏠 ホーム</a>
-            <a href="news.html" class="flex items-center gap-3">📰 NEWS</a>
-            <a href="destinations/maruyama.html" class="flex items-center gap-3">🌳 公園を探す</a>
-            <a href="map.html" class="flex items-center gap-3">🗺️ マップ</a>
-            <a href="saitama-mini-game.html" class="flex items-center gap-3">🎮 ゲーム</a>
-            <a href="gallery.html" class="flex items-center gap-3">🖼️ ギャラリー</a>
-            <hr class="border-slate-700">
-            <div class="flex items-center justify-around py-2">
-                <button onclick="setSaicolor('green')" class="saicolor-btn saicolor-green"></button>
-                <button onclick="setSaicolor('blue')" class="saicolor-btn saicolor-blue"></button>
-                <button onclick="setSaicolor('red')" class="saicolor-btn saicolor-red"></button>
-            </div>
-            <button onclick="toggleTheme()" class="flex items-center gap-3 w-full text-left">
-                <span id="theme-toggle-icon-mobile">🌙</span> ダークモード切替
-            </button>
-        </nav>
+                                                        <nav class="flex flex-col gap-6 text-lg">
+                <a href="index.html" class="flex items-center gap-3">🏠 ホーム</a>
+                <a href="news.html" class="flex items-center gap-3">📰 NEWS</a>
+                <a href="destinations/maruyama.html" class="flex items-center gap-3">🌳 公園を探す</a>
+                <a href="map.html" class="flex items-center gap-3">🗺️ マップ</a>
+                <a href="saitama-mini-game.html" class="flex items-center gap-3">🎮 ゲーム</a>
+                <a href="gallery.html" class="flex items-center gap-3">🖼️ ギャラリー</a>
+                <hr class="border-slate-700">
+                <button onclick="toggleTheme()" class="flex items-center gap-3 w-full text-left"><span id="theme-toggle-icon-mobile">🌳</span> カラー変更</button>
+                <button onclick="toggleDarkMode()" class="flex items-center gap-3 w-full text-left"><span>🌓</span> ダークモード切替</button>
+            </nav>
     </div>
 </div>
 
@@ -326,14 +318,14 @@
 </section>
 
 <footer>
-    <div class="max-w-6xl mx-auto">
+    <div class="max-w-6xl mx-auto px-6">
         <h2 class="text-2xl font-bold mb-4" style="font-family: 'Mochiy Pop One';">SAITAMA PARKS</h2>
-        <p>© 2026 埼玉県公園ガイドポータル - 自然と共に生きる。</p>
-        <div class="footer-links">
-            <a onclick="openModal('about')">サイトについて</a>
-            <a onclick="openModal('access')">アクセス</a>
-            <a onclick="openModal('copyright')">著作権</a>
-            <a onclick="openModal('recruit')">加盟店募集</a>
+        <p class="text-sm opacity-80">© 2026 埼玉県公園ガイドポータル - 自然と共に生きる。</p>
+        <div class="footer-links mt-6 flex justify-center gap-6 text-sm flex-wrap">
+            <a onclick="openModal('about')" class="hover:underline cursor-pointer">サイトについて</a>
+            <a onclick="openModal('access')" class="hover:underline cursor-pointer">アクセス</a>
+            <a onclick="openModal('copyright')" class="hover:underline cursor-pointer">著作権</a>
+            <a onclick="openModal('recruit')" class="hover:underline cursor-pointer text-emerald-400 font-bold">加盟店募集</a>
         </div>
     </div>
 </footer>
@@ -384,6 +376,7 @@
 <button onclick="scrollToTop()" class="go-to-top-button" aria-label="トップへ戻る">↑</button>
 
 <script src="js/common.js"></script>
+<script src="js/coupon-manager.js"></script>
 <script type="module" src="js/ai-concierge.js"></script>
 <script>
     // メイン背景スライダー & RSS統合
@@ -443,14 +436,14 @@
     initSliders();
 
     // 簡易マップ (大宮駅中心)
-    function initMiniMap() {
+    async function initMiniMap() {
         const miniMap = L.map('home-mini-map', {
-            zoomControl: false,
-            dragging: false,
-            touchZoom: false,
+            zoomControl: true,
+            dragging: true,
+            touchZoom: true,
             scrollWheelZoom: false,
-            doubleClickZoom: false
-        }).setView([35.9064, 139.6238], 15);
+            doubleClickZoom: true
+        }).setView([35.9224, 139.6338], 15); // 大宮公園中心
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap'
@@ -460,8 +453,29 @@
             html: `<div style="background: #2E7D32; width: 20px; height: 20px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.3);"></div>`,
             className: '', iconSize: [20, 20], iconAnchor: [10, 10]
         });
+        const toiletIcon = L.divIcon({
+            html: `<div style="background: #f57c00; width: 16px; height: 16px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 5px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; font-size: 10px; color: white;">🚻</div>`,
+            className: '', iconSize: [16, 16], iconAnchor: [8, 8]
+        });
+
         L.marker([35.9224, 139.6338], { icon: parkIcon }).addTo(miniMap)
             .bindPopup("<b>大宮公園</b><br>埼玉を代表する広大な公園").openPopup();
+
+        // トイレデータを自動取得して表示 (大宮公園周辺)
+        const lat = 35.9224, lon = 139.6338;
+        const query = `node["amenity"="toilet"](around:500,${lat},${lon});`;
+        const url = `https://overpass-api.de/api/interpreter?data=[out:json];${query}out;`;
+
+        try {
+            const res = await fetch(url);
+            const data = await res.json();
+            data.elements.forEach(el => {
+                L.marker([el.lat, el.lon], { icon: toiletIcon }).addTo(miniMap)
+                    .bindPopup("🚻 公衆トイレ");
+            });
+        } catch (e) {
+            console.error("Home map toilet fetch error:", e);
+        }
     }
     initMiniMap();
 

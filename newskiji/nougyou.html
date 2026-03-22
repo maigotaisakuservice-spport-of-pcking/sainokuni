@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Mochiy+Pop+One&family=DotGothic16&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/common.css">
     <style>
         .header-main {
@@ -127,15 +127,18 @@
                 <button onclick="readPageText()" class="hover:text-emerald-400">🔊 音声読み上げ</button>
             </div>
         </div>
-        <nav class="hidden md:flex items-center gap-6">
-            <a id="coupon-menu-item" href="../index.html?reward=true" class="hidden text-yellow-400 font-bold animate-pulse" title="クーポン獲得！">💎 特典</a>
-            <a href="../news.html" class="hover:text-emerald-400 font-bold">NEWS</a>
-            <a href="../destinations/maruyama.html" class="hover:text-emerald-400 font-bold">公園を探す</a>
-            <a href="../map.html" class="hover:text-emerald-400 font-bold">マップ</a>
-            <a href="../saitama-mini-game.html" class="hover:text-emerald-400 font-bold">ゲーム</a>
-            <a href="../gallery.html" class="hover:text-emerald-400 font-bold">ギャラリー</a>
-            <button onclick="toggleTheme()" class="theme-toggle-btn text-xl" id="theme-toggle-icon">🌙</button>
-        </nav>
+            <nav class="hidden md:flex items-center gap-6">
+        <a id="coupon-menu-item" href="../coupons.html" class="hidden text-yellow-400 font-bold animate-pulse" title="クーポン獲得！">💎 特典</a>
+        <a href="../news.html" class="hover:text-emerald-400 font-bold">NEWS</a>
+        <a href="../destinations/maruyama.html" class="hover:text-emerald-400 font-bold">公園を探す</a>
+        <a href="../map.html" class="hover:text-emerald-400 font-bold">マップ</a>
+        <a href="../saitama-mini-game.html" class="hover:text-emerald-400 font-bold">ゲーム</a>
+        <a href="../gallery.html" class="hover:text-emerald-400 font-bold">ギャラリー</a>
+        <div class="flex items-center gap-2 ml-2 border-l border-white/20 pl-4">
+            <button onclick="toggleTheme()" class="hover:scale-110 transition-transform" id="theme-toggle-icon" title="カラー変更">🌳</button>
+            <button onclick="toggleDarkMode()" class="hover:scale-110 transition-transform" title="ダークモード切替">🌓</button>
+        </div>
+    </nav>
     </header>
 
     <!-- モバイルメニュー -->
@@ -146,7 +149,7 @@
                 <h2 class="text-xl font-bold" style="font-family: 'Mochiy Pop One';">MENU</h2>
                 <button onclick="toggleMenu()" class="text-2xl">&times;</button>
             </div>
-            <nav class="flex flex-col gap-6 text-lg">
+                                                            <nav class="flex flex-col gap-6 text-lg">
                 <a href="../index.html" class="flex items-center gap-3">🏠 ホーム</a>
                 <a href="../news.html" class="flex items-center gap-3">📰 NEWS</a>
                 <a href="../destinations/maruyama.html" class="flex items-center gap-3">🌳 公園を探す</a>
@@ -154,9 +157,8 @@
                 <a href="../saitama-mini-game.html" class="flex items-center gap-3">🎮 ゲーム</a>
                 <a href="../gallery.html" class="flex items-center gap-3">🖼️ ギャラリー</a>
                 <hr class="border-slate-700">
-                <button onclick="toggleTheme()" class="flex items-center gap-3 w-full text-left">
-                    <span id="theme-toggle-icon-mobile">🌙</span> テーマ切り替え
-                </button>
+                <button onclick="toggleTheme()" class="flex items-center gap-3 w-full text-left"><span id="theme-toggle-icon-mobile">🌳</span> カラー変更</button>
+                <button onclick="toggleDarkMode()" class="flex items-center gap-3 w-full text-left"><span>🌓</span> ダークモード切替</button>
             </nav>
         </div>
     </div>

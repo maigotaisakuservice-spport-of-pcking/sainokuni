@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Mochiy+Pop+One&family=DotGothic16&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/common.css">
     <style>
         body { font-family: 'Noto Sans JP', sans-serif; overflow: hidden; }
@@ -21,6 +21,7 @@
 <body class="flex items-center justify-center min-h-screen">
 
     <a href="saitama-mini-game.html" class="back-btn">🔙 戻る</a>
+    <button onclick="openHelp()" class="fixed top-6 right-6 bg-white dark:bg-slate-800 p-2 px-4 rounded-full shadow-lg font-bold z-50">❓ 遊び方</button>
 
     <div class="relative">
         <canvas id="gameCanvas" width="800" height="500"></canvas>
@@ -41,8 +42,24 @@
         </div>
     </div>
 
+    <!-- ヘルプ用ポップアップ -->
+    <div id="help-modal" class="fixed inset-0 bg-black/80 flex items-center justify-center z-[100] hidden p-6" onclick="closeHelp()">
+        <div class="bg-white rounded-3xl p-8 max-w-md w-full" onclick="event.stopPropagation()">
+            <h3 id="help-title" class="text-2xl font-bold mb-4 text-emerald-700">長瀞フィッシングの遊び方</h3>
+            <div id="help-content" class="text-gray-600 space-y-4">
+                <p>1. 画面下の「HIT!」ボタンを押して、釣り糸を垂らそう！</p>
+                <p>2. 針が魚に当たると、自動的に釣り上げるぞ。</p>
+                <p>3. 制限時間内に2000点以上獲得すると、秘密のクーポンをゲット！</p>
+            </div>
+            <button onclick="closeHelp()" class="mt-8 w-full bg-emerald-600 text-white font-bold py-3 rounded-xl">分かった！</button>
+        </div>
+    </div>
+
     <script src="js/common.js"></script>
     <script>
+        function openHelp() { document.getElementById('help-modal').classList.remove('hidden'); }
+        function closeHelp() { document.getElementById('help-modal').classList.add('hidden'); }
+
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         const scoreEl = document.getElementById('score');

@@ -1,33 +1,47 @@
 
-// ダークモード・Saicolor管理
+// テーマ・モード管理
 function initTheme() {
     const savedMode = localStorage.getItem('saitama-mode') || 'light';
-    const savedColor = localStorage.getItem('saitama-color') || 'green';
+    const savedTheme = localStorage.getItem('saitama-theme') || 'green';
 
     document.documentElement.setAttribute('data-mode', savedMode);
-    document.documentElement.setAttribute('data-theme', savedColor);
-
-    updateThemeIcon(savedMode);
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    updateThemeIcon(savedMode, savedTheme);
 }
 
 function toggleTheme() {
+    // サイカラー（青・緑・赤）の切り替え
+    const themes = ['green', 'blue', 'red'];
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'green';
+    const nextIdx = (themes.indexOf(currentTheme) + 1) % themes.length;
+    const newTheme = themes[nextIdx];
+
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('saitama-theme', newTheme);
+    updateThemeIcon(document.documentElement.getAttribute('data-mode'), newTheme);
+}
+
+function toggleDarkMode() {
     const currentMode = document.documentElement.getAttribute('data-mode');
     const newMode = currentMode === 'dark' ? 'light' : 'dark';
 
     document.documentElement.setAttribute('data-mode', newMode);
     localStorage.setItem('saitama-mode', newMode);
-    updateThemeIcon(newMode);
+    updateThemeIcon(newMode, document.documentElement.getAttribute('data-theme'));
 }
 
-function setSaicolor(color) {
-    document.documentElement.setAttribute('data-theme', color);
-    localStorage.setItem('saitama-color', color);
-}
-
-function updateThemeIcon(mode) {
+function updateThemeIcon(mode, theme) {
     const themeIcon = document.getElementById('theme-toggle-icon');
     const themeIconMobile = document.getElementById('theme-toggle-icon-mobile');
-    const icon = mode === 'dark' ? '☀️' : '🌙';
+
+    // テーマ（色）に応じたアイコン
+    let icon = '🌳';
+    if (theme === 'blue') icon = '💧';
+    if (theme === 'red') icon = '🔥';
+
+    // ダークモード時は月
+    if (mode === 'dark') icon = '🌙';
+
     if (themeIcon) themeIcon.textContent = icon;
     if (themeIconMobile) themeIconMobile.textContent = icon;
 }
@@ -102,9 +116,9 @@ function handleStamp(spotId) {
         updateStampButton(spotId);
 
         if (collectedCount === totalSpots) {
-            localStorage.setItem('saitama-coupon-unlocked', 'true');
-            const couponLink = document.getElementById('coupon-menu-item');
-            if (couponLink) couponLink.classList.remove('hidden');
+            if (window.couponManager) {
+                window.couponManager.unlockCoupon('COUPON-STAMP-FULL');
+            }
         }
     }
 }
@@ -205,9 +219,14 @@ const modalContents = {
         <p class="text-sm">当サイトの情報の正確性には万全を期しておりますが、利用者が当サイトの情報を用いて行う一切の行為について、責任を負うものではありません。</p>
     `,
     recruit: `
-        <h2 class="text-2xl font-bold mb-4">公園内店舗・イベント 加盟募集</h2>
+        <h2 class="text-2xl font-bold mb-4 text-emerald-600">加盟店・イベント募集</h2>
         <p class="mb-4">公園内のカフェ、売店、期間限定イベントの情報を当サイトで紹介しませんか？</p>
-        <p class="text-center font-bold">お問い合わせ: parks-recruit@saitama-2026.jp</p>
+        <div class="text-center">
+            <a href="merchants.html" class="inline-block bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-8 rounded-full transition-all">
+                詳しく見る・応募する
+            </a>
+            <p class="mt-4 text-xs text-gray-500">※リンク先は外部募集ページへ移動します（実際には内部ページ）</p>
+        </div>
     `
 };
 
@@ -239,12 +258,4 @@ function closeModal() {
 
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();
-
-    const couponLink = document.getElementById('coupon-menu-item');
-    if (couponLink) {
-        const isUnlocked = localStorage.getItem('saitama-coupon-unlocked') === 'true';
-        if (isUnlocked) {
-            couponLink.classList.remove('hidden');
-        }
-    }
 });

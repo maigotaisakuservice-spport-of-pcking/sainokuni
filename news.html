@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Mochiy+Pop+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Mochiy+Pop+One&family=DotGothic16&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/common.css">
     <style>
         .header-main {
@@ -59,20 +59,18 @@
             <button onclick="toggleMenu()" class="text-2xl md:hidden">☰</button>
             <h1 class="text-xl font-bold tracking-tighter" style="font-family: 'Mochiy Pop One';"><a href="index.html" style="color: inherit; text-decoration: none;">SAITAMA PARKS</a></h1>
         </div>
-        <nav class="hidden md:flex items-center gap-6">
-            <div class="flex items-center gap-2 px-3 border-r border-white/20 mr-2">
-                <button onclick="setSaicolor('green')" class="saicolor-btn saicolor-green" title="緑（自然）"></button>
-                <button onclick="setSaicolor('blue')" class="saicolor-btn saicolor-blue" title="青（水・空）"></button>
-                <button onclick="setSaicolor('red')" class="saicolor-btn saicolor-red" title="赤（情熱）"></button>
-            </div>
-            <a id="coupon-menu-item" href="index.html?reward=true" class="hidden text-yellow-400 font-bold animate-pulse" title="クーポン獲得！">💎 特典</a>
-            <a href="news.html" class="hover:text-emerald-400 font-bold">NEWS</a>
-            <a href="destinations/maruyama.html" class="hover:text-emerald-400 font-bold">公園を探す</a>
-            <a href="map.html" class="hover:text-emerald-400 font-bold">マップ</a>
-            <a href="saitama-mini-game.html" class="hover:text-emerald-400 font-bold">ゲーム</a>
-            <a href="gallery.html" class="hover:text-emerald-400 font-bold">ギャラリー</a>
-            <button onclick="toggleTheme()" class="theme-toggle-btn text-xl" id="theme-toggle-icon">🌙</button>
-        </nav>
+            <nav class="hidden md:flex items-center gap-6">
+        <a id="coupon-menu-item" href="coupons.html" class="hidden text-yellow-400 font-bold animate-pulse" title="クーポン獲得！">💎 特典</a>
+        <a href="news.html" class="hover:text-emerald-400 font-bold">NEWS</a>
+        <a href="destinations/maruyama.html" class="hover:text-emerald-400 font-bold">公園を探す</a>
+        <a href="map.html" class="hover:text-emerald-400 font-bold">マップ</a>
+        <a href="saitama-mini-game.html" class="hover:text-emerald-400 font-bold">ゲーム</a>
+        <a href="gallery.html" class="hover:text-emerald-400 font-bold">ギャラリー</a>
+        <div class="flex items-center gap-2 ml-2 border-l border-white/20 pl-4">
+            <button onclick="toggleTheme()" class="hover:scale-110 transition-transform" id="theme-toggle-icon" title="カラー変更">🌳</button>
+            <button onclick="toggleDarkMode()" class="hover:scale-110 transition-transform" title="ダークモード切替">🌓</button>
+        </div>
+    </nav>
     </header>
 
     <!-- モバイルメニュー -->
@@ -83,7 +81,7 @@
                 <h2 class="text-xl font-bold" style="font-family: 'Mochiy Pop One';">MENU</h2>
                 <button onclick="toggleMenu()" class="text-2xl">&times;</button>
             </div>
-            <nav class="flex flex-col gap-6 text-lg">
+                                                            <nav class="flex flex-col gap-6 text-lg">
                 <a href="index.html" class="flex items-center gap-3">🏠 ホーム</a>
                 <a href="news.html" class="flex items-center gap-3">📰 NEWS</a>
                 <a href="destinations/maruyama.html" class="flex items-center gap-3">🌳 公園を探す</a>
@@ -91,14 +89,8 @@
                 <a href="saitama-mini-game.html" class="flex items-center gap-3">🎮 ゲーム</a>
                 <a href="gallery.html" class="flex items-center gap-3">🖼️ ギャラリー</a>
                 <hr class="border-slate-700">
-                <div class="flex items-center justify-around py-2">
-                    <button onclick="setSaicolor('green')" class="saicolor-btn saicolor-green"></button>
-                    <button onclick="setSaicolor('blue')" class="saicolor-btn saicolor-blue"></button>
-                    <button onclick="setSaicolor('red')" class="saicolor-btn saicolor-red"></button>
-                </div>
-                <button onclick="toggleTheme()" class="flex items-center gap-3 w-full text-left">
-                    <span id="theme-toggle-icon-mobile">🌙</span> ダークモード切替
-                </button>
+                <button onclick="toggleTheme()" class="flex items-center gap-3 w-full text-left"><span id="theme-toggle-icon-mobile">🌳</span> カラー変更</button>
+                <button onclick="toggleDarkMode()" class="flex items-center gap-3 w-full text-left"><span>🌓</span> ダークモード切替</button>
             </nav>
         </div>
     </div>
@@ -112,41 +104,41 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 
             <!-- 記事1 -->
-            <a href="newskiji/nougyou.html" class="news-card">
-                <img src="newskiji/kijiimg/aiyasai.jpg" alt="農業イノベーション" class="w-full h-48 object-cover">
+            <a href="destinations/omiya_park.html" class="news-card">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Omiya_Park_20220327_2.jpg/640px-Omiya_Park_20220327_2.jpg" alt="大宮公園さくら祭り" class="w-full h-48 object-cover">
                 <div class="p-6">
                     <div class="flex items-center gap-2 mb-3">
-                        <span class="news-tag">TECHNOLOGY</span>
-                        <span class="text-xs text-gray-500">2025.09.14</span>
+                        <span class="news-tag">EVENT</span>
+                        <span class="text-xs text-gray-500">2026.03.15</span>
                     </div>
-                    <h3 class="text-xl font-bold mb-2">埼玉の農業イノベーション最前線</h3>
-                    <p class="text-sm text-gray-500 line-clamp-2">AI、水耕栽培、そして地元の誇り。次世代に繋ぐ新しい農業のカタチを取材しました。</p>
+                    <h3 class="text-xl font-bold mb-2">大宮公園：春のさくら祭り2026 開催決定！</h3>
+                    <p class="text-sm text-gray-500 line-clamp-2">日本さくら名所100選にも選ばれた大宮公園。今年の桜まつりは、夜桜ライトアップとキッチンカーが勢揃いします。</p>
                 </div>
             </a>
 
             <!-- 記事2 -->
-            <a href="newskiji/cafe.html" class="news-card">
-                <img src="https://tblg.k-img.com/restaurant/images/Rvw/280701/640x640_rect_2a47d2c66bca8988230113ebdd829424.jpg" alt="カフェ5選" class="w-full h-48 object-cover">
+            <a href="destinations/shinrin_park.html" class="news-card">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Musashi_Kyuryo_National_Government_Park_20111105.jpg" alt="森林公園リニューアル" class="w-full h-48 object-cover">
                 <div class="p-6">
                     <div class="flex items-center gap-2 mb-3">
-                        <span class="news-tag">GOURMET</span>
-                        <span class="text-xs text-gray-500">2025.07.25</span>
+                        <span class="news-tag">FACILITY</span>
+                        <span class="text-xs text-gray-500">2026.03.10</span>
                     </div>
-                    <h3 class="text-xl font-bold mb-2">自然に癒される。埼玉の森と川の絶景カフェ5選</h3>
-                    <p class="text-sm text-gray-500 line-clamp-2">日常を忘れて心安らぐひとときを。美味しいコーヒーと共に最高の景色を味わう名店を紹介。</p>
+                    <h3 class="text-xl font-bold mb-2">森林公園：最新アスレチック「冒険コース」リニューアル</h3>
+                    <p class="text-sm text-gray-500 line-clamp-2">子供たちに大人気の冒険コースがさらにパワーアップ！日本最大級のネット遊具が登場し、より安全に遊べるようになりました。</p>
                 </div>
             </a>
 
             <!-- 記事3 -->
-            <a href="newskiji/saitamaseiti.html" class="news-card">
-                <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=2070&auto=format&fit=crop" alt="聖地巡礼" class="w-full h-48 object-cover">
+            <a href="destinations/tokorozawa_park.html" class="news-card">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Tokorozawa_Aviation_Memorial_Park_01.JPG/640px-Tokorozawa_Aviation_Memorial_Park_01.JPG" alt="航空公園テニス大会" class="w-full h-48 object-cover">
                 <div class="p-6">
                     <div class="flex items-center gap-2 mb-3">
-                        <span class="news-tag">CULTURE</span>
-                        <span class="text-xs text-gray-500">2025.08.02</span>
+                        <span class="news-tag">SPORTS</span>
+                        <span class="text-xs text-gray-500">2026.03.01</span>
                     </div>
-                    <h3 class="text-xl font-bold mb-2">人気アニメの舞台を巡る！埼玉聖地巡礼ガイド</h3>
-                    <p class="text-sm text-gray-500 line-clamp-2">あの感動をもう一度。作中の風景が広がるスポットを巡り、物語の世界に浸る旅へ。</p>
+                    <h3 class="text-xl font-bold mb-2">所沢航空公園：市民テニス大会のエントリー開始</h3>
+                    <p class="text-sm text-gray-500 line-clamp-2">新緑の美しい航空公園でテニスを楽しみませんか？初心者から上級者まで、どなたでも参加できるクラスを用意しています。</p>
                 </div>
             </a>
 
@@ -169,17 +161,17 @@
     </main>
 
     <footer>
-        <div class="max-w-6xl mx-auto px-6">
-            <h2 class="text-xl font-bold mb-4" style="font-family: 'Mochiy Pop One';">SAITAMA PARKS</h2>
-            <p class="text-sm opacity-80">© 2026 埼玉県公園ガイドポータル - 自然と共に生きる。</p>
-            <div class="footer-links mt-6 flex justify-center gap-6 text-sm flex-wrap">
-                <a onclick="openModal('about')" class="hover:underline cursor-pointer">サイトについて</a>
-                <a onclick="openModal('access')" class="hover:underline cursor-pointer">アクセス</a>
-                <a onclick="openModal('copyright')" class="hover:underline cursor-pointer">著作権</a>
-                <a onclick="openModal('recruit')" class="hover:underline cursor-pointer text-emerald-400 font-bold">加盟店募集</a>
-            </div>
+    <div class="max-w-6xl mx-auto px-6">
+        <h2 class="text-2xl font-bold mb-4" style="font-family: 'Mochiy Pop One';">SAITAMA PARKS</h2>
+        <p class="text-sm opacity-80">© 2026 埼玉県公園ガイドポータル - 自然と共に生きる。</p>
+        <div class="footer-links mt-6 flex justify-center gap-6 text-sm flex-wrap">
+            <a onclick="openModal('about')" class="hover:underline cursor-pointer">サイトについて</a>
+            <a onclick="openModal('access')" class="hover:underline cursor-pointer">アクセス</a>
+            <a onclick="openModal('copyright')" class="hover:underline cursor-pointer">著作権</a>
+            <a onclick="openModal('recruit')" class="hover:underline cursor-pointer text-emerald-400 font-bold">加盟店募集</a>
         </div>
-    </footer>
+    </div>
+</footer>
 
     <button onclick="scrollToTop()" class="go-to-top-button" aria-label="トップへ戻る">↑</button>
     <script src="js/common.js"></script>
