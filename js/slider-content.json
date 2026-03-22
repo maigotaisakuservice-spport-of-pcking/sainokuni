@@ -1,26 +1,32 @@
 [
     {
-        "title": "彩の国 ニュース",
-        "link": "https://www.pref.saitama.lg.jp/news/index.html",
-        "description": "埼玉県の最新ニュースやイベント情報をお届けします。県の取り組みや生活に役立つ情報をチェックしましょう。",
-        "source": "埼玉県"
+        "title": "大宮公園：春のさくら祭り2026",
+        "link": "destinations/omiya_park.html",
+        "description": "「日本さくら名所100選」に選ばれた県内屈指の桜スポット。夜桜ライトアップや屋台も楽しめます。",
+        "source": "大宮公園"
     },
     {
-        "title": "旧山吉デパート",
-        "link": "https://www.kawagoe-yell.com/sightseeing/yamakiti-department/",
-        "description": "昭和初期のモダニズム建築。現在は店舗として利用されていますが、当時のデザインが色濃く残っています。",
-        "source": "川越市のモダニズム建築"
+        "title": "国営武蔵丘陵森林公園：新アスレチック登場",
+        "link": "destinations/shinrin_park.html",
+        "description": "日本最大級のネット遊具「冒険コース」がリニューアル！広大な森の中で一日中遊び尽くせます。",
+        "source": "森林公園"
     },
     {
-        "title": "大沢家住宅",
-        "link": "https://ja.wikipedia.org/wiki/%E5%A4%A7%E6%B2%A2%E5%AE%B6%E4%BD%8F%E5%AE%85",
-        "description": "大正12年に建てられた病院。スクラッチタイルが特徴的なモダンなデザインです。",
-        "source": "川越市のモダニズム建築"
+        "title": "所沢航空記念公園：空と緑のフェスタ",
+        "link": "destinations/tokorozawa_park.html",
+        "description": "日本航空発祥の地。広い芝生広場や航空発祥記念館、テニスコートなど家族で楽しめる施設が充実。",
+        "source": "所沢航空公園"
     },
     {
-        "title": "盆栽の聖地・大宮",
-        "link": "https://www.stib.jp/bonsai/index.html",
-        "description": "世界中から愛好家が集まる大宮盆栽村。四季折々の表情を見せる芸術作品に触れてみませんか。",
-        "source": "さいたま観光国際協会"
+        "title": "上尾丸山公園：水と緑のふれあい",
+        "link": "destinations/maruyama.html",
+        "description": "小動物コーナーやアスレチック、大きな池があり、小さなお子様連れに大人気の「癒やし」の公園。",
+        "source": "丸山公園"
+    },
+    {
+        "title": "秋ヶ瀬公園：広大な自然のオアシス",
+        "link": "destinations/akigase_park.html",
+        "description": "荒川河川敷に広がる野鳥の宝庫。バーベキューエリアやスポーツ施設も充実した県民の憩いの場。",
+        "source": "秋ヶ瀬公園"
     }
 ]

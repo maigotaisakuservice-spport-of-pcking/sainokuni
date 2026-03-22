@@ -29,6 +29,7 @@
 | `newskiji/kijiimg/ainegi.jpg` | ニュース記事用（農業） |
 | `newskiji/kijiimg/aitunagarisns.jpg` | ニュース記事用（農業） |
 | `newskiji/tyosyaimg/cafetyosya.jpg` | 著者アイコン |
+| `images/logo.png` | （任意）サイトロゴ |
 
 ## 🛠️ 技術スタック
 - **Frontend**: HTML5, CSS3 (Tailwind CSS), JavaScript (ES6+)
