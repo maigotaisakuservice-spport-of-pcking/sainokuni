@@ -58,16 +58,20 @@ function updateThemeIcon(mode, theme) {
     const themeIcon = document.getElementById('theme-toggle-icon');
     const themeIconMobile = document.getElementById('theme-toggle-icon-mobile');
 
-    // テーマ（色）に応じたアイコン
-    let icon = '🌳';
-    if (theme === 'blue') icon = '💧';
-    if (theme === 'red') icon = '🔥';
+    // アクセシビリティ設定は車椅子アイコンをデフォルトとする
+    let icon = '♿';
 
-    // ダークモード時は月
-    if (mode === 'dark') icon = '🌙';
+    // ダークモード時は月（任意で切り替える場合）
+    // if (mode === 'dark') icon = '🌙';
 
     if (themeIcon) themeIcon.textContent = icon;
-    if (themeIconMobile) themeIconMobile.textContent = icon;
+    if (themeIconMobile) {
+        // モバイルメニュー内は「カラー変更」の横なので🌳などのままでも良い
+        let mobileIcon = '🌳';
+        if (theme === 'blue') mobileIcon = '💧';
+        if (theme === 'red') mobileIcon = '🔥';
+        themeIconMobile.textContent = mobileIcon;
+    }
 }
 
 // SNSシェア機能
@@ -171,7 +175,7 @@ function toggleAccessibilityPanel() {
         panel.className = 'fixed bottom-24 right-6 w-72 bg-white dark:bg-slate-900 rounded-3xl shadow-2xl z-[3000] border border-slate-200 dark:border-slate-800 p-6 transform transition-all duration-300 translate-y-10 opacity-0 pointer-events-none';
         panel.innerHTML = `
             <div class="flex justify-between items-center mb-6">
-                <h3 class="font-bold text-lg dark:text-white">表示設定</h3>
+                <h3 class="font-bold text-lg dark:text-white">♿ アクセシビリティ設定</h3>
                 <button onclick="toggleAccessibilityPanel()" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-2xl">&times;</button>
             </div>
 

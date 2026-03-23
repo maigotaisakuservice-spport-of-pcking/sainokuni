@@ -38,18 +38,19 @@
 <div id="reading-progress-container"><div id="reading-progress-bar"></div></div>
 <header class="header-main">
     <div class="flex items-center gap-4">
-        <h1 class="text-xl font-bold tracking-tighter" style="font-family: 'Mochiy Pop One';"><a href="../index.html" style="color: inherit; text-decoration: none;">SAITAMA PARKS</a></h1>
+        <h1 class="text-2xl font-bold tracking-tighter" style="font-family: 'Mochiy Pop One';"><a href="../index.html">SAITAMA PARKS</a></h1>
     </div>
     <nav class="flex items-center gap-4 md:gap-8">
-        <a href="maruyama.html" class="hover-accent-text font-bold text-white text-sm md:text-base">公園を探す</a>
-        <a href="../map.html" class="hover-accent-text font-bold text-white text-sm md:text-base">マップ</a>
-        <a href="../saitama-mini-game.html" class="hover-accent-text font-bold text-white text-sm md:text-base">ゲーム</a>
-        <button onclick="toggleMenu()" class="hover-accent-text font-bold text-white text-sm md:text-base">MENU</button>
+        <a href="maruyama.html" class="hover-accent-text font-bold text-sm md:text-base">公園を探す</a>
+        <a href="../map.html" class="hover-accent-text font-bold text-sm md:text-base">マップ</a>
+        <a href="../saitama-mini-game.html" class="hover-accent-text font-bold text-sm md:text-base">ゲーム</a>
+        <button onclick="toggleMenu()" class="hover-accent-text font-bold text-sm md:text-base">MENU</button>
         <div class="flex items-center gap-2 ml-2 border-l border-white/20 pl-4">
-            <button onclick="toggleAccessibilityPanel()" class="hover:scale-110 transition-transform" id="theme-toggle-icon" title="アクセシビリティ設定">⚙️</button>
+            <button onclick="toggleAccessibilityPanel()" class="hover:scale-110 transition-transform text-xl" id="theme-toggle-icon" title="アクセシビリティ設定">♿</button>
         </div>
     </nav>
 </header>
+
 
 <!-- モバイルメニュー -->
 <div id="menu-overlay" class="menu-overlay" onclick="toggleMenu()"></div>
@@ -155,16 +156,18 @@
 </main>
 
 <footer>
-    <div class="max-w-6xl mx-auto px-6 text-white">
-        <h2 class="text-2xl font-bold mb-4" style="font-family: 'Mochiy Pop One';">SAITAMA PARKS</h2>
+    <div class="max-w-6xl mx-auto px-6">
+        <div class="footer-logo">SAITAMA PARKS</div>
+        <hr>
         <p class="text-sm opacity-80">© 2026 埼玉県公園ガイドポータル - 自然と共に生きる。</p>
-        <div class="footer-links mt-6 flex justify-center gap-6 text-sm flex-wrap">
-            <a onclick="openModal('about')" class="hover:underline cursor-pointer text-white">サイトについて</a>
-            <a onclick="openModal('access')" class="hover:underline cursor-pointer text-white">アクセス</a>
-            <a onclick="openModal('copyright')" class="hover:underline cursor-pointer text-white">著作権</a>
+        <div class="footer-links mt-8 flex justify-center gap-12 text-sm flex-wrap">
+            <a onclick="openModal('about')" class="cursor-pointer">サイトについて</a>
+            <a onclick="openModal('access')" class="cursor-pointer">アクセス</a>
+            <a onclick="openModal('copyright')" class="cursor-pointer">著作権</a>
         </div>
     </div>
 </footer>
+
 <button onclick="scrollToTop()" class="go-to-top-button" aria-label="トップへ戻る">↑</button>
 <script src="../js/common.js"></script>
 </body>

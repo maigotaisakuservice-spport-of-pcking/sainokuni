@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEWS | SAITAMA PARKS 2026</title>
+    <title>PARK NEWS | SAITAMA PARKS 2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -28,23 +28,20 @@
 </head>
 <body class="min-h-screen">
 
-    <header class="header-main">
-        <div class="flex items-center gap-4">
-            <button onclick="toggleMenu()" class="text-2xl md:hidden">☰</button>
-            <h1 class="text-xl font-bold tracking-tighter" style="font-family: 'Mochiy Pop One';"><a href="index.html" style="color: inherit; text-decoration: none;">SAITAMA PARKS</a></h1>
-        </div>
-            <nav class="hidden md:flex items-center gap-6">
-        <a href="news.html" class="hover-accent-text font-bold">NEWS</a>
-        <a href="destinations/maruyama.html" class="hover-accent-text font-bold">公園を探す</a>
-        <a href="map.html" class="hover-accent-text font-bold">マップ</a>
-        <a href="saitama-mini-game.html" class="hover-accent-text font-bold">ゲーム</a>
-        <a href="gallery.html" class="hover-accent-text font-bold">ギャラリー</a>
+<header class="header-main">
+    <div class="flex items-center gap-4">
+        <h1 class="text-2xl font-bold tracking-tighter" style="font-family: 'Mochiy Pop One';"><a href="index.html">SAITAMA PARKS</a></h1>
+    </div>
+    <nav class="flex items-center gap-4 md:gap-8">
+        <a href="destinations/maruyama.html" class="hover-accent-text font-bold text-sm md:text-base">公園を探す</a>
+        <a href="map.html" class="hover-accent-text font-bold text-sm md:text-base">マップ</a>
+        <a href="saitama-mini-game.html" class="hover-accent-text font-bold text-sm md:text-base">ゲーム</a>
+        <button onclick="toggleMenu()" class="hover-accent-text font-bold text-sm md:text-base">MENU</button>
         <div class="flex items-center gap-2 ml-2 border-l border-white/20 pl-4">
-            <button onclick="toggleTheme()" class="hover:scale-110 transition-transform" id="theme-toggle-icon" title="カラー変更">🌳</button>
-            <button onclick="toggleDarkMode()" class="hover:scale-110 transition-transform" title="ダークモード切替">🌓</button>
+            <button onclick="toggleAccessibilityPanel()" class="hover:scale-110 transition-transform text-xl" id="theme-toggle-icon" title="アクセシビリティ設定">♿</button>
         </div>
     </nav>
-    </header>
+</header>
 
     <!-- モバイルメニュー -->
     <div id="menu-overlay" class="menu-overlay" onclick="toggleMenu()"></div>
@@ -54,13 +51,11 @@
                 <h2 class="text-xl font-bold" style="font-family: 'Mochiy Pop One';">MENU</h2>
                 <button onclick="toggleMenu()" class="text-2xl">&times;</button>
             </div>
-                                                            <nav class="flex flex-col gap-6 text-lg">
+            <nav class="flex flex-col gap-6 text-lg">
                 <a href="index.html" class="flex items-center gap-3">🏠 ホーム</a>
-                <a href="news.html" class="flex items-center gap-3">📰 NEWS</a>
                 <a href="destinations/maruyama.html" class="flex items-center gap-3">🌳 公園を探す</a>
                 <a href="map.html" class="flex items-center gap-3">🗺️ マップ</a>
                 <a href="saitama-mini-game.html" class="flex items-center gap-3">🎮 ゲーム</a>
-                <a href="gallery.html" class="flex items-center gap-3">🖼️ ギャラリー</a>
                 <hr class="border-slate-700">
                 <button onclick="toggleTheme()" class="flex items-center gap-3 w-full text-left"><span id="theme-toggle-icon-mobile">🌳</span> カラー変更</button>
                 <button onclick="toggleDarkMode()" class="flex items-center gap-3 w-full text-left"><span>🌓</span> ダークモード切替</button>
@@ -68,25 +63,26 @@
         </div>
     </div>
 
-    <main class="note-container mt-[80px]">
-        <h2 class="text-3xl font-bold mb-10 text-center" style="font-family: 'Mochiy Pop One';">PARK NEWS</h2>
+    <main class="note-container mt-[100px]">
+        <h2 class="text-4xl font-bold mb-4 text-center" style="font-family: 'Mochiy Pop One'; color: var(--primary-color);">PARK NEWS</h2>
+        <p class="text-center text-gray-500 mb-12">※ 2026年3月22日時点の公園情報</p>
 
         <!-- Note Style Article 1 -->
         <article class="note-article">
             <div class="note-meta">
                 <span class="bg-emerald-100 dark:bg-emerald-900/30 style="color: var(--primary-color);" dark:font-bold px-2 py-0.5 rounded text-xs font-bold">EVENT</span>
-                <span>2026年3月15日</span>
+                <span>2026年3月22日</span>
             </div>
-            <a href="destinations/omiya_park.html">
-                <h3 class="note-title">大宮公園：春のさくら祭り2026 開催決定！夜桜ライトアップも。</h3>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Omiya_Park_20220327_2.jpg/1200px-Omiya_Park_20220327_2.jpg" alt="大宮公園さくら祭り" class="note-thumbnail">
+            <a href="destinations/maruyama.html">
+                <h3 class="note-title">丸山公園：春のファミリーキャンプフェスタ開催！</h3>
+                <img src="images/maruyama.jpeg" alt="丸山公園キャンプ" class="note-thumbnail">
             </a>
-            <p class="note-excerpt">日本さくら名所100選にも選ばれた大宮公園。今年の桜まつりは、例年以上の規模で開催されます。幻想的な夜桜ライトアップに加え、県内屈指の人気店が集結するキッチンカーエリアも登場。家族や友人と、春のひとときを楽しみませんか？</p>
+            <p class="note-excerpt">上尾・丸山公園では、今週末から「ファミリーキャンプフェスタ」を開催します。手ぶらで楽しめるデイキャンプ体験や、地元の新鮮野菜を使ったBBQコーナーが登場。小動物園も夜間特別開園し、普段は見られない動物たちの姿を観察できます。</p>
             <div class="flex justify-between items-center">
-                <a href="destinations/omiya_park.html" class="note-link">続きを読む</a>
+                <a href="destinations/maruyama.html" class="note-link">続きを読む</a>
                 <div class="flex gap-4 text-gray-400">
-                    <span>❤️ 128</span>
-                    <span>💬 12</span>
+                    <span>❤️ 156</span>
+                    <span>💬 24</span>
                 </div>
             </div>
         </article>
@@ -95,18 +91,18 @@
         <article class="note-article">
             <div class="note-meta">
                 <span class="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 px-2 py-0.5 rounded text-xs font-bold">FACILITY</span>
-                <span>2026年3月10日</span>
+                <span>2026年3月18日</span>
             </div>
-            <a href="destinations/shinrin_park.html">
-                <h3 class="note-title">森林公園：最新アスレチック「冒険コース」がリニューアルオープン！</h3>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Musashi_Kyuryo_National_Government_Park_20111105.jpg" alt="森林公園リニューアル" class="note-thumbnail">
+            <a href="destinations/omiya_park.html">
+                <h3 class="note-title">大宮公園：日本庭園エリアのバリアフリー改修が完了</h3>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Omiya_Park_20220327_2.jpg/1200px-Omiya_Park_20220327_2.jpg" alt="大宮公園バリアフリー" class="note-thumbnail">
             </a>
-            <p class="note-excerpt">子供たちに絶大な人気を誇る森林公園の「冒険コース」が、この春、大幅にパワーアップしました。日本最大級のネット遊具「空の散歩道」が新登場し、より安全に、よりスリル満点に遊べるようになっています。春休みの行き先候補にぜひ。</p>
+            <p class="note-excerpt">大宮公園内の日本庭園エリアにて進められていた通路のバリアフリー改修が完了しました。車いすやベビーカーでも、四季折々の美しい庭園をスムーズに散策できるようになっています。多目的トイレも最新設備にリニューアルされました。</p>
             <div class="flex justify-between items-center">
-                <a href="destinations/shinrin_park.html" class="note-link">続きを読む</a>
+                <a href="destinations/omiya_park.html" class="note-link">続きを読む</a>
                 <div class="flex gap-4 text-gray-400">
-                    <span>❤️ 95</span>
-                    <span>💬 8</span>
+                    <span>❤️ 112</span>
+                    <span>💬 5</span>
                 </div>
             </div>
         </article>
@@ -114,30 +110,30 @@
         <!-- Note Style Article 3 -->
         <article class="note-article">
             <div class="note-meta">
-                <span class="bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 px-2 py-0.5 rounded text-xs font-bold">SPORTS</span>
-                <span>2026年3月1日</span>
+                <span class="bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 px-2 py-0.5 rounded text-xs font-bold">INFO</span>
+                <span>2026年3月12日</span>
             </div>
-            <a href="destinations/tokorozawa_park.html">
-                <h3 class="note-title">所沢航空公園：市民テニス大会のエントリーを開始します。</h3>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Tokorozawa_Aviation_Memorial_Park_01.JPG/1200px-Tokorozawa_Aviation_Memorial_Park_01.JPG" alt="航空公園テニス大会" class="note-thumbnail">
+            <a href="destinations/shinrin_park.html">
+                <h3 class="note-title">国営武蔵丘陵森林公園：ネモフィラの花畑が見頃を迎えました</h3>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Musashi_Kyuryo_National_Government_Park_20111105.jpg" alt="森林公園ネモフィラ" class="note-thumbnail">
             </a>
-            <p class="note-excerpt">新緑の美しい航空公園でテニスを楽しみませんか？初心者から上級者まで、どなたでも参加できるクラスを用意しています。参加者全員に公園オリジナルグッズのプレゼントも！先着順ですので、お早めのエントリーをお願いします。</p>
+            <p class="note-excerpt">森林公園の西口エリアにある広大な花畑で、ネモフィラが見頃を迎えています。空の青さと溶け合うような一面の青い世界は圧巻です。フォトコンテストも同時開催中ですので、とっておきの一枚をぜひ投稿してください。</p>
             <div class="flex justify-between items-center">
-                <a href="destinations/tokorozawa_park.html" class="note-link">続きを読む</a>
+                <a href="destinations/shinrin_park.html" class="note-link">続きを読む</a>
                 <div class="flex gap-4 text-gray-400">
-                    <span>❤️ 64</span>
-                    <span>💬 5</span>
+                    <span>❤️ 234</span>
+                    <span>💬 18</span>
                 </div>
             </div>
         </article>
 
         <!-- External Link Section -->
-        <div class="bg-gray-50 dark:bg-slate-800 p-8 rounded-2xl border border-gray-100 dark:border-slate-700">
-            <h4 class="font-bold mb-4">埼玉県公式ニュース（外部サイト）</h4>
+        <div class="bg-gray-50 dark:bg-slate-800 p-8 rounded-3xl border border-gray-100 dark:border-slate-700">
+            <h4 class="font-bold mb-4">県内公園の開花情報・イベント（公式）</h4>
             <ul class="space-y-4">
                 <li>
                     <a href="https://www.pref.saitama.lg.jp/news/index.html" target="_blank" class="flex justify-between items-center group">
-                        <span class="group-hover:font-bold transition-colors">彩の国 ニュース 埼玉県公式サイトへ</span>
+                        <span class="group-hover:font-bold transition-colors">埼玉県 公園・緑地情報公式サイト</span>
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                     </a>
                 </li>
@@ -145,14 +141,15 @@
         </div>
     </main>
 
-    <footer>
+<footer>
     <div class="max-w-6xl mx-auto px-6">
-        <h2 class="text-2xl font-bold mb-4" style="font-family: 'Mochiy Pop One';">SAITAMA PARKS</h2>
+        <div class="footer-logo">SAITAMA PARKS</div>
+        <hr>
         <p class="text-sm opacity-80">© 2026 埼玉県公園ガイドポータル - 自然と共に生きる。</p>
-        <div class="footer-links mt-6 flex justify-center gap-6 text-sm flex-wrap">
-            <a onclick="openModal('about')" class="hover:underline cursor-pointer">サイトについて</a>
-            <a onclick="openModal('access')" class="hover:underline cursor-pointer">アクセス</a>
-            <a onclick="openModal('copyright')" class="hover:underline cursor-pointer">著作権</a>
+        <div class="footer-links mt-8 flex justify-center gap-12 text-sm flex-wrap">
+            <a onclick="openModal('about')" class="cursor-pointer">サイトについて</a>
+            <a onclick="openModal('access')" class="cursor-pointer">アクセス</a>
+            <a onclick="openModal('copyright')" class="cursor-pointer">著作権</a>
         </div>
     </div>
 </footer>

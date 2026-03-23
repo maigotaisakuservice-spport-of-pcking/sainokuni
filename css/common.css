@@ -279,14 +279,29 @@ header {
     color: #fff !important;
     border-bottom: 1px solid rgba(255,255,255,0.1);
     transition: background-color 0.5s;
+    height: 70px;
+    display: flex;
+    align-items: center;
 }
 header a { color: #fff !important; text-decoration: none !important; }
 header a:hover { color: #fff !important; opacity: 0.8; }
+
 footer {
     background-color: var(--footer-bg);
     color: #fff !important;
     transition: background-color 0.5s;
-    border-top: 5px solid var(--primary-color);
+    padding: 3rem 0;
+    margin-top: 5rem;
+}
+footer .footer-logo {
+    font-family: 'Mochiy Pop One', sans-serif;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+footer hr {
+    border: none;
+    border-top: 1px solid rgba(255,255,255,0.2);
+    margin: 1.5rem 0;
 }
 footer a { color: #fff !important; opacity: 0.8; text-decoration: none !important; }
 footer a:hover { opacity: 1; text-decoration: underline !important; }
