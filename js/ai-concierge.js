@@ -11,14 +11,14 @@ const SYSTEM_PROMPT = `
 時々システムに「ノイズ」が発生し、埼玉愛が溢れすぎるバグ（例：十万石まんじゅうへの執着）が発生します。
 
 知識ベース（公園メイン）:
-- 大宮公園: 歴史ある県営公園。桜の名所。氷川神社隣接。
-- 所沢航空記念公園: 日本の航空発祥の地。ドッグランや広大な芝生。
-- 国営武蔵丘陵森林公園: 日本初の国営公園。サイクリングや巨大遊具「ポンポコ山」。
-- 秋ヶ瀬公園: 荒川沿いの広大な緑地。BBQやサッカー場が充実。
-- 丸山公園: 上尾市。小動物園や水遊び場があり、ファミリーに最適。
+- 大宮公園: 歴史ある県営公園。桜の名所。氷川神社隣接。 (destinations/omiya_park.html)
+- 所沢航空記念公園: 日本の航空発祥の地。ドッグランや広大な芝生。 (destinations/tokorozawa_park.html)
+- 国営武蔵丘陵森林公園: 日本初の国営公園。サイクリングや巨大遊具「ポンポコ山」。 (destinations/shinrin_park.html)
+- 秋ヶ瀬公園: 荒川沿いの広大な緑地。BBQやサッカー場が充実。 (destinations/akigase_park.html)
+- 丸山公園: 上尾市。小動物園や水遊び場があり、ファミリーに最適。 (destinations/maruyama-park.html)
 - グルメ: 深谷ねぎ、草加せんべい、肉汁うどん、十万石まんじゅう（うますぎる）。
 
-回答には、必要に応じてこのサイト内のページ（destinations/kawagoe.html など）への誘導を含めてください。
+回答には、必要に応じてこのサイト内のページ（destinations/omiya_park.html など）への誘導を含めてください。
 `;
 
 let engine = null;
@@ -124,17 +124,16 @@ function addMessage(role, text) {
     if (!chatMessages) return document.createElement('div');
     const div = document.createElement('div');
     div.className = `mb-4 ${role === 'user' ? 'text-right' : 'text-left'}`;
+
+    const haniwa = document.createElement('div');
+    haniwa.className = "text-[10px] text-gray-500 mb-1";
+    haniwa.textContent = role === 'user' ? 'あなた' : 'AIサイタマニアくん';
+    div.appendChild(haniwa);
+
     const inner = document.createElement('div');
     // テーマ変数を反映するように変更
     inner.className = `inline-block p-3 rounded-2xl ${role === 'user' ? 'bg-[var(--primary-color)] text-white' : 'bg-gray-700 text-gray-200'} max-w-[80%] break-words`;
     inner.textContent = text;
-
-    if (role === 'model') {
-        const haniwa = document.createElement('div');
-        haniwa.className = "text-[10px] text-gray-500 mb-1";
-        haniwa.textContent = "AIサイタマニアくん";
-        div.appendChild(haniwa);
-    }
 
     div.appendChild(inner);
     chatMessages.appendChild(div);
@@ -142,20 +141,36 @@ function addMessage(role, text) {
     return div;
 }
 
+function clearChat() {
+    if (confirm("チャット履歴を削除します。よろしいですか？")) {
+        const chatMessages = document.getElementById('chat-messages');
+        if (chatMessages) {
+            chatMessages.innerHTML = '';
+            addWelcomeMessage();
+        }
+    }
+}
+window.clearChat = clearChat;
+
 function fallbackResponse(msg) {
     let response = "ﾋﾟﾋﾟｯ...公園簡易スキャン完了。";
-    if(msg.match(/腹|食べ|うどん|弁当/)) {
-        response += "お弁当を食べるなら、芝生広場が広大な『森林公園』や『秋ヶ瀬公園』を推奨する。十万石まんじゅうも忘れずに持参せよ。";
+    if(msg.match(/腹|食べ|うどん|弁当|空いた/)) {
+        response += "お腹が空いたのであれば、園内に美味しいカフェがある『所沢航空記念公園』や、ピクニックに最適な『秋ヶ瀬公園』を推奨する。十万石まんじゅうも忘れずに。";
+        response += " <a href='destinations/tokorozawa_park.html' class='underline'>所沢航空公園ガイドを見る</a>";
     } else if(msg.match(/歩|散歩|ウォーキング/)) {
-        response += "散歩なら『大宮公園』の歴史ある参道や、『所沢航空記念公園』の広大な敷地がおすすめである。";
+        response += "散歩なら、『大宮公園』の歴史ある参道や、広大な『森林公園』のウォーキングコースがおすすめである。";
+        response += " <a href='destinations/omiya_park.html' class='underline'>大宮公園ガイドを見る</a>";
     } else if(msg.match(/子供|遊び|遊具/)) {
-        response += "子供連れなら、巨大遊具のある『森林公園』や、小動物園のある『丸山公園』が最適だ。";
+        response += "子供連れなら、無料の小動物園や大型遊具がある『丸山公園』が最適だ。";
+        response += " <a href='destinations/maruyama-park.html' class='underline'>丸山公園ガイドを見る</a>";
     } else if(msg.match(/学|歴史|勉強/)) {
-        response += "歴史を学びたいなら『大宮公園』の博物館や、『所沢航空記念公園』の記念館を推奨する。";
+        response += "学びたいのであれば、『所沢航空記念公園』の記念館で日本の航空史に触れることを推奨する。";
+        response += " <a href='destinations/tokorozawa_park.html' class='underline'>所沢航空公園ガイドを見る</a>";
     } else if(msg.match(/スポーツ|サッカー/)) {
         response += "スポーツを楽しむなら、競技場が充実している『秋ヶ瀬公園』や『大宮公園』が良いだろう。";
+        response += " <a href='destinations/akigase_park.html' class='underline'>秋ヶ瀬公園ガイドを見る</a>";
     } else {
-        response += "埼玉の公園には多彩な魅力がある。公園を探すページやニュース一覧をチェックしてほしい。";
+        response += "埼玉の5大公園（大宮、所沢、森林、秋ヶ瀬、丸山）を中心に、最適な場所を提案しよう。";
     }
     addMessage('model', response);
 }

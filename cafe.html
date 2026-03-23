@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公園カフェ巡り | SAITAMA PARKS 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "selector"
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Mochiy+Pop+One&family=DotGothic16&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        .header-main {
+            background: var(--header-bg);
+            backdrop-filter: blur(10px);
+            color: #ecf0f1;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0; width: 100%; z-index: 1000;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        main { max-width: 800px; margin: 0 auto; padding: 120px 1.5rem 4rem; }
+        .article-content { line-height: 2; font-size: 1.1rem; }
+        .article-content h2 { font-size: 1.8rem; font-weight: 700; margin: 3rem 0 1.5rem; border-left: 8px solid var(--primary-color); padding-left: 1rem; }
+        .article-content p { margin-bottom: 1.5rem; }
+        .cafe-card { background: var(--card-bg); border-radius: 20px; overflow: hidden; margin-bottom: 3rem; border: 1px solid var(--border-color); }
+        .cafe-card img { width: 100%; height: 300px; object-fit: cover; }
+        .cafe-info { padding: 2rem; }
+    </style>
+</head>
+<body>
+<div id="reading-progress-container"><div id="reading-progress-bar"></div></div>
+<header class="header-main">
+    <div class="flex items-center gap-4">
+        <h1 class="text-2xl font-bold tracking-tighter" style="font-family: 'Mochiy Pop One';"><a href="index.html">SAITAMA PARKS</a></h1>
+    </div>
+    <nav class="flex items-center gap-4 md:gap-8">
+        <a href="destinations/maruyama-park.html" class="hover-accent-text font-bold text-sm md:text-base">公園を探す</a>
+        <a href="map.html" class="hover-accent-text font-bold text-sm md:text-base">マップ</a>
+        <a href="saitama-mini-game.html" class="hover-accent-text font-bold text-sm md:text-base">ゲーム</a>
+        <button onclick="toggleMenu()" class="hover-accent-text font-bold text-sm md:text-base">MENU</button>
+        <div class="flex items-center gap-2 ml-2 border-l border-white/20 pl-4">
+            <button onclick="toggleAccessibilityPanel()" class="hover:scale-110 transition-transform text-xl" id="theme-toggle-icon" title="アクセシビリティ設定">⚙️</button>
+        </div>
+    </nav>
+</header>
+
+<main>
+    <div class="mb-12">
+        <h1 class="text-4xl md:text-5xl font-bold mb-6 leading-tight">週末、公園カフェで<br>とっておきの非日常を。</h1>
+        <div class="flex items-center gap-4 text-gray-500 mb-8">
+            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=100&auto=format&fit=crop" class="w-10 h-10 rounded-full" alt="著者">
+            <div>
+                <div class="font-bold text-gray-900 dark:text-gray-200">Saitama Walker 編集部</div>
+                <div class="text-xs">2026.05.20 公開</div>
+            </div>
+        </div>
+        <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?q=80&w=2078&auto=format&fit=crop" class="w-full h-[400px] object-cover rounded-[40px] shadow-2xl" alt="メイン画像">
+    </div>
+
+    <div class="article-content">
+        <p>埼玉県の公園は今、劇的な進化を遂げています。単なる「遊び場」から、上質な「サードプレイス」へ。特に注目したいのが、園内に併設された個性豊かなカフェたちです。豊かな緑を眺めながら、こだわりのコーヒーを味わう時間は、忙しい日常を忘れさせてくれます。</p>
+
+        <h2>1. 所沢航空記念公園「エコトコ・ファーマーズカフェ」</h2>
+        <div class="cafe-card">
+            <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=2047&auto=format&fit=crop" alt="カフェ">
+            <div class="cafe-info">
+                <p>所沢の地場野菜をふんだんに使ったランチが自慢。テラス席からは、広大な芝生広場と、その向こうに佇むC-46中型輸送機を眺めることができます。飛行機の歴史を感じながら、ゆったりとした時間を過ごせます。</p>
+            </div>
+        </div>
+
+        <h2>2. 別所沼公園「アナザープレイスカフェ」</h2>
+        <div class="cafe-card">
+            <img src="https://images.unsplash.com/photo-1445116572660-236099ec97a0?q=80&w=2071&auto=format&fit=crop" alt="カフェ">
+            <div class="cafe-info">
+                <p>「公園の中にある、もう一つの場所」をコンセプトにしたカフェ。別所沼のほとりに佇む一軒家のような佇まいで、焼きたてのパンや本格的なイタリアンが楽しめます。沼の水を眺めながらの朝食は、まるで北欧にいるような気分にさせてくれます。</p>
+            </div>
+        </div>
+
+        <div class="bg-gray-100 dark:bg-gray-800 p-8 rounded-3xl my-12 italic border-l-8 border-gray-300">
+            「緑の中で飲むコーヒーは、なぜこんなにも美味しいのでしょうか。それは、視覚的なリラックス効果と、澄んだ空気がスパイスになっているからかもしれません。」
+        </div>
+
+        <p>今回ご紹介したカフェ以外にも、埼玉には素敵な公園カフェが続々とオープンしています。今度の週末は、お気に入りの一冊を持って、公園カフェへ出かけてみませんか？</p>
+    </div>
+
+    <div class="mt-20 p-10 bg-[var(--accent-bg)] rounded-[40px] text-center border border-[var(--accent-border)]">
+        <h3 class="text-2xl font-bold mb-4">この記事で紹介した場所をマップでチェック</h3>
+        <a href="map.html" class="inline-block bg-[var(--primary-color)] text-white font-bold py-4 px-10 rounded-full shadow-lg hover:scale-105 transition-all">🗺️ マップを開く</a>
+    </div>
+</main>
+
+<footer>
+    <div class="max-w-6xl mx-auto px-6">
+        <div class="footer-logo">SAITAMA PARKS</div>
+        <hr>
+        <p class="text-sm opacity-80">© 2026 埼玉県公園ガイドポータル - 自然と共に生きる。</p>
+        <div class="footer-links mt-8 flex justify-center gap-12 text-sm flex-wrap">
+            <a onclick="openModal('about')" class="cursor-pointer">サイトについて</a>
+            <a onclick="openModal('access')" class="cursor-pointer">アクセス</a>
+            <a onclick="openModal('copyright')" class="cursor-pointer">著作権</a>
+        </div>
+    </div>
+</footer>
+
+<button onclick="scrollToTop()" class="go-to-top-button" aria-label="トップへ戻る">↑</button>
+<script src="js/common.js"></script>
+</body>
+</html>

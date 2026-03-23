@@ -137,15 +137,23 @@ function readPageText() {
     } else {
         const mainEl = document.querySelector('main') || document.body;
         const clone = mainEl.cloneNode(true);
-        const scripts = clone.querySelectorAll('script, style, #menu-content, header, footer, .theme-toggle-btn');
+        const scripts = clone.querySelectorAll('script, style, #menu-content, header, footer, .theme-toggle-btn, button, #accessibility-panel');
         scripts.forEach(s => s.remove());
 
-        const textToRead = clone.innerText || clone.textContent;
+        const textToRead = (clone.innerText || clone.textContent).replace(/\s+/g, ' ').trim();
         const utterance = new SpeechSynthesisUtterance(textToRead);
-        utterance.lang = 'ja-JP';
-        utterance.rate = 1.0;
 
-        window.speechSynthesis.resume();
+        // より自然な声を選択（利用可能な場合）
+        const voices = window.speechSynthesis.getVoices();
+        const japaneseVoice = voices.find(v => v.lang === 'ja-JP' && v.name.includes('Google')) ||
+                            voices.find(v => v.lang === 'ja-JP') ||
+                            voices[0];
+
+        if (japaneseVoice) utterance.voice = japaneseVoice;
+        utterance.lang = 'ja-JP';
+        utterance.rate = 1.1; // 少し速めの方が自然に聞こえる場合が多い
+        utterance.pitch = 1.0;
+
         window.speechSynthesis.speak(utterance);
     }
 }
@@ -157,6 +165,37 @@ function toggleMenu() {
     if (menu && overlay) {
         menu.classList.toggle('active');
         overlay.classList.toggle('active');
+
+        // メニュー項目の動的更新 (index.html かどうかで出し分け)
+        const isIndex = window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('/');
+        const nav = menu.querySelector('nav');
+        if (nav) {
+            if (isIndex) {
+                nav.innerHTML = `
+                    <a href="index.html" class="flex items-center gap-3">🏠 ホーム</a>
+                    <a href="destinations/maruyama-park.html" class="flex items-center gap-3">🌳 公園を探す</a>
+                    <a href="map.html" class="flex items-center gap-3">🗺️ マップ</a>
+                    <a href="saitama-mini-game.html" class="flex items-center gap-3">🎮 ゲーム</a>
+                    <hr class="border-slate-700">
+                    <button onclick="toggleTheme()" class="flex items-center gap-3 w-full text-left"><span id="theme-toggle-icon-mobile">🌳</span> カラー変更</button>
+                    <button onclick="toggleDarkMode()" class="flex items-center gap-3 w-full text-left"><span>🌓</span> ダークモード切替</button>
+                `;
+            } else {
+                const prefix = window.location.pathname.includes('/news/') || window.location.pathname.includes('/game/') || window.location.pathname.includes('/destinations/') ? '../' : '';
+                nav.innerHTML = `
+                    <a href="${prefix}index.html" class="flex items-center gap-3">🏠 ホーム</a>
+                    <a href="${prefix}destinations/maruyama-park.html" class="flex items-center gap-3">🌳 公園を探す</a>
+                    <a href="${prefix}map.html" class="flex items-center gap-3">🗺️ マップ</a>
+                    <a href="${prefix}saitama-mini-game.html" class="flex items-center gap-3">🎮 ゲーム</a>
+                    <a href="${prefix}news.html" class="flex items-center gap-3">📰 NEWS</a>
+                    <a href="${prefix}gallery.html" class="flex items-center gap-3">🖼️ ギャラリー</a>
+                    <hr class="border-slate-700">
+                    <button onclick="toggleTheme()" class="flex items-center gap-3 w-full text-left"><span id="theme-toggle-icon-mobile">🌳</span> カラー変更</button>
+                    <button onclick="toggleDarkMode()" class="flex items-center gap-3 w-full text-left"><span>🌓</span> ダークモード切替</button>
+                `;
+            }
+        }
+
         // メニューが開いているときはスクロール禁止
         if (menu.classList.contains('active')) {
             document.body.style.overflow = 'hidden';
