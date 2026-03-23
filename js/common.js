@@ -17,7 +17,7 @@ function initTheme() {
 }
 
 function toggleTheme() {
-    // サイカラー（青・緑・赤）の切り替え
+    // パークカラー（青・緑・赤）の切り替え
     const themes = ['green', 'blue', 'red'];
     const currentTheme = document.documentElement.getAttribute('data-theme') || 'green';
     const nextIdx = (themes.indexOf(currentTheme) + 1) % themes.length;
@@ -58,8 +58,8 @@ function updateThemeIcon(mode, theme) {
     const themeIcon = document.getElementById('theme-toggle-icon');
     const themeIconMobile = document.getElementById('theme-toggle-icon-mobile');
 
-    // アクセシビリティ設定は車椅子アイコンをデフォルトとする
-    let icon = '♿';
+    // アクセシビリティ設定は歯車アイコンをデフォルトとする
+    let icon = '⚙️';
 
     // ダークモード時は月（任意で切り替える場合）
     // if (mode === 'dark') icon = '🌙';
@@ -175,14 +175,14 @@ function toggleAccessibilityPanel() {
         panel.className = 'fixed bottom-24 right-6 w-72 bg-white dark:bg-slate-900 rounded-3xl shadow-2xl z-[3000] border border-slate-200 dark:border-slate-800 p-6 transform transition-all duration-300 translate-y-10 opacity-0 pointer-events-none';
         panel.innerHTML = `
             <div class="flex justify-between items-center mb-6">
-                <h3 class="font-bold text-lg dark:text-white">♿ アクセシビリティ設定</h3>
+                <h3 class="font-bold text-lg dark:text-white">⚙️ アクセシビリティ設定</h3>
                 <button onclick="toggleAccessibilityPanel()" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-2xl">&times;</button>
             </div>
 
             <div class="space-y-6">
                 <!-- カラーテーマ -->
                 <div>
-                    <p class="text-xs text-slate-500 mb-3 uppercase tracking-widest font-bold">サイカラー選択</p>
+                    <p class="text-xs text-slate-500 mb-3 uppercase tracking-widest font-bold">パークカラー選択</p>
                     <div class="flex justify-between gap-2">
                         <button onclick="setTheme('green')" class="flex-1 aspect-square rounded-2xl bg-emerald-600 border-4 border-white dark:border-slate-800 shadow-sm transition-transform hover:scale-110 active:scale-95" title="グリーン"></button>
                         <button onclick="setTheme('blue')" class="flex-1 aspect-square rounded-2xl bg-sky-600 border-4 border-white dark:border-slate-800 shadow-sm transition-transform hover:scale-110 active:scale-95" title="ブルー"></button>

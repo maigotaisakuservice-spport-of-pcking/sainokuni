@@ -62,7 +62,7 @@
         <a href="saitama-mini-game.html" class="hover-accent-text font-bold text-sm md:text-base">ゲーム</a>
         <button onclick="toggleMenu()" class="hover-accent-text font-bold text-sm md:text-base">MENU</button>
         <div class="flex items-center gap-2 ml-2 border-l border-white/20 pl-4">
-            <button onclick="toggleAccessibilityPanel()" class="hover:scale-110 transition-transform text-xl" id="theme-toggle-icon" title="アクセシビリティ設定">♿</button>
+            <button onclick="toggleAccessibilityPanel()" class="hover:scale-110 transition-transform text-xl" id="theme-toggle-icon" title="アクセシビリティ設定">⚙️</button>
         </div>
     </nav>
 </header>
@@ -210,7 +210,7 @@
                         const sport = tags.sport ? `(${tags.sport})` : '';
                         info += `バリアフリー: ${wheel}<br>スポーツ: ${sport || '不明'}`;
                     } else if (tags.amenity === 'toilet') {
-                        const wheel = tags.wheelchair === 'yes' ? '♿ 車いす対応' : '不明';
+                        const wheel = tags.wheelchair === 'yes' ? '⚙️ 車いす対応' : '不明';
                         info += `トイレ情報: ${wheel}`;
                     }
 
