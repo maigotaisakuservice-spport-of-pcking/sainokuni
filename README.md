@@ -19,17 +19,12 @@
 
 ## 🖼️ 必要な画像アセット
 本プロジェクトの完全な表示には、以下のローカル画像ファイルが必要です。
-（※一部は外部URLを参照していますが、以下のファイルは`images/`ディレクトリに配置してください）
+（※多くのコンテンツは外部URLの画像を参照していますが、以下のコアアセットは`images/`ディレクトリに配置してください）
 
 | ファイル名 | 用途 |
 | :--- | :--- |
-| `images/maruyama.jpeg` | 丸山公園のメインビジュアル |
-| `images/densya.jpg` | 鉄道博物館・スライダー用 |
-| `newskiji/kijiimg/aiyasai.jpg` | ニュース記事用（農業） |
-| `newskiji/kijiimg/ainegi.jpg` | ニュース記事用（農業） |
-| `newskiji/kijiimg/aitunagarisns.jpg` | ニュース記事用（農業） |
-| `newskiji/tyosyaimg/cafetyosya.jpg` | 著者アイコン |
-| `images/logo.png` | （任意）サイトロゴ |
+| `images/maruyama.jpeg` | 丸山公園のメインビジュアル・ニュースサムネイル |
+| `images/densya.jpg` | 鉄道博物館・スライダー用背景 |
 
 ## 🛠️ 技術スタック
 - **Frontend**: HTML5, CSS3 (Tailwind CSS), JavaScript (ES6+)

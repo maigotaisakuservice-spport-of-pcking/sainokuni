@@ -52,7 +52,7 @@
         .filter-chip.active { background: #8BC34A; border-color: #8BC34A; color: #1b5e20; font-weight: bold; }
     </style>
 </head>
-<body class="flex flex-col h-screen">
+<body class="flex flex-col min-h-screen">
 
 <header class="header-main">
     <div class="flex items-center gap-4">
@@ -103,8 +103,8 @@
         </button>
     </div>
 
-    <main class="flex-grow relative">
-        <div id="map"></div>
+    <main class="flex-grow relative min-h-[700px]">
+        <div id="map" class="absolute inset-0"></div>
         <div id="loading-overlay" class="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center z-[2000] hidden">
             <div class="text-center">
                 <div class="animate-spin rounded-full h-12 w-12 border-b-2 style="border-color: var(--primary-color);" mx-auto mb-2"></div>
