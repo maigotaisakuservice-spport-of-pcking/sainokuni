@@ -143,18 +143,30 @@ function readPageText() {
         const textToRead = (clone.innerText || clone.textContent).replace(/\s+/g, ' ').trim();
         const utterance = new SpeechSynthesisUtterance(textToRead);
 
-        // より自然な声を選択（利用可能な場合）
-        const voices = window.speechSynthesis.getVoices();
-        const japaneseVoice = voices.find(v => v.lang === 'ja-JP' && v.name.includes('Google')) ||
-                            voices.find(v => v.lang === 'ja-JP') ||
-                            voices[0];
+        // 音声リストが空の場合があるため、非同期取得も考慮した発話関数
+        const speak = () => {
+            const voices = window.speechSynthesis.getVoices();
+            // より自然な声を選択（Nanami, Keita, Google, Naturalなどのキーワードで検索）
+            const japaneseVoice = voices.find(v => v.lang === 'ja-JP' && (v.name.includes('Natural') || v.name.includes('Online'))) ||
+                                voices.find(v => v.lang === 'ja-JP' && (v.name.includes('Nanami') || v.name.includes('Keita') || v.name.includes('Sayaka'))) ||
+                                voices.find(v => v.lang === 'ja-JP' && v.name.includes('Google')) ||
+                                voices.find(v => v.lang === 'ja-JP') ||
+                                voices[0];
 
-        if (japaneseVoice) utterance.voice = japaneseVoice;
-        utterance.lang = 'ja-JP';
-        utterance.rate = 1.1; // 少し速めの方が自然に聞こえる場合が多い
-        utterance.pitch = 1.0;
+            if (japaneseVoice) utterance.voice = japaneseVoice;
+            utterance.lang = 'ja-JP';
+            // 人間に近い自然な速さとトーンに調整
+            utterance.rate = 1.05;
+            utterance.pitch = 1.0;
 
-        window.speechSynthesis.speak(utterance);
+            window.speechSynthesis.speak(utterance);
+        };
+
+        if (window.speechSynthesis.getVoices().length === 0) {
+            window.speechSynthesis.onvoiceschanged = speak;
+        } else {
+            speak();
+        }
     }
 }
 
