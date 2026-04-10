@@ -12,19 +12,23 @@
 
 ## 📂 ページ構成
 1. `index.html`: ホームページ（スライダー、AI、ダイジェスト）
-2. `news.html`: ニュースアーカイブ（農業・カフェ・聖地巡礼）
+2. `news.html`: ニュースアーカイブ
 3. `map.html`: 施設検索マップ（5大公園ピン表示対応）
 4. `saitama-mini-game.html`: ゲームハブ
 5. `gallery.html`: フォトギャラリー
+6. `destinations/`: 各公園の詳細ページ
 
 ## 🖼️ 必要な画像アセット
-本プロジェクトの完全な表示には、以下のローカル画像ファイルが必要です。
-（※多くのコンテンツは外部URLの画像を参照していますが、以下のコアアセットは`images/`ディレクトリに配置してください）
+本プロジェクトでは外部サーバーの負荷軽減とプライバシー保護のため、すべての公園画像をローカルアセットとして管理しています。
+以下の画像を `images/` ディレクトリに配置してください。
 
 | ファイル名 | 用途 |
 | :--- | :--- |
-| `images/maruyama.jpeg` | 丸山公園のメインビジュアル・ニュースサムネイル |
-| `images/densya.jpg` | 鉄道博物館・スライダー用背景 |
+| `images/omiya_park.jpg` | 大宮公園のメインビジュアル・ギャラリー |
+| `images/shinrin_park.jpg` | 森林公園のメインビジュアル・ギャラリー |
+| `images/tokorozawa_park.jpg` | 所沢航空記念公園のメインビジュアル・ギャラリー |
+| `images/akigase_park.jpg` | 秋ヶ瀬公園のメインビジュアル・ギャラリー |
+| `images/maruyama_park.jpg` | 丸山公園のメインビジュアル・ギャラリー |
 
 ## 🛠️ 技術スタック
 - **Frontend**: HTML5, CSS3 (Tailwind CSS), JavaScript (ES6+)
