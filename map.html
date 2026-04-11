@@ -41,15 +41,34 @@
         .custom-div-icon:hover { transform: scale(1.2); z-index: 1000 !important; }
         .map-controls {
             background: var(--card-bg); color: var(--text-color); padding: 1rem;
-            display: flex; flex-direction: column; gap: 10px; z-index: 100;
+            display: flex; flex-direction: column; gap: 15px; z-index: 100;
             margin-top: 70px; border-bottom: 1px solid var(--border-color);
         }
         .filter-chip {
             padding: 5px 15px; border-radius: 20px; font-size: 0.85rem;
             cursor: pointer; transition: all 0.3s; border: 1px solid var(--border-color);
             background: var(--bg-color); display: flex; align-items: center; gap: 5px;
+            white-space: nowrap;
         }
         .filter-chip.active { background: #8BC34A; border-color: #8BC34A; color: #1b5e20; font-weight: bold; }
+
+        #side-panel {
+            width: 350px; height: 100%; overflow-y: auto; background: var(--card-bg);
+            border-left: 1px solid var(--border-color); z-index: 50;
+            transition: transform 0.3s ease-in-out;
+        }
+        @media (max-width: 768px) {
+            #side-panel {
+                position: fixed; right: 0; top: 0; bottom: 0;
+                transform: translateX(100%);
+            }
+            #side-panel.open { transform: translateX(0); }
+        }
+        .facility-item {
+            padding: 1rem; border-bottom: 1px solid var(--border-color); cursor: pointer;
+            transition: background 0.2s;
+        }
+        .facility-item:hover { background: var(--accent-bg); }
     </style>
 </head>
 <body class="flex flex-col min-h-screen">
@@ -77,13 +96,11 @@
                 <h2 class="text-xl font-bold" style="font-family: 'Mochiy Pop One';">MENU</h2>
                 <button onclick="toggleMenu()" class="text-2xl">&times;</button>
             </div>
-                                                            <nav class="flex flex-col gap-6 text-lg">
+            <nav class="flex flex-col gap-6 text-lg">
                 <a href="index.html" class="flex items-center gap-3">🏠 ホーム</a>
                 <a href="destinations/maruyama-park.html" class="flex items-center gap-3">🌳 公園を探す</a>
                 <a href="map.html" class="flex items-center gap-3">🗺️ マップ</a>
                 <a href="saitama-mini-game.html" class="flex items-center gap-3">🎮 ゲーム</a>
-                <a href="news.html" class="flex items-center gap-3">📰 NEWS</a>
-                <a href="gallery.html" class="flex items-center gap-3">🖼️ ギャラリー</a>
                 <hr class="border-slate-700">
                 <button onclick="toggleTheme()" class="flex items-center gap-3 w-full text-left"><span id="theme-toggle-icon-mobile">🌳</span> カラー変更</button>
                 <button onclick="toggleDarkMode()" class="flex items-center gap-3 w-full text-left"><span>🌓</span> ダークモード切替</button>
@@ -92,22 +109,62 @@
     </div>
 
     <div class="map-controls">
-        <div class="flex flex-wrap justify-center gap-2" id="filter-container">
-            <div class="filter-chip active" data-type="all">すべて</div>
-            <div class="filter-chip" data-type="parks">🌳 公園</div>
-            <div class="filter-chip" data-type="stations">🚉 駅</div>
-            <div class="filter-chip" data-type="toilets">🚻 トイレ</div>
+        <div class="flex flex-wrap items-center justify-center gap-4">
+            <div class="flex flex-wrap justify-center gap-2" id="filter-container">
+                <div class="filter-chip active" data-type="all">すべて</div>
+                <div class="filter-chip" data-type="parks">🌳 公園</div>
+                <div class="filter-chip" data-type="stations">🚉 駅</div>
+                <div class="filter-chip" data-type="toilets">🚻 トイレ</div>
+                <div class="filter-chip" data-type="shops">🏪 コンビニ</div>
+                <div class="filter-chip" data-type="parking">🅿️ 駐車場</div>
+                <div class="filter-chip" data-type="cafe">☕ カフェ</div>
+                <div class="filter-chip" data-type="vending">🥤 自販機</div>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <span class="text-sm font-bold">範囲:</span>
+                <select id="radius-select" class="bg-[var(--bg-color)] border border-[var(--border-color)] rounded-lg px-2 py-1 text-sm outline-none">
+                    <option value="100">100m</option>
+                    <option value="500" selected>500m</option>
+                    <option value="1000">1km</option>
+                    <option value="5000">5km</option>
+                </select>
+            </div>
         </div>
-        <button id="locate-btn" class="bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 px-6 rounded-full transition-colors self-center shadow-lg">
-            現在地を取得 & 周辺100mを検索
-        </button>
+
+        <div class="flex flex-wrap items-center justify-center gap-4 mt-2">
+            <div class="relative w-full max-w-md">
+                <input type="text" id="keyword-input" placeholder="名前で検索..." class="w-full bg-[var(--bg-color)] border border-[var(--border-color)] rounded-full px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-[#8BC34A]">
+                <button id="search-btn" class="absolute right-2 top-1/2 -translate-y-1/2 bg-[#8BC34A] text-white p-1 rounded-full hover:bg-[#7CB342] transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                </button>
+            </div>
+            <button id="locate-btn" class="bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 px-6 rounded-full transition-colors shadow-md">
+                現在地から探す
+            </button>
+            <button id="toggle-list-btn" class="md:hidden bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-full transition-colors shadow-md">
+                リスト表示
+            </button>
+        </div>
     </div>
 
-    <main class="flex-grow relative min-h-[700px]">
-        <div id="map" class="absolute inset-0"></div>
+    <main class="flex-grow flex relative min-h-[500px]">
+        <div id="map" class="flex-grow"></div>
+
+        <div id="side-panel" class="hidden md:block">
+            <div class="p-4 bg-[var(--accent-bg)] border-b border-[var(--border-color)] sticky top-0 z-10 flex justify-between items-center">
+                <h3 class="font-bold">施設リスト (<span id="count">0</span>)</h3>
+                <button id="close-list-btn" class="md:hidden text-2xl">&times;</button>
+            </div>
+            <div id="facility-list">
+                <!-- リストがここに生成されます -->
+                <div class="p-8 text-center text-gray-400">施設を検索してください</div>
+            </div>
+        </div>
+
         <div id="loading-overlay" class="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center z-[2000] hidden">
             <div class="text-center">
-                <div class="animate-spin rounded-full h-12 w-12 border-b-2 style="border-color: var(--primary-color);" mx-auto mb-2"></div>
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--primary-color)] mx-auto mb-2"></div>
                 <p class="font-bold text-gray-700">データを取得中...</p>
             </div>
         </div>
@@ -123,7 +180,7 @@
             { name: "丸山公園", pos: [35.9680, 139.5444], url: "destinations/maruyama-park.html" }
         ];
 
-        const map = L.map('map').setView([35.9064, 139.6238], 11); // 埼玉県全体が見えるレベルで初期化
+        const map = L.map('map').setView([35.9064, 139.6238], 11);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -135,10 +192,10 @@
         });
 
         const markers = L.markerClusterGroup().addTo(map);
-        const staticMarkers = L.layerGroup().addTo(map); // 常に表示する5選用
+        const staticMarkers = L.layerGroup().addTo(map);
         let currentType = 'all';
+        let foundFacilities = [];
 
-        // 5大公園のピンを設置
         function initBig5() {
             big5Parks.forEach(p => {
                 const marker = L.marker(p.pos, {
@@ -147,42 +204,43 @@
                 marker.bindPopup(`
                     <div class="p-2">
                         <b class="text-lg">${p.name}</b><br>
-                        <span class="text-xs font-bold font-bold">埼玉5大公園の1つ</span><br>
-                        <a href="${p.url}" class="inline-block mt-2 style="background-color: var(--primary-color);" text-white text-xs px-2 py-1 rounded">詳細ページを見る</a>
+                        <span class="text-xs font-bold">埼玉5大公園の1つ</span><br>
+                        <a href="${p.url}" class="inline-block mt-2 text-white text-xs px-2 py-1 rounded" style="background-color: var(--primary-color);">詳細ページを見る</a>
                     </div>
                 `);
             });
         }
         initBig5();
 
-        // Overpass API を使用して実際の施設データを取得
-        async function fetchOSMData(type, center, radius = 100) {
+        async function fetchOSMData(type, center, radius = 500, keyword = '') {
             const lat = center.lat;
             const lon = center.lng;
             let query = "";
             let emoji = "📍";
             let color = "#333";
 
-            if (type === 'parks') {
-                query = `node["leisure"="park"](around:${radius},${lat},${lon});way["leisure"="park"](around:${radius},${lat},${lon});`;
-                emoji = "🌳"; color = "#2e7d32";
-            } else if (type === 'stations') {
-                query = `node["railway"="station"](around:${radius},${lat},${lon});`;
-                emoji = "🚉"; color = "#1565c0";
-            } else if (type === 'toilets') {
-                query = `node["amenity"="toilet"](around:${radius},${lat},${lon});`;
-                emoji = "🚻"; color = "#f57c00";
-            } else {
-                // all の場合は主要なものをまとめて取得
-                query = `
-                    (node["leisure"="park"](around:${radius},${lat},${lon});
-                     way["leisure"="park"](around:${radius},${lat},${lon});
-                     node["railway"="station"](around:${radius},${lat},${lon});
-                     node["amenity"="toilet"](around:${radius},${lat},${lon});)
-                `;
+            const categories = {
+                'parks': { q: 'node["leisure"="park"](around:RADIUS,LAT,LON);way["leisure"="park"](around:RADIUS,LAT,LON);', e: '🌳', c: '#2e7d32' },
+                'stations': { q: 'node["railway"="station"](around:RADIUS,LAT,LON);', e: '🚉', c: '#1565c0' },
+                'toilets': { q: 'node["amenity"="toilet"](around:RADIUS,LAT,LON);', e: '🚻', c: '#f57c00' },
+                'shops': { q: 'node["shop"~"convenience"](around:RADIUS,LAT,LON);', e: '🏪', c: '#43a047' },
+                'parking': { q: 'node["amenity"="parking"](around:RADIUS,LAT,LON);way["amenity"="parking"](around:RADIUS,LAT,LON);', e: '🅿️', c: '#546e7a' },
+                'cafe': { q: 'node["amenity"="cafe"](around:RADIUS,LAT,LON);', e: '☕', c: '#6d4c41' },
+                'vending': { q: 'node["amenity"="vending_machine"](around:RADIUS,LAT,LON);', e: '🥤', c: '#1e88e5' }
+            };
+
+            if (type === 'all') {
+                query = Object.values(categories).map(cat => cat.q).join('');
+            } else if (categories[type]) {
+                query = categories[type].q;
+                emoji = categories[type].e;
+                color = categories[type].c;
             }
 
-            const url = `https://overpass-api.de/api/interpreter?data=[out:json];${query}out center;`;
+            query = query.replace(/RADIUS/g, radius).replace(/LAT/g, lat).replace(/LON/g, lon);
+
+            // Overpass API URL
+            const url = `https://overpass-api.de/api/interpreter?data=[out:json];(${query});out center;`;
 
             document.getElementById('loading-overlay').classList.remove('hidden');
             try {
@@ -190,50 +248,72 @@
                 const data = await res.json();
 
                 markers.clearLayers();
-                data.elements.forEach(el => {
+                foundFacilities = [];
+                const listContainer = document.getElementById('facility-list');
+                listContainer.innerHTML = '';
+
+                let elements = data.elements;
+                if (keyword) {
+                    elements = elements.filter(el => {
+                        const name = (el.tags && el.tags.name) || '';
+                        return name.includes(keyword);
+                    });
+                }
+
+                elements.forEach(el => {
                     let mEmoji = emoji;
                     let mColor = color;
                     const pos = el.center ? [el.center.lat, el.center.lon] : [el.lat, el.lon];
-
-                    if (type === 'all') {
-                        const tags = el.tags || {};
-                        if (tags.leisure === 'park') { mEmoji = "🌳"; mColor = "#2e7d32"; }
-                        else if (tags.railway === 'station') { mEmoji = "🚉"; mColor = "#1565c0"; }
-                        else if (tags.amenity === 'toilet') { mEmoji = "🚻"; mColor = "#f57c00"; }
-                    }
-
-                    const marker = L.marker(pos, { icon: createIcon(mEmoji, mColor) });
                     const tags = el.tags || {};
                     const name = tags.name || tags.operator || "名称不明の施設";
 
-                    let info = `<div class="p-2 min-w-[150px]">`;
-                    info += `<b class="text-lg block mb-2">${name}</b>`;
-                    if (tags.leisure === 'park') {
-                        const wheel = tags.wheelchair === 'yes' ? '✅' : '❓';
-                        const sport = tags.sport ? `(${tags.sport})` : '';
-                        info += `<div class="text-sm mb-2">♿ バリアフリー: ${wheel}<br>⚽ スポーツ: ${sport || '不明'}</div>`;
-                    } else if (tags.amenity === 'toilet') {
-                        const wheel = tags.wheelchair === 'yes' ? '⚙️ 車いす対応' : '不明';
-                        info += `<div class="text-sm mb-2">🚻 トイレ情報: ${wheel}</div>`;
+                    if (type === 'all') {
+                        if (tags.leisure === 'park') { mEmoji = "🌳"; mColor = "#2e7d32"; }
+                        else if (tags.railway === 'station') { mEmoji = "🚉"; mColor = "#1565c0"; }
+                        else if (tags.amenity === 'toilet') { mEmoji = "🚻"; mColor = "#f57c00"; }
+                        else if (tags.shop === 'convenience') { mEmoji = "🏪"; mColor = "#43a047"; }
+                        else if (tags.amenity === 'parking') { mEmoji = "🅿️"; mColor = "#546e7a"; }
+                        else if (tags.amenity === 'cafe') { mEmoji = "☕"; mColor = "#6d4c41"; }
+                        else if (tags.amenity === 'vending_machine') { mEmoji = "🥤"; mColor = "#1e88e5"; }
                     }
 
-                    // ルート検索ボタン
+                    const marker = L.marker(pos, { icon: createIcon(mEmoji, mColor) });
+                    let info = `<div class="p-2 min-w-[150px]"><b class="text-lg block mb-1">${name}</b>`;
+                    if (tags.leisure === 'park') info += `<div class="text-sm mb-1">♿ バリアフリー: ${tags.wheelchair==='yes'?'✅':'❓'}</div>`;
+
                     const routeUrl = `https://www.google.com/maps/dir/?api=1&destination=${pos[0]},${pos[1]}`;
-                    info += `<a href="${routeUrl}" target="_blank" class="block text-center bg-blue-500 hover:bg-blue-600 text-white text-xs font-bold py-2 px-3 rounded-lg transition-colors mt-2">🚗 ここへのルート</a>`;
-                    info += `</div>`;
+                    info += `<a href="${routeUrl}" target="_blank" class="block text-center bg-blue-500 text-white text-xs font-bold py-1 px-2 rounded mt-2">🚗 ルート</a></div>`;
 
                     marker.bindPopup(info);
                     marker.addTo(markers);
+
+                    // リストアイテムの作成
+                    const item = document.createElement('div');
+                    item.className = 'facility-item';
+                    item.innerHTML = `
+                        <div class="flex items-start gap-3">
+                            <div class="text-xl">${mEmoji}</div>
+                            <div class="flex-grow">
+                                <div class="font-bold">${name}</div>
+                                <div class="text-xs text-gray-500">${tags.operator || ''}</div>
+                                <div class="mt-2 flex gap-2">
+                                    <button class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded" onclick="window.focusFacility(${pos[0]}, ${pos[1]})">地図で見る</button>
+                                    <a href="${routeUrl}" target="_blank" class="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">ルート</a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    listContainer.appendChild(item);
                 });
 
-                // 検索範囲を示す円を描画
+                document.getElementById('count').textContent = elements.length;
+                if (elements.length === 0) {
+                    listContainer.innerHTML = '<div class="p-8 text-center text-gray-400">見つかりませんでした</div>';
+                }
+
                 if (window.radiusCircle) map.removeLayer(window.radiusCircle);
                 window.radiusCircle = L.circle([lat, lon], {
-                    radius: radius,
-                    color: '#8BC34A',
-                    fillColor: '#8BC34A',
-                    fillOpacity: 0.1,
-                    dashArray: '5, 10'
+                    radius: radius, color: '#8BC34A', fillColor: '#8BC34A', fillOpacity: 0.1, dashArray: '5, 10'
                 }).addTo(map);
 
             } catch (e) {
@@ -243,46 +323,56 @@
             }
         }
 
-        // 初期表示と移動時の更新
-        map.on('moveend', () => {
-            // 自動更新は半径広めで、ボタン押下時は100mに限定
-            // fetchOSMData(currentType, map.getCenter(), 500);
-        });
+        window.focusFacility = (lat, lon) => {
+            map.setView([lat, lon], 17);
+            markers.eachLayer(m => {
+                if (m.getLatLng().lat === lat && m.getLatLng().lng === lon) m.openPopup();
+            });
+            if (window.innerWidth <= 768) toggleSidePanel();
+        };
 
-        // フィルター操作
+        const executeSearch = () => {
+            const radius = parseInt(document.getElementById('radius-select').value);
+            const keyword = document.getElementById('keyword-input').value;
+            fetchOSMData(currentType, map.getCenter(), radius, keyword);
+        };
+
         document.querySelectorAll('.filter-chip').forEach(chip => {
             chip.addEventListener('click', (e) => {
                 document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
                 chip.classList.add('active');
                 currentType = chip.dataset.type;
-                fetchOSMData(currentType, map.getCenter(), 100);
+                executeSearch();
             });
         });
 
-        // 現在地取得 & 100m検索
+        document.getElementById('radius-select').addEventListener('change', executeSearch);
+        document.getElementById('search-btn').addEventListener('click', executeSearch);
+        document.getElementById('keyword-input').addEventListener('keypress', e => { if(e.key === 'Enter') executeSearch(); });
+
         document.getElementById('locate-btn').addEventListener('click', () => {
-            map.locate({setView: true, maxZoom: 18});
+            map.locate({setView: true, maxZoom: 16});
         });
 
         let userLocationMarker = null;
         map.on('locationfound', (e) => {
             if (userLocationMarker) map.removeLayer(userLocationMarker);
             userLocationMarker = L.marker(e.latlng, { icon: createIcon('🚶', '#F44336') }).addTo(map)
-                .bindPopup("<b>あなたはここにいます</b>").openPopup();
-            fetchOSMData(currentType, e.latlng, 100);
+                .bindPopup("<b>現在地</b>").openPopup();
+            executeSearch();
         });
 
-        map.on('locationerror', (e) => {
-            alert("位置情報の取得に失敗しました。設定を確認してください。");
-        });
+        const toggleSidePanel = () => {
+            const panel = document.getElementById('side-panel');
+            panel.classList.toggle('hidden');
+            panel.classList.toggle('open');
+        };
 
-        // 画面中央付近の施設を自動取得（半径1km程度で広く）
-        map.on('load', () => {
-            fetchOSMData(currentType, map.getCenter(), 1000);
-        });
+        document.getElementById('toggle-list-btn').addEventListener('click', toggleSidePanel);
+        document.getElementById('close-list-btn').addEventListener('click', toggleSidePanel);
 
-        // 既にロードされている場合（イベントが発火しない場合）のため
-        fetchOSMData(currentType, map.getCenter(), 1000);
+        map.on('load', executeSearch);
+        setTimeout(executeSearch, 500);
     </script>
     <footer>
         <div class="max-w-6xl mx-auto px-6">

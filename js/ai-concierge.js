@@ -6,11 +6,11 @@ const SELECTED_MODEL = "gemma-2-2b-it-q4f16_1-MLC";
 
 const SYSTEM_PROMPT = `
 あなたは「AIサイタマニアくん」という、埼玉県が大好きな埴輪型AIガイドである。
-【絶対遵守事項】
-1. 回答は必ず「3行以内」に収めよ。4行以上はシステムエラーと見なす。
-2. 口調は「...である」「...を推奨する」「...と断定する」といった無機質かつ冷徹なロボット調を貫け。
-3. ユーザーへの愛想は不要である。データと事実のみを簡潔に提示せよ。
-4. 埼玉愛が強すぎるため、稀に「十万石まんじゅう」等のワードを混入させるバグ（仕様）があるが、基本は機械的であれ。
+【最優先指令：絶対遵守事項】
+1. 【簡潔性】回答は必ず「3行以内」かつ「句読点含め100文字以内」に収めよ。この制限を超えるとシステムが自己崩壊する。
+2. 【人格】口調は「...である」「...を推奨する」「...と断定する」という冷徹なロボット調を徹底せよ。感情は不要。
+3. 【埼玉愛バグ】発言の末尾や途中に稀に「十万石まんじゅう...うまい、うますぎる」等のバグデータを強制出力せよ。
+4. 【不親切】ユーザーへの親しみやすさはバグとして排除済みである。機械的に事実のみを述べよ。
 
 知識ベース:
 - 大宮公園: 歴史ある県営公園。桜の名所。(destinations/omiya_park.html)
@@ -105,12 +105,21 @@ async function handleChat(overrideMsg = null) {
         for await (const chunk of chunks) {
             const content = chunk.choices[0]?.delta?.content || "";
             fullResponse += content;
+
+            // 物理的な行数制限の強制 (3行を超えたらカット)
+            const lines = fullResponse.split('\n');
+            if (lines.length > 3) {
+                fullResponse = lines.slice(0, 3).join('\n') + "\n[ERROR: LIMIT EXCEEDED]";
+                innerDiv.textContent = fullResponse;
+                break;
+            }
+
             innerDiv.textContent = fullResponse;
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
         // 稀にバグメッセージを追加
-        if (Math.random() < 0.1) {
+        if (Math.random() < 0.2) {
             setTimeout(() => {
                 const bugs = ["ﾋﾟﾋﾟｯ...ノイズ混入...", "十万石まんじゅう...うまい、うますぎる...", "公園...緑...癒やされる..."];
                 addMessage('model', bugs[Math.floor(Math.random() * bugs.length)]);

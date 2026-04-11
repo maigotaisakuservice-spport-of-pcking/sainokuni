@@ -5,6 +5,8 @@
 
 ## 🌟 主要機能
 - **AI旅先コンシェルジュ**: WebLLMを使用したオンデバイスAIが、気分に合わせた公園を提案。
+- **強固なキャラクター管理**: AI「サイタマニアくん」の性格を維持するため、システムプロンプトの厳格化と出力制限（3行・100文字以内）を実装。
+- **高音質音声合成**: 自然な日本語音声（Natural/Online）を優先的に選択するTTSエンジン。
 - **Park Color（パークカラー）モード**: 埼玉の自然（青・緑・赤）をイメージしたテーマカラー切り替え機能。
 - **SAITAMA GO**: 3Dで埼玉の公園を探索し、隠されたアイテムを見つけるオープンワールド体験。
 - **多機能マップ**: Overpass APIを利用し、現在地周辺の公園・駅・トイレをリアルタイム検索。
@@ -32,6 +34,7 @@
 
 ## 🛠️ 技術スタック
 - **Frontend**: HTML5, CSS3 (Tailwind CSS), JavaScript (ES6+)
+- **Performance**: Script Deferring, Lazy Loading, Layout Stability (aspect-ratio)
 - **Map**: Leaflet.js + OpenStreetMap + Overpass API
 - **AI**: WebLLM (MLC-LLM)
 - **Icons**: Lucide Icons (SVG)
