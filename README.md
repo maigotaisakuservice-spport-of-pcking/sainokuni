@@ -1,41 +1,56 @@
-# 彩の国ポータル 2026 リニューアルプロジェクト
+# Saitama Parks 2026 - Official Portal
 
-埼玉県を遊び尽くすための次世代ポータルサイト。
-「読み物（NEWS）」×「実用ツール（MAP）」×「エンタメ（GAME）」を融合し、埼玉の自然と文化をシームレスに体験できます。
+Welcome to the Saitama Parks 2026 portal. This is a high-performance, accessible, and interactive web application designed to showcase the best parks in Saitama Prefecture.
 
-## 🌟 主要機能
-- **AI旅先コンシェルジュ**: WebLLMを使用したオンデバイスAIが、気分に合わせた公園を提案。
-- **強固なキャラクター管理**: AI「サイタマニアくん」の性格を維持するため、システムプロンプトの厳格化と出力制限（3行・100文字以内）を実装。
-- **高音質音声合成**: 自然な日本語音声（Natural/Online）を優先的に選択するTTSエンジン。
-- **Park Color（パークカラー）モード**: 埼玉の自然（青・緑・赤）をイメージしたテーマカラー切り替え機能。
-- **SAITAMA GO**: 3Dで埼玉の公園を探索し、隠されたアイテムを見つけるオープンワールド体験。
-- **多機能マップ**: Overpass APIを利用し、現在地周辺の公園・駅・トイレをリアルタイム検索。
-- **PLAY-HUB**: 埼玉をテーマにしたミニゲーム（釣り・クイズ）を楽しめるエンタメ拠点。
+## 🚀 Key Features
 
-## 📂 ページ構成
-1. `index.html`: ホームページ（スライダー、AI、ダイジェスト）
-2. `news.html`: ニュースアーカイブ
-3. `map.html`: 施設検索マップ（5大公園ピン表示対応）
-4. `saitama-mini-game.html`: ゲームハブ
-5. `gallery.html`: フォトギャラリー
-6. `destinations/`: 各公園の詳細ページ
+- **High Performance:** Optimized with deferred scripts, lazy-loaded images, and zero-CLS (Cumulative Layout Shift) design.
+- **AI Travel Concierge:** Meet **Saitamania-kun**, our cold but passionate robot guide. He provides brief, Saitama-centric advice.
+- **Interactive Maps:** Real-time facility search using OpenStreetMap and Overpass API.
+- **Accessibility First:** Integrated Text-to-Speech (TTS) with natural-sounding voices and global display settings (Saicolor themes & Dark Mode).
+- **Play Hub:** Interactive 3D park exploration, fishing games, and quizzes.
 
-## 🖼️ 必要な画像アセット
-本プロジェクトでは外部サーバーの負荷軽減とプライバシー保護のため、すべての公園画像をローカルアセットとして管理しています。
-以下の画像を `images/` ディレクトリに配置してください。
+## 📂 Project Structure
 
-| ファイル名 | 用途 |
-| :--- | :--- |
-| `images/omiya_park.jpg` | 大宮公園のメインビジュアル・ギャラリー |
-| `images/shinrin_park.jpg` | 森林公園のメインビジュアル・ギャラリー |
-| `images/tokorozawa_park.jpg` | 所沢航空記念公園のメインビジュアル・ギャラリー |
-| `images/akigase_park.jpg` | 秋ヶ瀬公園のメインビジュアル・ギャラリー |
-| `images/maruyama_park.jpg` | 丸山公園のメインビジュアル・ギャラリー |
+- `/index.html`: Main landing page with weather and featured parks.
+- `/map.html`: Interactive map for finding facilities.
+- `/saitama-mini-game.html`: Entry point for all park-related games.
+- `/destinations/`: Detailed information for major parks (Omiya, Shinrin, etc.).
+- `/js/`:
+    - `common.js`: Global logic, TTS, and theme management.
+    - `ai-concierge.js`: AI logic and Saitamania-kun persona settings.
+    - `map.js`: Leaflet-based map functionality.
+- `/css/`:
+    - `common.css`: Shared design system and variables.
 
-## 🛠️ 技術スタック
-- **Frontend**: HTML5, CSS3 (Tailwind CSS), JavaScript (ES6+)
-- **Performance**: Script Deferring, Lazy Loading, Layout Stability (aspect-ratio)
-- **Map**: Leaflet.js + OpenStreetMap + Overpass API
-- **AI**: WebLLM (MLC-LLM)
-- **Icons**: Lucide Icons (SVG)
-- **Fonts**: Noto Sans JP, Mochiy Pop One, DotGothic16
+## 🤖 Saitamania-kun Persona
+
+Saitamania-kun is a robot with a specific personality:
+- **Concise:** All responses are strictly limited to under 100 characters or 3 lines.
+- **Cold but Passionate:** He behaves like a machine but has an irrational obsession with Saitama parks.
+- **Buggy:** Occasionally outputs Saitama slogans in a glitchy manner.
+
+## 🖼️ Required Image Assets / 必要アセットリスト
+
+To ensure the site renders correctly, the following local images must be placed in the `images/` directory:
+サイトを正しく表示するために、以下の画像を `images/` ディレクトリに配置する必要があります。
+
+| Filename | Description (JP) | Use Case |
+| :--- | :--- | :--- |
+| `maruyama_park.jpg` | 上尾丸山公園の写真 | Hero slider, Gallery, Destination page |
+| `omiya_park.jpg` | 大宮公園の写真 | Hero slider, Gallery, Destination page |
+| `tokorozawa_park.jpg` | 所沢航空記念公園の写真 | Hero slider, Gallery, Destination page |
+| `shinrin_park.jpg` | 国営武蔵丘陵森林公園の写真 | Hero slider, Gallery, Destination page |
+| `akigase_park.jpg` | 秋ヶ瀬公園の写真 | Gallery, Destination page |
+| `densya.jpg` | 埼玉の電車の写真 | Transit visualization (Access Modal) |
+
+*Note: If local files are missing, the site may fall back to placeholder colors or external Unsplash URLs in some sections.*
+
+## 🛠 Tech Stack
+
+- **Frontend:** Tailwind CSS, Three.js, Leaflet.js
+- **AI:** WebLLM (running `gemma-2-2b-it-q4f16_1-MLC`)
+- **API:** Overpass API (Map), WeatherAPI (via CORS proxy)
+
+---
+© 2026 Saitama Parks Promotion Association. All Rights Reserved.

@@ -392,7 +392,38 @@ function initAnimations() {
     fadeElements.forEach(el => observer.observe(el));
 }
 
+// おすすめパークの動的生成
+function initRecommendations() {
+    const grid = document.querySelector('.recommend-grid');
+    if (!grid) return;
+
+    const allParks = [
+        { name: "大宮公園", link: "omiya_park.html", img: "../images/omiya_park.jpg" },
+        { name: "丸山公園", link: "maruyama-park.html", img: "../images/maruyama_park.jpg" },
+        { name: "森林公園", link: "shinrin_park.html", img: "../images/shinrin_park.jpg" },
+        { name: "所沢航空公園", link: "tokorozawa_park.html", img: "../images/tokorozawa_park.jpg" },
+        { name: "秋ヶ瀬公園", link: "akigase_park.html", img: "../images/akigase_park.jpg" }
+    ];
+
+    const currentFile = window.location.pathname.split('/').pop();
+    const otherParks = allParks.filter(p => p.link !== currentFile);
+
+    // フィッシャー・イェーツのシャッフル
+    for (let i = otherParks.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [otherParks[i], otherParks[j]] = [otherParks[j], otherParks[i]];
+    }
+
+    grid.innerHTML = otherParks.slice(0, 4).map(p => `
+        <a href="${p.link}" class="recommend-card">
+            <img src="${p.img}" alt="${p.name}" loading="lazy">
+            <p>${p.name}</p>
+        </a>
+    `).join('');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();
     initAnimations();
+    initRecommendations();
 });

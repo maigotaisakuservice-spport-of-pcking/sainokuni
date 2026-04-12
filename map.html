@@ -148,8 +148,8 @@
         </div>
     </div>
 
-    <main class="flex-grow flex relative min-h-[500px]">
-        <div id="map" class="flex-grow"></div>
+    <main class="flex-grow flex relative min-h-[500px]" style="height: calc(100vh - 200px);">
+        <div id="map" class="flex-grow" style="height: 100%;"></div>
 
         <div id="side-panel" class="hidden md:block">
             <div class="p-4 bg-[var(--accent-bg)] border-b border-[var(--border-color)] sticky top-0 z-10 flex justify-between items-center">
@@ -185,6 +185,9 @@
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
+
+        // Resize map after load to ensure tiles are displayed correctly
+        setTimeout(() => { map.invalidateSize(); }, 200);
 
         const createIcon = (emoji, color) => L.divIcon({
             html: `<div class="custom-div-icon" style="background-color: ${color};">${emoji}</div>`,
@@ -371,8 +374,9 @@
         document.getElementById('toggle-list-btn').addEventListener('click', toggleSidePanel);
         document.getElementById('close-list-btn').addEventListener('click', toggleSidePanel);
 
-        map.on('load', executeSearch);
-        setTimeout(executeSearch, 500);
+        map.whenReady(() => {
+            executeSearch();
+        });
     </script>
     <footer>
         <div class="max-w-6xl mx-auto px-6">

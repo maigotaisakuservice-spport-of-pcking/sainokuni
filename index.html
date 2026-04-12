@@ -405,6 +405,7 @@
 <script src="js/common.js" defer></script>
 <script type="module" src="js/ai-concierge.js" defer></script>
 <script>
+document.addEventListener('DOMContentLoaded', () => {
     // メイン背景スライダー & RSS統合
     let rssItems = [];
     let currentRssIdx = 0;
@@ -478,11 +479,16 @@
     document.querySelectorAll('.random-label').forEach(el => {
         el.href = randomLink;
     });
-    randomizeUILabel('.random-label', ['公園を探す', 'Discovery', '自然を見つける', 'Park Search']);
+    if (typeof randomizeUILabel === 'function') {
+        randomizeUILabel('.random-label', ['公園を探す', 'Discovery', '自然を見つける', 'Park Search']);
+    }
 
     // 簡易マップ (大宮駅中心) - 縮小拡大不可に設定
     async function initMiniMap() {
-        const miniMap = L.map('home-mini-map', {
+        const mapEl = document.getElementById('home-mini-map');
+        if (!mapEl || !window.L) return;
+
+        const miniMap = L.map(mapEl, {
             zoomControl: false,
             dragging: false,
             touchZoom: false,
@@ -495,6 +501,9 @@
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap'
         }).addTo(miniMap);
+
+        // Resize map
+        setTimeout(() => { miniMap.invalidateSize(); }, 500);
 
         const parkIcon = L.divIcon({
             html: `<div style="background: #2E7D32; width: 24px; height: 24px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; color: white; font-size: 12px;">🌳</div>`,
@@ -518,7 +527,10 @@
         const url = `https://overpass-api.de/api/interpreter?data=[out:json];${query}out;`;
 
         try {
-            const res = await fetch(url);
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 8000);
+            const res = await fetch(url, { signal: controller.signal });
+            clearTimeout(timeoutId);
             const data = await res.json();
             data.elements.forEach(el => {
                 let icon = toiletIcon;
@@ -534,8 +546,8 @@
             console.error("Home map toilet fetch error:", e);
         }
     }
-    initMiniMap();
 
+    initMiniMap();
 
     const nextFestival = new Date('2026-11-01');
     const today = new Date();
@@ -548,7 +560,15 @@
         try {
             const { CONFIG } = await import('./js/config.js');
             const apiUrl = `https://api.weatherapi.com/v1/current.json?key=${CONFIG.WEATHER_API_KEY}&q=Saitama&lang=ja`;
-            const res = await fetch(`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(apiUrl)}`);
+            // WeatherAPI.com supports CORS directly, so we try direct fetch first for better reliability.
+            let res;
+            try {
+                res = await fetch(apiUrl);
+            } catch (e) {
+                // Fallback to proxy if direct fetch fails (e.g. strict CSP or mixed content)
+                res = await fetch(`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(apiUrl)}`);
+            }
+
             if (!res.ok) throw new Error('API request failed');
             const data = await res.json();
 
@@ -646,12 +666,9 @@
     }
 
 
-    // ウィジェット情報のロードを少し遅らせる
-    window.addEventListener('load', () => {
-        setTimeout(() => {
-            initWeather();
-        }, 1000);
-    });
+    // ウィジェット情報のロード
+    initWeather();
+});
 </script>
 
 <script>
