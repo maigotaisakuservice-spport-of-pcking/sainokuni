@@ -177,6 +177,35 @@ function readPageText() {
     }
 }
 
+// 公園データの定義
+const PARK_DATA = [
+    { name: "大宮公園", link: "omiya_park.html", img: "omiya_park.jpg" },
+    { name: "丸山公園", link: "maruyama-park.html", img: "maruyama_park.jpg" },
+    { name: "森林公園", link: "shinrin_park.html", img: "shinrin_park.jpg" },
+    { name: "所沢航空公園", link: "tokorozawa_park.html", img: "tokorozawa_park.jpg" },
+    { name: "秋ヶ瀬公園", link: "akigase_park.html", img: "akigase_park.jpg" }
+];
+
+function getRandomPark() {
+    return PARK_DATA[Math.floor(Math.random() * PARK_DATA.length)];
+}
+
+function initRandomParkLinks() {
+    const isIndex = window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('/');
+    const prefix = isIndex ? 'destinations/' : '';
+    // 既にdestinations/内にいる場合はプレフィックス不要
+    const finalPrefix = window.location.pathname.includes('/destinations/') ? '' : prefix;
+
+    const randomPark = getRandomPark();
+    const links = document.querySelectorAll('a');
+
+    links.forEach(link => {
+        if (link.textContent.includes('公園を探す')) {
+            link.href = `${finalPrefix}${randomPark.link}`;
+        }
+    });
+}
+
 // UI要素のランダムラベル
 function randomizeUILabel(selector, options) {
     const elements = document.querySelectorAll(selector);
@@ -199,12 +228,14 @@ function toggleMenu() {
         const isIndex = window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('/');
         const nav = menu.querySelector('nav');
         if (nav) {
-            const isIndex = window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('/');
             const prefix = isIndex ? '' : (window.location.pathname.includes('/destinations/') || window.location.pathname.includes('/news/') || window.location.pathname.includes('/game/')) ? '../' : '';
+
+            const randomPark = getRandomPark();
+            const parkPath = isIndex ? `destinations/${randomPark.link}` : (window.location.pathname.includes('/destinations/') ? randomPark.link : `../destinations/${randomPark.link}`);
 
             nav.innerHTML = `
                 <a href="${prefix}index.html" class="flex items-center gap-3">🏠 ホーム</a>
-                <a href="${prefix}destinations/maruyama-park.html" class="flex items-center gap-3">🌳 公園を探す</a>
+                <a href="${parkPath}" class="flex items-center gap-3">🌳 公園を探す</a>
                 <a href="${prefix}map.html" class="flex items-center gap-3">🗺️ マップ</a>
                 <a href="${prefix}saitama-mini-game.html" class="flex items-center gap-3">🎮 ゲーム</a>
                 <hr class="border-slate-700">
@@ -397,16 +428,12 @@ function initRecommendations() {
     const grid = document.querySelector('.recommend-grid');
     if (!grid) return;
 
-    const allParks = [
-        { name: "大宮公園", link: "omiya_park.html", img: "../images/omiya_park.jpg" },
-        { name: "丸山公園", link: "maruyama-park.html", img: "../images/maruyama_park.jpg" },
-        { name: "森林公園", link: "shinrin_park.html", img: "../images/shinrin_park.jpg" },
-        { name: "所沢航空公園", link: "tokorozawa_park.html", img: "../images/tokorozawa_park.jpg" },
-        { name: "秋ヶ瀬公園", link: "akigase_park.html", img: "../images/akigase_park.jpg" }
-    ];
+    // PARK_DATA を使用し、パスを調整
+    const isDestinations = window.location.pathname.includes('/destinations/');
+    const imgPrefix = isDestinations ? '../images/' : 'images/';
 
     const currentFile = window.location.pathname.split('/').pop();
-    const otherParks = allParks.filter(p => p.link !== currentFile);
+    const otherParks = PARK_DATA.filter(p => p.link !== currentFile);
 
     // フィッシャー・イェーツのシャッフル
     for (let i = otherParks.length - 1; i > 0; i--) {
@@ -416,7 +443,7 @@ function initRecommendations() {
 
     grid.innerHTML = otherParks.slice(0, 4).map(p => `
         <a href="${p.link}" class="recommend-card">
-            <img src="${p.img}" alt="${p.name}" loading="lazy">
+            <img src="${imgPrefix}${p.img}" alt="${p.name}" loading="lazy">
             <p>${p.name}</p>
         </a>
     `).join('');
@@ -425,5 +452,6 @@ function initRecommendations() {
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();
     initAnimations();
+    initRandomParkLinks();
     initRecommendations();
 });

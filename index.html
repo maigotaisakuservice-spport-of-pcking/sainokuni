@@ -467,18 +467,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initSliders();
 
-    // UIラベルのランダム化 & リンクのランダム化
-    const parkPages = [
-        'destinations/akigase_park.html',
-        'destinations/maruyama-park.html',
-        'destinations/omiya_park.html',
-        'destinations/shinrin_park.html',
-        'destinations/tokorozawa_park.html'
-    ];
-    const randomLink = parkPages[Math.floor(Math.random() * parkPages.length)];
-    document.querySelectorAll('.random-label').forEach(el => {
-        el.href = randomLink;
-    });
+    // UIラベルのランダム化
     if (typeof randomizeUILabel === 'function') {
         randomizeUILabel('.random-label', ['公園を探す', 'Discovery', '自然を見つける', 'Park Search']);
     }
