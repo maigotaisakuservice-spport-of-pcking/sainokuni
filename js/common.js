@@ -163,8 +163,8 @@ function readPageText() {
         }
         utterance.lang = 'ja-JP';
         // より人間らしく、聞き取りやすい設定
-        utterance.rate = 1.05;
-        utterance.pitch = 1.0;
+        utterance.rate = 0.95; // 少し落ち着いた速度に
+        utterance.pitch = 1.05; // わずかに高めに
         utterance.volume = 1.0;
 
         window.speechSynthesis.speak(utterance);
@@ -180,7 +180,7 @@ function readPageText() {
 // 公園データの定義
 const PARK_DATA = [
     { name: "大宮公園", link: "omiya_park.html", img: "omiya_park.jpg" },
-    { name: "丸山公園", link: "maruyama-park.html", img: "maruyama_park.jpg" },
+    { name: "北浦和公園", link: "kita-urawa-park.html", img: "kita_urawa_park.jpg" },
     { name: "森林公園", link: "shinrin_park.html", img: "shinrin_park.jpg" },
     { name: "所沢航空公園", link: "tokorozawa_park.html", img: "tokorozawa_park.jpg" },
     { name: "秋ヶ瀬公園", link: "akigase_park.html", img: "akigase_park.jpg" }
@@ -348,7 +348,7 @@ const modalContents = {
                     <div class="flex items-center gap-4 relative z-10">
                         <div class="w-8 h-8 rounded-full bg-sky-600 flex items-center justify-center text-white text-[10px] font-bold border-4 border-white dark:border-slate-800 shadow-sm">🌳</div>
                         <div>
-                            <p class="font-bold text-sm">丸山公園 / 大宮公園</p>
+                            <p class="font-bold text-sm">北浦和公園 / 大宮公園</p>
                             <p class="text-[10px] opacity-60">大宮駅からバスまたは徒歩圏内</p>
                         </div>
                     </div>

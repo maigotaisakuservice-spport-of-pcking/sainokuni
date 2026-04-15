@@ -5,17 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>さいたま周辺施設マップ | 2026年版</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             darkMode: "selector"
         }
     </script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
-    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+    <script defer src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Mochiy+Pop+One&family=DotGothic16&display=swap" rel="stylesheet">
@@ -78,7 +78,7 @@
         <h1 class="text-2xl font-bold tracking-tighter" style="font-family: 'Mochiy Pop One';"><a href="index.html">SAITAMA PARKS</a></h1>
     </div>
     <nav class="flex items-center gap-4 md:gap-8">
-        <a href="destinations/maruyama-park.html" class="hover-accent-text font-bold text-sm md:text-base">公園を探す</a>
+        <a href="destinations/kita-urawa-park.html" class="hover-accent-text font-bold text-sm md:text-base">公園を探す</a>
         <a href="map.html" class="hover-accent-text font-bold text-sm md:text-base">マップ</a>
         <a href="saitama-mini-game.html" class="hover-accent-text font-bold text-sm md:text-base">ゲーム</a>
         <button onclick="toggleMenu()" class="hover-accent-text font-bold text-sm md:text-base">MENU</button>
@@ -98,7 +98,7 @@
             </div>
             <nav class="flex flex-col gap-6 text-lg">
                 <a href="index.html" class="flex items-center gap-3">🏠 ホーム</a>
-                <a href="destinations/maruyama-park.html" class="flex items-center gap-3">🌳 公園を探す</a>
+                <a href="destinations/kita-urawa-park.html" class="flex items-center gap-3">🌳 公園を探す</a>
                 <a href="map.html" class="flex items-center gap-3">🗺️ マップ</a>
                 <a href="saitama-mini-game.html" class="flex items-center gap-3">🎮 ゲーム</a>
                 <hr class="border-slate-700">
@@ -177,7 +177,7 @@
             { name: "所沢航空記念公園", pos: [35.7981, 139.4715], url: "destinations/tokorozawa_park.html" },
             { name: "国営武蔵丘陵森林公園", pos: [36.0858, 139.3755], url: "destinations/shinrin_park.html" },
             { name: "秋ヶ瀬公園", pos: [35.8504, 139.6053], url: "destinations/akigase_park.html" },
-            { name: "丸山公園", pos: [35.9680, 139.5444], url: "destinations/maruyama-park.html" }
+            { name: "北浦和公園", pos: [35.9680, 139.5444], url: "destinations/kita-urawa-park.html" }
         ];
 
         const map = L.map('map').setView([35.9064, 139.6238], 11);
@@ -391,6 +391,6 @@
         </div>
     </footer>
 
-    <script src="js/common.js"></script>
+    <script defer src="js/common.js" defer></script>
 </body>
 </html>

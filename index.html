@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>彩の国ポータル 2026 | 埼玉県紹介サイト</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             darkMode: 'selector'
@@ -14,7 +14,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Mochiy+Pop+One&family=DotGothic16&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
     <link rel="stylesheet" href="css/common.css">
     <style>
         .header-main {
@@ -159,7 +159,7 @@
             <button onclick="setTheme('green')" class="w-6 h-6 rounded-full bg-emerald-600 border-2 border-white/50 hover:scale-110 transition-transform" title="Saitama Green"></button>
             <button onclick="setTheme('red')" class="w-6 h-6 rounded-full bg-red-600 border-2 border-white/50 hover:scale-110 transition-transform" title="Saitama Red"></button>
         </div>
-        <a href="destinations/maruyama-park.html" class="hover-accent-text font-bold text-sm md:text-base random-label">公園を探す</a>
+        <a href="destinations/kita-urawa-park.html" class="hover-accent-text font-bold text-sm md:text-base random-label">公園を探す</a>
         <a href="map.html" class="hover-accent-text font-bold text-sm md:text-base">マップ</a>
         <a href="saitama-mini-game.html" class="hover-accent-text font-bold text-sm md:text-base">ゲーム</a>
         <button onclick="toggleMenu()" class="hover-accent-text font-bold text-sm md:text-base">MENU</button>
@@ -179,7 +179,7 @@
         </div>
             <nav class="flex flex-col gap-6 text-lg">
                 <a href="index.html" class="flex items-center gap-3">🏠 ホーム</a>
-                <a href="destinations/maruyama-park.html" class="flex items-center gap-3">🌳 公園を探す</a>
+                <a href="destinations/kita-urawa-park.html" class="flex items-center gap-3">🌳 公園を探す</a>
                 <a href="map.html" class="flex items-center gap-3">🗺️ マップ</a>
                 <a href="saitama-mini-game.html" class="flex items-center gap-3">🎮 ゲーム</a>
                 <hr class="border-slate-700">
@@ -190,7 +190,11 @@
 </div>
 
 <div class="hero-slider" id="main-slider">
-    <!-- スライドはJSで生成されます -->
+    <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
+        <source src="videos/kita_urawa_fountain.mp4" type="video/mp4">
+        <!-- フォールバック画像 -->
+        <img loading="lazy" decoding="async" loading="lazy" decoding="async" src="images/kita_urawa_park.jpg" class="w-full h-full object-cover">
+    </video>
     <div class="hero-overlay">
         <div class="hero-text" style="font-family: 'Mochiy Pop One';">
             緑あふれる、<br>埼玉の公園へ。
@@ -242,7 +246,7 @@
     <div class="article-grid">
         <a href="cafe.html" class="article-card">
             <div class="relative">
-                <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?q=80&w=640&auto=format&fit=crop" alt="カフェ" class="w-full h-48 object-cover" loading="lazy" decoding="async">
+                <img loading="lazy" decoding="async" loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?q=80&w=640&auto=format&fit=crop" alt="カフェ" class="w-full h-48 object-cover" loading="lazy" decoding="async">
                 <div class="absolute top-4 left-4 bg-pink-600 text-white text-[10px] font-bold px-2 py-1 rounded">FEATURE</div>
             </div>
             <div class="p-6">
@@ -252,7 +256,7 @@
         </a>
         <a href="nougyou.html" class="article-card">
             <div class="relative">
-                <img src="https://images.unsplash.com/photo-1500651230702-0e2d8a49d4ad?q=80&w=640&auto=format&fit=crop" alt="農業" class="w-full h-48 object-cover" loading="lazy" decoding="async">
+                <img loading="lazy" decoding="async" loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1500651230702-0e2d8a49d4ad?q=80&w=640&auto=format&fit=crop" alt="農業" class="w-full h-48 object-cover" loading="lazy" decoding="async">
                 <div class="absolute top-4 left-4 bg-amber-600 text-white text-[10px] font-bold px-2 py-1 rounded">LIFE</div>
             </div>
             <div class="p-6">
@@ -260,19 +264,19 @@
                 <p class="opacity-70 text-sm">公園での農業体験や直売所など、土と触れ合う新しい週末の過ごし方。</p>
             </div>
         </a>
-        <a href="destinations/maruyama-park.html" class="article-card">
+        <a href="destinations/kita-urawa-park.html" class="article-card">
             <div class="relative">
-                <img src="images/maruyama_park.jpg" alt="丸山公園" class="w-full h-48 object-cover" loading="lazy" decoding="async">
+                <img loading="lazy" decoding="async" loading="lazy" decoding="async" src="images/kita_urawa_park.jpg" alt="北浦和公園" class="w-full h-48 object-cover" loading="lazy" decoding="async">
                 <div class="absolute top-4 left-4 bg-emerald-600 text-white text-[10px] font-bold px-2 py-1 rounded">UPATED</div>
             </div>
             <div class="p-6">
-                <h3 class="text-xl font-bold mb-2">上尾・丸山公園：水と緑のオアシス</h3>
+                <h3 class="text-xl font-bold mb-2">北浦和公園：水と緑のオアシス</h3>
                 <p class="opacity-70 text-sm">小動物園や水遊び場など、一日中楽しめる総合公園。</p>
             </div>
         </a>
         <a href="destinations/omiya_park.html" class="article-card">
             <div class="relative">
-                <img src="images/omiya_park.jpg" alt="大宮公園" class="w-full h-48 object-cover" loading="lazy" decoding="async">
+                <img loading="lazy" decoding="async" loading="lazy" decoding="async" src="images/omiya_park.jpg" alt="大宮公園" class="w-full h-48 object-cover" loading="lazy" decoding="async">
                 <div class="absolute top-4 left-4 bg-pink-600 text-white text-[10px] font-bold px-2 py-1 rounded">定番</div>
             </div>
             <div class="p-6">
@@ -282,7 +286,7 @@
         </a>
         <a href="destinations/shinrin_park.html" class="article-card">
             <div class="relative">
-                <img src="images/shinrin_park.jpg" alt="森林公園" class="w-full h-48 object-cover" loading="lazy" decoding="async">
+                <img loading="lazy" decoding="async" loading="lazy" decoding="async" src="images/shinrin_park.jpg" alt="森林公園" class="w-full h-48 object-cover" loading="lazy" decoding="async">
                 <div class="absolute top-4 left-4 bg-sky-600 text-white text-[10px] font-bold px-2 py-1 rounded">広い</div>
             </div>
             <div class="p-6">
@@ -303,12 +307,12 @@
 <section id="gallery" class="my-20">
     <h2 class="section-title">#埼玉公園散歩 ギャラリー</h2>
     <div class="gallery-grid">
-        <div class="gallery-item"><img src="images/maruyama_park.jpg" alt="丸山公園" loading="lazy" decoding="async"></div>
-        <div class="gallery-item"><img src="images/omiya_park.jpg" alt="大宮公園" loading="lazy" decoding="async"></div>
-        <div class="gallery-item"><img src="images/tokorozawa_park.jpg" alt="所沢航空公園" loading="lazy" decoding="async"></div>
-        <div class="gallery-item"><img src="images/shinrin_park.jpg" alt="森林公園" loading="lazy" decoding="async"></div>
-        <div class="gallery-item"><img src="images/akigase_park.jpg" alt="秋ヶ瀬公園" loading="lazy" decoding="async"></div>
-        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1519331379826-f10be5486c6f?q=80&w=2070&auto=format&fit=crop" alt="公園の木々" loading="lazy" decoding="async"></div>
+        <div class="gallery-item"><img loading="lazy" decoding="async" loading="lazy" decoding="async" src="images/kita_urawa_park.jpg" alt="北浦和公園" loading="lazy" decoding="async"></div>
+        <div class="gallery-item"><img loading="lazy" decoding="async" loading="lazy" decoding="async" src="images/omiya_park.jpg" alt="大宮公園" loading="lazy" decoding="async"></div>
+        <div class="gallery-item"><img loading="lazy" decoding="async" loading="lazy" decoding="async" src="images/tokorozawa_park.jpg" alt="所沢航空公園" loading="lazy" decoding="async"></div>
+        <div class="gallery-item"><img loading="lazy" decoding="async" loading="lazy" decoding="async" src="images/shinrin_park.jpg" alt="森林公園" loading="lazy" decoding="async"></div>
+        <div class="gallery-item"><img loading="lazy" decoding="async" loading="lazy" decoding="async" src="images/akigase_park.jpg" alt="秋ヶ瀬公園" loading="lazy" decoding="async"></div>
+        <div class="gallery-item"><img loading="lazy" decoding="async" loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1519331379826-f10be5486c6f?q=80&w=2070&auto=format&fit=crop" alt="公園の木々" loading="lazy" decoding="async"></div>
     </div>
     <div class="text-center mt-10">
         <a href="gallery.html" class="inline-block border-2 border-[var(--primary-color)] text-[var(--primary-color)] hover:bg-[var(--primary-color)] hover:text-white font-bold py-3 px-10 rounded-full transition-all">
@@ -402,37 +406,15 @@
 
 <button onclick="scrollToTop()" class="go-to-top-button" aria-label="トップへ戻る">↑</button>
 
-<script src="js/common.js" defer></script>
+<script defer src="js/common.js" defer></script>
 <script type="module" src="js/ai-concierge.js" defer></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     // メイン背景スライダー & RSS統合
     let rssItems = [];
     let currentRssIdx = 0;
-    let currentHeroIdx = 0;
-    const heroImages = [
-        'images/maruyama_park.jpg',
-        'images/omiya_park.jpg',
-        'images/tokorozawa_park.jpg',
-        'images/shinrin_park.jpg'
-    ];
 
     async function initSliders() {
-        const sliderContainer = document.getElementById('main-slider');
-        heroImages.forEach((img, i) => {
-            const div = document.createElement('div');
-            div.className = `slide-bg ${i === 0 ? 'active' : ''}`;
-            div.style.backgroundImage = `url('${img}')`;
-            sliderContainer.prepend(div);
-        });
-
-        const heroSlides = document.querySelectorAll('.slide-bg');
-        setInterval(() => {
-            heroSlides[currentHeroIdx].classList.remove('active');
-            currentHeroIdx = (currentHeroIdx + 1) % heroSlides.length;
-            heroSlides[currentHeroIdx].classList.add('active');
-        }, 8000);
-
         try {
             const res = await fetch('js/slider-content.json');
             if (!res.ok) throw new Error('Fetch failed');
@@ -441,28 +423,33 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('RSS content load error:', e);
             rssItems = [
                 { "title": "2026年 埼玉公園プロジェクト始動！", "link": "news.html" },
-                { "title": "【注目】丸山公園の小動物園がリニューアル", "link": "destinations/maruyama-park.html" },
+                { "title": "【注目】北浦和公園の小動物園がリニューアル", "link": "destinations/kita-urawa-park.html" },
                 { "title": "SAITAMA PARK: 3D公園散策がスタート！", "link": "saitama-mini-game.html" }
             ];
         }
         updateRssDisplay();
-        setInterval(nextRss, 10000);
+        setInterval(() => {
+            currentRssIdx = (currentRssIdx + 1) % rssItems.length;
+            updateRssDisplay();
+        }, 10000);
+
+        // グローバルに関数を公開
+        window.triggerNextRss = () => {
+            currentRssIdx = (currentRssIdx + 1) % rssItems.length;
+            updateRssDisplay();
+        };
     }
 
     function updateRssDisplay() {
         if (!rssItems.length) return;
         const item = rssItems[currentRssIdx];
         const container = document.getElementById('rss-content');
+        if (!container) return;
         container.style.opacity = 0;
         setTimeout(() => {
             container.innerHTML = `<a href="${item.link}" class="hover:underline">${item.title}</a>`;
             container.style.opacity = 1;
         }, 300);
-    }
-
-    function nextRss() {
-        currentRssIdx = (currentRssIdx + 1) % rssItems.length;
-        updateRssDisplay();
     }
 
     initSliders();
@@ -564,7 +551,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const weatherInfo = document.getElementById('weather-info');
             if (weatherInfo) {
                 weatherInfo.innerHTML = `
-                    <img src="${data.current.condition.icon}" class="mx-auto w-12 h-12">
+                    <img loading="lazy" decoding="async" loading="lazy" decoding="async" src="${data.current.condition.icon}" class="mx-auto w-12 h-12">
                     ${data.current.temp_c}℃ / ${data.current.condition.text}
                 `;
             }
@@ -595,7 +582,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if ([1066, 1114, 1210, 1213, 1216, 1219, 1222, 1225, 1255, 1258].includes(code)) {
             recommend = { text: "雪の公園も綺麗ですよ。暖かい格好でこちらへ！", link: "destinations/omiya_park.html", name: "大宮公園" };
         } else if (code >= 1003 && code <= 1030) { // 曇りなど
-            recommend = { text: "日差しが優しい日は、のんびりお散歩！", link: "destinations/maruyama-park.html", name: "丸山公園" };
+            recommend = { text: "日差しが優しい日は、のんびりお散歩！", link: "destinations/kita-urawa-park.html", name: "北浦和公園" };
         }
 
         recommendEl.innerHTML = `
@@ -645,23 +632,31 @@ document.addEventListener('DOMContentLoaded', () => {
         animate();
     }
 
-    // チャットUI
-    function toggleChat() {
-        const container = document.getElementById('chat-widget-container');
-        if (container) {
-            container.classList.toggle('active');
-            if(container.classList.contains('active') && document.getElementById('chat-messages').children.length === 0) addWelcomeMessage();
-        }
-    }
-
-
     // ウィジェット情報のロード
     initWeather();
 });
-</script>
 
-<script>
-    function addWelcomeMessage() {
+// チャットUI (グローバルスコープ)
+function toggleChat() {
+    const container = document.getElementById('chat-widget-container');
+    if (container) {
+        container.classList.toggle('active');
+        if(container.classList.contains('active')) {
+            const chatMessages = document.getElementById('chat-messages');
+            if (chatMessages && chatMessages.children.length === 0) {
+                addWelcomeMessage();
+            }
+        }
+    }
+}
+
+function nextRss() {
+    if (typeof window.triggerNextRss === 'function') {
+        window.triggerNextRss();
+    }
+}
+
+function addWelcomeMessage() {
         const chatMessages = document.getElementById('chat-messages');
         if (chatMessages) {
             const div = document.createElement('div');

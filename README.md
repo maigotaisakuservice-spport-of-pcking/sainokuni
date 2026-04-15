@@ -4,53 +4,54 @@ Welcome to the Saitama Parks 2026 portal. This is a high-performance, accessible
 
 ## 🚀 Key Features
 
-- **High Performance:** Optimized with deferred scripts, lazy-loaded images, and zero-CLS (Cumulative Layout Shift) design.
-- **AI Travel Concierge:** Meet **Saitamania-kun**, our cold but passionate robot guide. He provides brief, Saitama-centric advice.
+- **High Performance:** Optimized with deferred scripts, lazy-loaded images, and optimized asset delivery.
+- **Hero Video:** The landing page features a majestic looping video of the Kita-Urawa Park musical fountain.
+- **AI Travel Concierge:** Meet **Saitamania-kun**, our cold, robotic haniwa guide. He is strictly concise and Saitama-obsessed.
 - **Interactive Maps:** Real-time facility search using OpenStreetMap and Overpass API.
-- **Accessibility First:** Integrated Text-to-Speech (TTS) with natural-sounding voices and global display settings (Saicolor themes & Dark Mode).
-- **Play Hub:** Interactive 3D park exploration, fishing games, and quizzes.
+- **Accessibility:** Natural-sounding TTS (Text-to-Speech) and unified Saicolor theme system.
+- **MOMAS Integration:** Interactive museum experience for the Museum of Modern Art, Saitama.
 
 ## 📂 Project Structure
 
-- `/index.html`: Main landing page with weather and featured parks.
-- `/map.html`: Interactive map for finding facilities.
-- `/saitama-mini-game.html`: Entry point for all park-related games.
-- `/destinations/`: Detailed information for major parks (Omiya, Shinrin, etc.).
-- `/js/`:
-    - `common.js`: Global logic, TTS, and theme management.
-    - `ai-concierge.js`: AI logic and Saitamania-kun persona settings.
-    - `map.js`: Leaflet-based map functionality.
-- `/css/`:
-    - `common.css`: Shared design system and variables.
+- `/index.html`: Main landing page with a hero video background.
+- `/map.html`: Facility search map.
+- `/saitama-mini-game.html`: Entry point for park games.
+- `/destinations/kita-urawa-park.html`: The new featured destination (replaces Maruyama Park).
+- `/js/ai-concierge.js`: Hardened persona logic for Saitamania-kun.
 
 ## 🤖 Saitamania-kun Persona
 
-Saitamania-kun is a robot with a specific personality:
-- **Concise:** All responses are strictly limited to under 100 characters or 3 lines.
-- **Cold but Passionate:** He behaves like a machine but has an irrational obsession with Saitama parks.
-- **Buggy:** Occasionally outputs Saitama slogans in a glitchy manner.
+Saitamania-kun is a robotic guide with the following protocol:
+1. **Conciseness:** Always responds in 3 lines or fewer.
+2. **Cold Personality:** Uses robotic, formal Japanese (断定調). No emotions allowed.
+3. **Saitama-Only:** Highly obsessed with Saitama. Non-Saitama queries may trigger system errors or cold dismissals.
 
-## 🖼️ Required Image Assets / 必要アセットリスト
+## 🖼️ Required Asset List / 必要アセットリスト
 
-To ensure the site renders correctly, the following local images must be placed in the `images/` directory:
-サイトを正しく表示するために、以下の画像を `images/` ディレクトリに配置する必要があります。
+To ensure the site renders correctly, please place the following files in their respective directories:
+サイトを正しく表示するために、以下のファイルを指定のディレクトリに配置してください。
 
+### Videos (`/videos/`)
 | Filename | Description (JP) | Use Case |
 | :--- | :--- | :--- |
-| `maruyama_park.jpg` | 上尾丸山公園の写真 | Hero slider, Gallery, Destination page |
-| `omiya_park.jpg` | 大宮公園の写真 | Hero slider, Gallery, Destination page |
-| `tokorozawa_park.jpg` | 所沢航空記念公園の写真 | Hero slider, Gallery, Destination page |
-| `shinrin_park.jpg` | 国営武蔵丘陵森林公園の写真 | Hero slider, Gallery, Destination page |
+| `kita_urawa_fountain.mp4` | 北浦和公園の音楽噴水のループ動画 | Home Page Hero Background |
+
+### Images (`/images/`)
+| Filename | Description (JP) | Use Case |
+| :--- | :--- | :--- |
+| `kita_urawa_park.jpg` | 北浦和公園のメイン写真 | Gallery, Destination page |
+| `momas_ext.jpg` | 埼玉県立近代美術館(MOMAS)の外観 | Destination page |
+| `omiya_park.jpg` | 大宮公園の写真 | Gallery, Destination page |
+| `tokorozawa_park.jpg` | 所沢航空記念公園の写真 | Gallery, Destination page |
+| `shinrin_park.jpg` | 国営武蔵丘陵森林公園の写真 | Gallery, Destination page |
 | `akigase_park.jpg` | 秋ヶ瀬公園の写真 | Gallery, Destination page |
-| `densya.jpg` | 埼玉の電車の写真 | Transit visualization (Access Modal) |
+| `artwork_1.jpg` ~ `artwork_3.jpg` | 美術館の作品イメージ | MOMAS Ticket Animation |
+| `densya.jpg` | 埼玉の電車の写真 | Access Modal |
 
-*Note: If local files are missing, the site may fall back to placeholder colors or external Unsplash URLs in some sections.*
-
-## 🛠 Tech Stack
-
-- **Frontend:** Tailwind CSS, Three.js, Leaflet.js
-- **AI:** WebLLM (running `gemma-2-2b-it-q4f16_1-MLC`)
-- **API:** Overpass API (Map), WeatherAPI (via CORS proxy)
+### Audio (`/audio/`)
+| Filename | Description (JP) | Use Case |
+| :--- | :--- | :--- |
+| `fountain_music.mp3` | 噴水ショーの音楽 | MOMAS Ticket Animation |
 
 ---
 © 2026 Saitama Parks Promotion Association. All Rights Reserved.
