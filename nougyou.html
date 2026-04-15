@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>埼玉の農業と公園 | SAITAMA PARKS 2026</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             darkMode: "selector"
@@ -38,7 +38,7 @@
         <h1 class="text-2xl font-bold tracking-tighter" style="font-family: 'Mochiy Pop One';"><a href="index.html">SAITAMA PARKS</a></h1>
     </div>
     <nav class="flex items-center gap-4 md:gap-8">
-        <a href="destinations/maruyama-park.html" class="hover-accent-text font-bold text-sm md:text-base">公園を探す</a>
+        <a href="destinations/kita-urawa-park.html" class="hover-accent-text font-bold text-sm md:text-base">公園を探す</a>
         <a href="map.html" class="hover-accent-text font-bold text-sm md:text-base">マップ</a>
         <a href="saitama-mini-game.html" class="hover-accent-text font-bold text-sm md:text-base">ゲーム</a>
         <button onclick="toggleMenu()" class="hover-accent-text font-bold text-sm md:text-base">MENU</button>
@@ -55,7 +55,7 @@
             <div class="bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-xs font-bold">AGRICULTURE</div>
             <div class="text-xs">2026.04.12 公開</div>
         </div>
-        <img src="https://images.unsplash.com/photo-1500651230702-0e2d8a49d4ad?q=80&w=2070&auto=format&fit=crop" class="w-full h-[400px] object-cover rounded-[40px] shadow-2xl" alt="農業">
+        <img loading="lazy" decoding="async" loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1500651230702-0e2d8a49d4ad?q=80&w=2070&auto=format&fit=crop" class="w-full h-[400px] object-cover rounded-[40px] shadow-2xl" alt="農業">
     </div>
 
     <div class="article-content prose prose-lg dark:prose-invert max-w-none">
@@ -93,6 +93,6 @@
 </footer>
 
 <button onclick="scrollToTop()" class="go-to-top-button" aria-label="トップへ戻る">↑</button>
-<script src="js/common.js"></script>
+<script defer src="js/common.js" defer></script>
 </body>
 </html>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>大宮公園 | 埼玉県公園ガイド 2026</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             darkMode: "selector"
@@ -41,7 +41,7 @@
         <h1 class="text-2xl font-bold tracking-tighter" style="font-family: 'Mochiy Pop One';"><a href="../index.html">SAITAMA PARKS</a></h1>
     </div>
     <nav class="flex items-center gap-4 md:gap-8">
-        <a href="maruyama-park.html" class="hover-accent-text font-bold text-sm md:text-base">公園を探す</a>
+        <a href="kita-urawa-park.html" class="hover-accent-text font-bold text-sm md:text-base">公園を探す</a>
         <a href="../map.html" class="hover-accent-text font-bold text-sm md:text-base">マップ</a>
         <a href="../saitama-mini-game.html" class="hover-accent-text font-bold text-sm md:text-base">ゲーム</a>
         <button onclick="toggleMenu()" class="hover-accent-text font-bold text-sm md:text-base">MENU</button>
@@ -60,19 +60,20 @@
             <h2 class="text-xl font-bold" style="font-family: 'Mochiy Pop One';">MENU</h2>
             <button onclick="toggleMenu()" class="text-2xl">&times;</button>
         </div>
-        <nav class="flex flex-col gap-6 text-lg">
-            <a href="../index.html" class="flex items-center gap-3">🏠 ホーム</a>
-            <a href="maruyama-park.html" class="flex items-center gap-3">🌳 公園を探す</a>
-            <a href="../map.html" class="flex items-center gap-3">🗺️ マップ</a>
-            <a href="../saitama-mini-game.html" class="flex items-center gap-3">🎮 ゲーム</a>
-            <a href="../news.html" class="flex items-center gap-3">📰 NEWS</a>
-            <a href="../gallery.html" class="flex items-center gap-3">🖼️ ギャラリー</a>
-        </nav>
+            <nav class="flex flex-col gap-6 text-lg">
+                <a href="../index.html" class="flex items-center gap-3">🏠 ホーム</a>
+                <a href="kita-urawa-park.html" class="flex items-center gap-3">🌳 公園を探す</a>
+                <a href="../map.html" class="flex items-center gap-3">🗺️ マップ</a>
+                <a href="../saitama-mini-game.html" class="flex items-center gap-3">🎮 ゲーム</a>
+                <hr class="border-slate-700">
+                <button onclick="toggleTheme()" class="flex items-center gap-3 w-full text-left"><span id="theme-toggle-icon-mobile">🌳</span> カラー変更</button>
+                <button onclick="toggleDarkMode()" class="flex items-center gap-3 w-full text-left"><span>🌓</span> ダークモード切替</button>
+            </nav>
     </div>
 </div>
 
 <div class="hero-image-container mt-[60px]">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Omiya_Park_20220327_2.jpg/1200px-Omiya_Park_20220327_2.jpg" alt="大宮公園" class="animate-in fade-in duration-1000">
+    <img loading="lazy" decoding="async" loading="lazy" decoding="async" src="../images/omiya_park.jpg" alt="大宮公園" class="animate-in fade-in duration-1000">
     <h2 class="hero-title animate-in slide-in-from-left duration-700">大宮公園</h2>
 </div>
 
@@ -94,19 +95,19 @@
                 <div class="text-3xl mb-3">🚻</div>
                 <h4 class="font-bold mb-2">トイレのキレイ度</h4>
                 <div class="toilet-rating">★★★☆☆</div>
-                <p class="text-xs text-slate-500 mt-2">歴史がある分、古いトイレもありますが、主要エリアのトイレは清掃が行き届いています。</p>
+                <p class="text-xs opacity-70 mt-2">歴史がある分、古いトイレもありますが、主要エリアのトイレは清掃が行き届いています。</p>
             </div>
             <div class="family-info-card">
                 <div class="text-3xl mb-3">🚉</div>
                 <h4 class="font-bold mb-2">アクセスの良さ</h4>
                 <div class="text-emerald-500 font-bold">駅から徒歩10分</div>
-                <p class="text-xs text-slate-500 mt-2">大宮公園駅・野田市駅（現：北大宮駅）から徒歩圏内。参道を歩いて氷川神社経由で来るのもおすすめです。</p>
+                <p class="text-xs opacity-70 mt-2">大宮公園駅・野田市駅（現：北大宮駅）から徒歩圏内。参道を歩いて氷川神社経由で来るのもおすすめです。</p>
             </div>
             <div class="family-info-card">
                 <div class="text-3xl mb-3">🦒</div>
                 <h4 class="font-bold mb-2">子どもが喜ぶスポット</h4>
                 <div class="text-emerald-500 font-bold">動物園・遊園地</div>
-                <p class="text-xs text-slate-500 mt-2">入園無料の小動物園や、レトロな乗り物が楽しめる児童遊園地があり、お子様連れでも一日楽しめます。</p>
+                <p class="text-xs opacity-70 mt-2">入園無料の小動物園や、レトロな乗り物が楽しめる児童遊園地があり、お子様連れでも一日楽しめます。</p>
             </div>
         </div>
     </section>
@@ -135,20 +136,20 @@
     <section class="recommend-section fade-in-up">
         <h3 class="mt-0 mb-6">ここに行った人はここもチェック！</h3>
         <div class="recommend-grid">
-            <a href="maruyama-park.html" class="recommend-card">
-                <img src="../images/maruyama.jpeg" alt="丸山公園">
-                <p>丸山公園</p>
+            <a href="kita-urawa-park.html" class="recommend-card">
+                <img loading="lazy" decoding="async" loading="lazy" decoding="async" src="../images/kita_urawa_park.jpg" alt="北浦和公園">
+                <p>北浦和公園</p>
             </a>
             <a href="tokorozawa_park.html" class="recommend-card">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Tokorozawa_Aviation_Memorial_Park_01.JPG/320px-Tokorozawa_Aviation_Memorial_Park_01.JPG" alt="所沢航空公園">
+                <img loading="lazy" decoding="async" loading="lazy" decoding="async" src="../images/tokorozawa_park.jpg" alt="所沢航空公園">
                 <p>所沢航空公園</p>
             </a>
             <a href="shinrin_park.html" class="recommend-card">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Musashi_Kyuryo_National_Government_Park_20111105.jpg/320px-Musashi_Kyuryo_National_Government_Park_20111105.jpg" alt="森林公園">
+                <img loading="lazy" decoding="async" loading="lazy" decoding="async" src="../images/shinrin_park.jpg" alt="森林公園">
                 <p>森林公園</p>
             </a>
             <a href="akigase_park.html" class="recommend-card">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Akigase_park.jpg/320px-Akigase_park.jpg" alt="秋ヶ瀬公園">
+                <img loading="lazy" decoding="async" loading="lazy" decoding="async" src="../images/akigase_park.jpg" alt="秋ヶ瀬公園">
                 <p>秋ヶ瀬公園</p>
             </a>
         </div>
@@ -169,6 +170,6 @@
 </footer>
 
 <button onclick="scrollToTop()" class="go-to-top-button" aria-label="トップへ戻る">↑</button>
-<script src="../js/common.js"></script>
+<script defer src="../js/common.js" defer></script>
 </body>
 </html>

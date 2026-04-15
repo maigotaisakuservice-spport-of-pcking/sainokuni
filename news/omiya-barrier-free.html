@@ -21,7 +21,7 @@
             <h1 class="text-2xl font-bold tracking-tighter" style="font-family: 'Mochiy Pop One';"><a href="../index.html">SAITAMA PARKS</a></h1>
         </div>
         <nav class="flex items-center gap-4 md:gap-8">
-            <a href="../destinations/maruyama-park.html" class="hover-accent-text font-bold text-sm md:text-base">公園を探す</a>
+            <a href="../destinations/kita-urawa-park.html" class="hover-accent-text font-bold text-sm md:text-base">公園を探す</a>
             <a href="../map.html" class="hover-accent-text font-bold text-sm md:text-base">マップ</a>
             <a href="../saitama-mini-game.html" class="hover-accent-text font-bold text-sm md:text-base">ゲーム</a>
             <button onclick="toggleMenu()" class="hover-accent-text font-bold text-sm md:text-base">MENU</button>
@@ -40,11 +40,9 @@
             </div>
             <nav class="flex flex-col gap-6 text-lg">
                 <a href="../index.html" class="flex items-center gap-3">🏠 ホーム</a>
-                <a href="../destinations/maruyama-park.html" class="flex items-center gap-3">🌳 公園を探す</a>
+                <a href="kita-urawa-park.html" class="flex items-center gap-3">🌳 公園を探す</a>
                 <a href="../map.html" class="flex items-center gap-3">🗺️ マップ</a>
                 <a href="../saitama-mini-game.html" class="flex items-center gap-3">🎮 ゲーム</a>
-                <a href="../news.html" class="flex items-center gap-3">📰 NEWS</a>
-                <a href="../gallery.html" class="flex items-center gap-3">🖼️ ギャラリー</a>
                 <hr class="border-slate-700">
                 <button onclick="toggleTheme()" class="flex items-center gap-3 w-full text-left"><span id="theme-toggle-icon-mobile">🌳</span> カラー変更</button>
                 <button onclick="toggleDarkMode()" class="flex items-center gap-3 w-full text-left"><span>🌓</span> ダークモード切替</button>
@@ -53,13 +51,13 @@
     </div>
 
     <main class="note-container mt-[120px] max-w-4xl mx-auto px-6 mb-20">
-        <article class="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-sm border border-gray-100 dark:border-slate-700">
+        <article class="bg-[var(--card-bg)] rounded-3xl p-8 shadow-sm border border-gray-100 dark:border-slate-700">
             <div class="flex items-center gap-4 text-sm text-gray-500 mb-6">
                 <span class="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 px-3 py-1 rounded-full font-bold">FACILITY</span>
                 <time datetime="2026-03-18">2026年3月18日</time>
             </div>
             <h1 class="text-3xl md:text-4xl font-bold mb-8 leading-tight">大宮公園：日本庭園エリアのバリアフリー改修が完了</h1>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Omiya_Park_20220327_2.jpg/1200px-Omiya_Park_20220327_2.jpg" alt="大宮公園バリアフリー" class="w-full rounded-2xl mb-8 object-cover max-h-[400px]">
+            <img loading="lazy" decoding="async" src="../images/omiya_park.jpg" alt="大宮公園バリアフリー" class="w-full rounded-2xl mb-8 object-cover max-h-[400px]">
 
             <div class="prose prose-lg dark:prose-invert max-w-none leading-relaxed">
                 <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-2xl border-l-8 border-blue-500 mb-8 not-prose">
@@ -123,6 +121,6 @@
 
     <button onclick="scrollToTop()" class="go-to-top-button fixed bottom-8 right-8 w-12 h-12 rounded-full bg-blue-500 text-white flex items-center justify-center shadow-2xl opacity-0 transition-all hover:scale-110 z-50 cursor-pointer" id="back-to-top">↑</button>
 
-    <script src="../js/common.js"></script>
+    <script src="../js/common.js" defer></script>
 </body>
 </html>

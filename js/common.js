@@ -134,28 +134,86 @@ function scrollToTop() {
 function readPageText() {
     if (window.speechSynthesis.speaking) {
         window.speechSynthesis.cancel();
-    } else {
-        const mainEl = document.querySelector('main') || document.body;
-        const clone = mainEl.cloneNode(true);
-        const scripts = clone.querySelectorAll('script, style, #menu-content, header, footer, .theme-toggle-btn, button, #accessibility-panel');
-        scripts.forEach(s => s.remove());
+        return;
+    }
 
-        const textToRead = (clone.innerText || clone.textContent).replace(/\s+/g, ' ').trim();
-        const utterance = new SpeechSynthesisUtterance(textToRead);
+    const mainEl = document.querySelector('main') || document.body;
+    const clone = mainEl.cloneNode(true);
+    const excludes = 'script, style, #menu-content, header, footer, .theme-toggle-btn, button, #accessibility-panel, .no-read';
+    clone.querySelectorAll(excludes).forEach(s => s.remove());
 
-        // より自然な声を選択（利用可能な場合）
+    const textToRead = (clone.innerText || clone.textContent).replace(/\s+/g, ' ').trim();
+    if (!textToRead) return;
+
+    const utterance = new SpeechSynthesisUtterance(textToRead);
+
+    const speak = () => {
         const voices = window.speechSynthesis.getVoices();
-        const japaneseVoice = voices.find(v => v.lang === 'ja-JP' && v.name.includes('Google')) ||
-                            voices.find(v => v.lang === 'ja-JP') ||
-                            voices[0];
+        // 自然な日本語音声の優先順位付け
+        const japaneseVoice =
+            voices.find(v => v.lang === 'ja-JP' && v.name.includes('Natural')) ||
+            voices.find(v => v.lang === 'ja-JP' && v.name.includes('Online')) ||
+            voices.find(v => v.lang === 'ja-JP' && (v.name.includes('Nanami') || v.name.includes('Keita') || v.name.includes('Siri'))) ||
+            voices.find(v => v.lang === 'ja-JP' && v.name.includes('Google')) ||
+            voices.find(v => v.lang === 'ja-JP') ||
+            voices[0];
 
-        if (japaneseVoice) utterance.voice = japaneseVoice;
+        if (japaneseVoice) {
+            utterance.voice = japaneseVoice;
+        }
         utterance.lang = 'ja-JP';
-        utterance.rate = 1.1; // 少し速めの方が自然に聞こえる場合が多い
-        utterance.pitch = 1.0;
+        // より人間らしく、聞き取りやすい設定
+        utterance.rate = 0.95; // 少し落ち着いた速度に
+        utterance.pitch = 1.05; // わずかに高めに
+        utterance.volume = 1.0;
 
         window.speechSynthesis.speak(utterance);
+    };
+
+    if (window.speechSynthesis.getVoices().length === 0) {
+        window.speechSynthesis.onvoiceschanged = speak;
+    } else {
+        speak();
     }
+}
+
+// 公園データの定義
+const PARK_DATA = [
+    { name: "大宮公園", link: "omiya_park.html", img: "omiya_park.jpg" },
+    { name: "北浦和公園", link: "kita-urawa-park.html", img: "kita_urawa_park.jpg" },
+    { name: "森林公園", link: "shinrin_park.html", img: "shinrin_park.jpg" },
+    { name: "所沢航空公園", link: "tokorozawa_park.html", img: "tokorozawa_park.jpg" },
+    { name: "秋ヶ瀬公園", link: "akigase_park.html", img: "akigase_park.jpg" }
+];
+
+function getRandomPark() {
+    return PARK_DATA[Math.floor(Math.random() * PARK_DATA.length)];
+}
+
+function initRandomParkLinks() {
+    const isIndex = window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('/');
+    const prefix = isIndex ? 'destinations/' : '';
+    // 既にdestinations/内にいる場合はプレフィックス不要
+    const finalPrefix = window.location.pathname.includes('/destinations/') ? '' : prefix;
+
+    const randomPark = getRandomPark();
+    const links = document.querySelectorAll('a');
+
+    links.forEach(link => {
+        if (link.textContent.includes('公園を探す')) {
+            link.href = `${finalPrefix}${randomPark.link}`;
+        }
+    });
+}
+
+// UI要素のランダムラベル
+function randomizeUILabel(selector, options) {
+    const elements = document.querySelectorAll(selector);
+    elements.forEach(el => {
+        if (!el.dataset.originalText) el.dataset.originalText = el.textContent;
+        const randomText = options[Math.floor(Math.random() * options.length)];
+        el.textContent = randomText;
+    });
 }
 
 // ハンバーガーメニュー制御
@@ -170,30 +228,20 @@ function toggleMenu() {
         const isIndex = window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('/');
         const nav = menu.querySelector('nav');
         if (nav) {
-            if (isIndex) {
-                nav.innerHTML = `
-                    <a href="index.html" class="flex items-center gap-3">🏠 ホーム</a>
-                    <a href="destinations/maruyama-park.html" class="flex items-center gap-3">🌳 公園を探す</a>
-                    <a href="map.html" class="flex items-center gap-3">🗺️ マップ</a>
-                    <a href="saitama-mini-game.html" class="flex items-center gap-3">🎮 ゲーム</a>
-                    <hr class="border-slate-700">
-                    <button onclick="toggleTheme()" class="flex items-center gap-3 w-full text-left"><span id="theme-toggle-icon-mobile">🌳</span> カラー変更</button>
-                    <button onclick="toggleDarkMode()" class="flex items-center gap-3 w-full text-left"><span>🌓</span> ダークモード切替</button>
-                `;
-            } else {
-                const prefix = window.location.pathname.includes('/news/') || window.location.pathname.includes('/game/') || window.location.pathname.includes('/destinations/') ? '../' : '';
-                nav.innerHTML = `
-                    <a href="${prefix}index.html" class="flex items-center gap-3">🏠 ホーム</a>
-                    <a href="${prefix}destinations/maruyama-park.html" class="flex items-center gap-3">🌳 公園を探す</a>
-                    <a href="${prefix}map.html" class="flex items-center gap-3">🗺️ マップ</a>
-                    <a href="${prefix}saitama-mini-game.html" class="flex items-center gap-3">🎮 ゲーム</a>
-                    <a href="${prefix}news.html" class="flex items-center gap-3">📰 NEWS</a>
-                    <a href="${prefix}gallery.html" class="flex items-center gap-3">🖼️ ギャラリー</a>
-                    <hr class="border-slate-700">
-                    <button onclick="toggleTheme()" class="flex items-center gap-3 w-full text-left"><span id="theme-toggle-icon-mobile">🌳</span> カラー変更</button>
-                    <button onclick="toggleDarkMode()" class="flex items-center gap-3 w-full text-left"><span>🌓</span> ダークモード切替</button>
-                `;
-            }
+            const prefix = isIndex ? '' : (window.location.pathname.includes('/destinations/') || window.location.pathname.includes('/news/') || window.location.pathname.includes('/game/')) ? '../' : '';
+
+            const randomPark = getRandomPark();
+            const parkPath = isIndex ? `destinations/${randomPark.link}` : (window.location.pathname.includes('/destinations/') ? randomPark.link : `../destinations/${randomPark.link}`);
+
+            nav.innerHTML = `
+                <a href="${prefix}index.html" class="flex items-center gap-3">🏠 ホーム</a>
+                <a href="${parkPath}" class="flex items-center gap-3">🌳 公園を探す</a>
+                <a href="${prefix}map.html" class="flex items-center gap-3">🗺️ マップ</a>
+                <a href="${prefix}saitama-mini-game.html" class="flex items-center gap-3">🎮 ゲーム</a>
+                <hr class="border-slate-700">
+                <button onclick="toggleTheme()" class="flex items-center gap-3 w-full text-left"><span id="theme-toggle-icon-mobile">🌳</span> カラー変更</button>
+                <button onclick="toggleDarkMode()" class="flex items-center gap-3 w-full text-left"><span>🌓</span> ダークモード切替</button>
+            `;
         }
 
         // メニューが開いているときはスクロール禁止
@@ -273,13 +321,44 @@ const modalContents = {
     `,
     access: `
         <h2 class="text-2xl font-bold mb-4">公園へのアクセス</h2>
-        <div class="space-y-4">
-            <p>埼玉県の公園は、多くが駅から徒歩圏内、または駅からバスでアクセス可能です。</p>
-            <p><strong>🚆 主要な公園の最寄り駅:</strong></p>
-            <ul class="list-disc list-inside">
-                <li>大宮公園: 東武アーバンパークライン「大宮公園駅」徒歩10分</li>
-                <li>所沢航空公園: 西武新宿線「航空公園駅」直結</li>
-                <li>森林公園: 東武東上線「森林公園駅」からバス</li>
+        <div class="space-y-6">
+            <p class="text-sm">埼玉県の公園は、都心からのアクセスも良好です。主要ルートは以下の通りです。</p>
+
+            <div class="bg-slate-100 dark:bg-slate-800 p-6 rounded-3xl border border-slate-200 dark:border-slate-700">
+                <p class="text-xs font-bold text-slate-500 mb-4 uppercase tracking-widest">🚉 主要ルート・スキマティック</p>
+                <div class="flex flex-col gap-4 relative">
+                    <div class="absolute left-[15px] top-4 bottom-4 w-1 bg-emerald-500 rounded-full"></div>
+
+                    <div class="flex items-center gap-4 relative z-10">
+                        <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-white text-[10px] font-bold border-4 border-white dark:border-slate-800 shadow-sm">駅</div>
+                        <div>
+                            <p class="font-bold text-sm">東京・上野方面</p>
+                            <p class="text-[10px] opacity-60">JR上野東京ライン / 湘南新宿ライン</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-4 relative z-10">
+                        <div class="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center text-white text-[10px] font-bold border-4 border-white dark:border-slate-800 shadow-sm">駅</div>
+                        <div>
+                            <p class="font-bold text-sm">大宮駅</p>
+                            <p class="text-[10px] opacity-60">主要ハブ。ここから各方面へ分岐</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-4 relative z-10">
+                        <div class="w-8 h-8 rounded-full bg-sky-600 flex items-center justify-center text-white text-[10px] font-bold border-4 border-white dark:border-slate-800 shadow-sm">🌳</div>
+                        <div>
+                            <p class="font-bold text-sm">北浦和公園 / 大宮公園</p>
+                            <p class="text-[10px] opacity-60">大宮駅からバスまたは徒歩圏内</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <ul class="text-sm space-y-2">
+                <li><strong class="text-emerald-600">大宮公園:</strong> 大宮公園駅より徒歩10分</li>
+                <li><strong class="text-emerald-600">所沢航空公園:</strong> 航空公園駅直結</li>
+                <li><strong class="text-emerald-600">森林公園:</strong> 森林公園駅からバス</li>
             </ul>
         </div>
     `,
@@ -287,6 +366,16 @@ const modalContents = {
         <h2 class="text-2xl font-bold mb-4">著作権・免責事項</h2>
         <p class="mb-4">© 2026 埼玉公園ポータルプロジェクト. All Rights Reserved.</p>
         <p class="text-sm">当サイトの情報の正確性には万全を期しておりますが、利用者が当サイトの情報を用いて行う一切の行為について、責任を負うものではありません。</p>
+    `,
+    legal: `
+        <h2 class="text-2xl font-bold mb-4">利用規約 (ToS) / EULA</h2>
+        <div class="space-y-4 text-xs leading-relaxed max-h-[60vh] overflow-y-auto pr-2">
+            <p>本サイト（SAITAMA PARKS 2026）をご利用いただく際は、以下の規約に同意したものとみなします。</p>
+            <p><strong>1. AIサービスの利用:</strong> 「AIサイタマニアくん」は試験的なLLM技術を使用しており、情報の正確性を保証しません。埼玉愛が強すぎるあまり不適切な表現（十万石まんじゅうの過度な推奨等）が含まれる場合があります。</p>
+            <p><strong>2. 禁止事項:</strong> 本サイトのデータを不正にスクレイピングする行為、およびAIエンジンに対して攻撃的なプロンプトを入力する行為を禁じます。</p>
+            <p><strong>3. 免責事項:</strong> 本サイトの情報に基づいて発生した損害について、当プロジェクトは一切の責任を負いません。実際の公園の状況は現地の案内に従ってください。</p>
+            <p><strong>4. アップデート:</strong> 本規約は予告なく変更されることがあります。</p>
+        </div>
     `
 };
 
@@ -334,7 +423,35 @@ function initAnimations() {
     fadeElements.forEach(el => observer.observe(el));
 }
 
+// おすすめパークの動的生成
+function initRecommendations() {
+    const grid = document.querySelector('.recommend-grid');
+    if (!grid) return;
+
+    // PARK_DATA を使用し、パスを調整
+    const isDestinations = window.location.pathname.includes('/destinations/');
+    const imgPrefix = isDestinations ? '../images/' : 'images/';
+
+    const currentFile = window.location.pathname.split('/').pop();
+    const otherParks = PARK_DATA.filter(p => p.link !== currentFile);
+
+    // フィッシャー・イェーツのシャッフル
+    for (let i = otherParks.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [otherParks[i], otherParks[j]] = [otherParks[j], otherParks[i]];
+    }
+
+    grid.innerHTML = otherParks.slice(0, 4).map(p => `
+        <a href="${p.link}" class="recommend-card">
+            <img src="${imgPrefix}${p.img}" alt="${p.name}" loading="lazy">
+            <p>${p.name}</p>
+        </a>
+    `).join('');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();
     initAnimations();
+    initRandomParkLinks();
+    initRecommendations();
 });

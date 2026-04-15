@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PLAY-HUB SAITAMA | ゲームセンター</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             darkMode: "selector"
@@ -29,15 +29,15 @@
 
         .game-card {
             background: var(--card-bg); border-radius: 24px; overflow: hidden;
-            box-shadow: 0 10px 30px rgba(46, 125, 50, 0.1);
+            box-shadow: 0 10px 30px var(--card-shadow);
             transition: all 0.3s; border: 1px solid var(--border-color);
         }
-        .game-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(46, 125, 50, 0.2); }
+        .game-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px var(--card-shadow); }
 
         .play-btn {
-            background: linear-gradient(135deg, #2e7d32, #4caf50);
+            background: var(--primary-color);
             color: white; font-weight: 700; padding: 12px 30px; border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3); transition: all 0.3s;
+            box-shadow: 0 4px 15px var(--card-shadow); transition: all 0.3s;
         }
         .play-btn:hover { transform: scale(1.05); filter: brightness(1.1); }
     </style>
@@ -49,7 +49,7 @@
         <h1 class="text-2xl font-bold tracking-tighter" style="font-family: 'Mochiy Pop One';"><a href="index.html">SAITAMA PARKS</a></h1>
     </div>
     <nav class="flex items-center gap-4 md:gap-8">
-        <a href="destinations/maruyama-park.html" class="hover-accent-text font-bold text-sm md:text-base">公園を探す</a>
+        <a href="destinations/kita-urawa-park.html" class="hover-accent-text font-bold text-sm md:text-base">公園を探す</a>
         <a href="map.html" class="hover-accent-text font-bold text-sm md:text-base">マップ</a>
         <a href="saitama-mini-game.html" class="hover-accent-text font-bold text-sm md:text-base">ゲーム</a>
         <button onclick="toggleMenu()" class="hover-accent-text font-bold text-sm md:text-base">MENU</button>
@@ -67,13 +67,11 @@
                 <h2 class="text-xl font-bold" style="font-family: 'Mochiy Pop One';">MENU</h2>
                 <button onclick="toggleMenu()" class="text-2xl">&times;</button>
             </div>
-                                                            <nav class="flex flex-col gap-6 text-lg">
+            <nav class="flex flex-col gap-6 text-lg">
                 <a href="index.html" class="flex items-center gap-3">🏠 ホーム</a>
-                <a href="destinations/maruyama-park.html" class="flex items-center gap-3">🌳 公園を探す</a>
+                <a href="destinations/kita-urawa-park.html" class="flex items-center gap-3">🌳 公園を探す</a>
                 <a href="map.html" class="flex items-center gap-3">🗺️ マップ</a>
                 <a href="saitama-mini-game.html" class="flex items-center gap-3">🎮 ゲーム</a>
-                <a href="news.html" class="flex items-center gap-3">📰 NEWS</a>
-                <a href="gallery.html" class="flex items-center gap-3">🖼️ ギャラリー</a>
                 <hr class="border-slate-700">
                 <button onclick="toggleTheme()" class="flex items-center gap-3 w-full text-left"><span id="theme-toggle-icon-mobile">🌳</span> カラー変更</button>
                 <button onclick="toggleDarkMode()" class="flex items-center gap-3 w-full text-left"><span>🌓</span> ダークモード切替</button>
@@ -81,69 +79,48 @@
         </div>
     </div>
 
-    <header class="pt-32 pb-12 text-center bg-white dark:bg-slate-900 border-b border-[var(--accent-border)] dark:border-slate-800 transition-colors">
+    <header class="pt-32 pb-12 text-center bg-[var(--bg-color)] border-b border-[var(--border-color)] transition-colors">
         <h1 class="text-4xl md:text-6xl game-title mb-4 !text-[var(--primary-color)]">PLAY-HUB SAITAMA</h1>
-        <p class="text-lg font-bold !text-[var(--primary-color)]">埼玉を遊びつくせ！デジタル・アミューズメント</p>
+        <p class="text-lg font-bold !text-[var(--primary-color)] px-4">埼玉を遊びつくせ！デジタル・アミューズメント</p>
     </header>
 
     <main class="max-w-6xl mx-auto px-6 py-12">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-
-            <!-- SAITAMA PARK (3D) -->
-            <div class="game-card col-span-1 md:col-span-2 relative">
-                <button onclick="openHelp('rpg')" class="absolute top-2 right-2 z-20 bg-white/80 w-8 h-8 rounded-full flex items-center justify-center shadow-md hover:bg-white transition-colors">❓</button>
-                <div class="absolute top-4 left-4 text-white text-xs font-bold px-3 py-1 rounded-full z-10" style="background-color: var(--primary-color);">NEW (3D)</div>
-                <div class="aspect-video bg-gray-200 relative overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1519331379826-f10be5486c6f?q=80&w=2070&auto=format&fit=crop" alt="SAITAMA PARK" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
-                        <div class="text-center text-white p-6">
-                            <h2 class="text-3xl font-bold mb-2">SAITAMA PARK</h2>
-                            <p class="text-sm opacity-90 mb-6">埼玉の公園を3Dで自由に散策しよう！<br>落ちているゴミを拾って、公園をピカピカにしてね。</p>
-                            <a href="game/saitamagame.html" class="play-btn text-xl">🌳 公園へ行く</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="p-6">
-                    <div class="flex items-center gap-2 mb-4">
-                        <span class="bg-blue-100 text-blue-700 text-[10px] px-2 py-0.5 rounded">Three.js</span>
-                        <span class="text-[10px] px-2 py-0.5 rounded" style="background-color: var(--accent-bg); color: var(--primary-color);">公園シミュレーター</span>
-                    </div>
-                    <p class="text-sm text-gray-500">※3Dモデルの読み込みに時間がかかる場合があります。</p>
-                </div>
-            </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
 
             <!-- 釣りゲーム -->
-            <div class="game-card relative">
-                <button onclick="openHelp('fishing')" class="absolute top-2 right-2 z-20 bg-white/80 w-8 h-8 rounded-full flex items-center justify-center shadow-md hover:bg-white transition-colors">❓</button>
-                <div class="relative">
-                    <img src="https://images.unsplash.com/photo-1544551763-47a0159f9234?q=80&w=2070&auto=format&fit=crop" alt="釣りゲーム" class="w-full h-48 object-cover">
-                    <div class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity" style="background-color: color-mix(in srgb, var(--primary-color), transparent 80%);">
+            <div class="game-card relative flex flex-col h-full">
+                <button onclick="openHelp('fishing')" class="absolute top-4 right-4 z-20 bg-white/90 dark:bg-slate-800/90 w-10 h-10 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform">❓</button>
+                <div class="relative overflow-hidden group aspect-video">
+                    <img loading="lazy" decoding="async" loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1582738411706-bfc8e691d1c2?q=80&w=1200&auto=format&fit=crop" alt="釣りゲーム" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy">
+                    <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40">
                         <a href="game/fishing.html" class="play-btn">🎣 プレイする</a>
                     </div>
                 </div>
-                <div class="p-6">
-                    <h2 class="text-xl font-bold mb-2">長瀞フィッシング！</h2>
-                    <p class="text-sm text-gray-600 mb-4">長瀞の清流で大物を釣り上げよう！2Dアクション釣りゲーム。</p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-xs font-bold" style="color: var(--primary-color);">難易度: ★★☆</span>
+                <div class="p-8 flex-1 flex flex-col">
+                    <h2 class="text-2xl font-bold mb-3">長瀞フィッシング！</h2>
+                    <p class="text-base opacity-80 mb-6 flex-1">長瀞の清流で大物を釣り上げよう！2Dアクション釣りゲーム。反射神経が試されるぞ。</p>
+                    <div class="flex justify-between items-center mt-auto pt-4 border-t border-[var(--border-color)]">
+                        <span class="text-sm font-bold" style="color: var(--primary-color);">難易度: ★★☆</span>
+                        <span class="text-xs opacity-60">2D Action</span>
                     </div>
                 </div>
             </div>
 
             <!-- クイズ -->
-            <div class="game-card relative">
-                <button onclick="openHelp('quiz')" class="absolute top-2 right-2 z-20 bg-white/80 w-8 h-8 rounded-full flex items-center justify-center shadow-md hover:bg-white transition-colors">❓</button>
-                <div class="relative">
-                    <img src="https://images.unsplash.com/photo-1606326608945-480e30f24932?q=80&w=2070&auto=format&fit=crop" alt="クイズ" class="w-full h-48 object-cover">
-                    <div class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity" style="background-color: color-mix(in srgb, var(--primary-color), transparent 80%);">
+            <div class="game-card relative flex flex-col h-full">
+                <button onclick="openHelp('quiz')" class="absolute top-4 right-4 z-20 bg-white/90 dark:bg-slate-800/90 w-10 h-10 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform">❓</button>
+                <div class="relative overflow-hidden group aspect-video">
+                    <img loading="lazy" decoding="async" loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1544006659-f0b21f04cb1d?q=80&w=1200&auto=format&fit=crop" alt="クイズ" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy">
+                    <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40">
                         <a href="game/quiz.html" class="play-btn">💡 クイズに挑戦</a>
                     </div>
                 </div>
-                <div class="p-6">
-                    <h2 class="text-xl font-bold mb-2">埼玉マスターへの道</h2>
-                    <p class="text-sm text-gray-600 mb-4">埼玉の知識を試す！全問正解で「埼玉博士」の称号を授与。</p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-xs font-bold" style="color: var(--primary-color);">難易度: ★☆☆</span>
+                <div class="p-8 flex-1 flex flex-col">
+                    <h2 class="text-2xl font-bold mb-3">埼玉マスターへの道</h2>
+                    <p class="text-base opacity-80 mb-6 flex-1">埼玉の知識を試す！全問正解で「埼玉博士」の称号を授与。君は全ての難問に答えられるか？</p>
+                    <div class="flex justify-between items-center mt-auto pt-4 border-t border-[var(--border-color)]">
+                        <span class="text-sm font-bold" style="color: var(--primary-color);">難易度: ★☆☆</span>
+                        <span class="text-xs opacity-60">Quiz / Trivia</span>
                     </div>
                 </div>
             </div>
@@ -154,7 +131,7 @@
             <div class="relative z-10">
                 <h2 class="text-3xl font-bold mb-6 game-title !text-yellow-400">🏆 ハイスコアを目指そう！</h2>
                 <p class="text-lg mb-8 opacity-90">ゲームで一定以上のスコアを出すと、「埼玉マスター」の称号がもらえるぞ！友達や家族と競い合おう！</p>
-                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 inline-block">
+                <div class="bg-[var(--card-bg)]/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 inline-block">
                     <p class="text-sm uppercase tracking-widest opacity-70 mb-2">現在の最高得点者</p>
                     <p class="text-2xl font-black pixel-font">Player_Saitamania: 99,999 pts</p>
                 </div>
@@ -180,9 +157,9 @@
 
     <!-- ヘルプ用ポップアップ -->
     <div id="help-modal" class="fixed inset-0 bg-black/80 flex items-center justify-center z-[100] hidden p-6" onclick="closeHelp()">
-        <div class="bg-white rounded-3xl p-8 max-w-md w-full" onclick="event.stopPropagation()">
+        <div class="bg-[var(--card-bg)] rounded-3xl p-8 max-w-md w-full" onclick="event.stopPropagation()">
             <h3 id="help-title" class="text-2xl font-bold mb-4" style="color: var(--primary-color);"></h3>
-            <div id="help-content" class="text-gray-600 space-y-4"></div>
+            <div id="help-content" class="text-[var(--text-color)] space-y-4"></div>
             <button onclick="closeHelp()" class="mt-8 w-full text-white font-bold py-3 rounded-xl" style="background-color: var(--accent-btn);">分かった！</button>
         </div>
     </div>
@@ -192,10 +169,6 @@
             'fishing': {
                 title: '長瀞フィッシングの遊び方',
                 content: '<p>1. タイミングよくボタンを押して、魚を釣り上げよう！</p><p>2. 大物を釣ると、埼玉の豆知識が手に入るぞ。</p><p>3. 制限時間内にたくさんの魚をゲットしよう。</p>'
-            },
-            'rpg': {
-                title: 'SAITAMA FANTASYの遊び方',
-                content: '<p>1. 矢印キーまたは画面上のボタンで移動しよう。</p><p>2. 町の人に話しかけてクエストを受けよう。</p><p>3. 埼玉の名産品を集めて、伝説の装備を手に入れろ！</p>'
             },
             'quiz': {
                 title: '埼玉マスターへの道の遊び方',
@@ -214,6 +187,6 @@
             document.getElementById('help-modal').classList.add('hidden');
         }
     </script>
-    <script src="js/common.js"></script>
+    <script defer src="js/common.js" defer></script>
 </body>
 </html>
