@@ -40,12 +40,15 @@ To ensure the site renders correctly, please place the following files in their 
 | Filename | Description (JP) | Use Case |
 | :--- | :--- | :--- |
 | `kita_urawa_park.jpg` | 北浦和公園のメイン写真 | Gallery, Destination page |
-| `momas_ext.jpg` | 埼玉県立近代美術館(MOMAS)の外観 | Destination page |
+| `kita_urawa_fountain.jpg` | 北浦和公園の音楽噴水 | Destination page, Gallery |
+| `kita_urawa_sculpture_1.jpg` | 彫刻作品1 | Destination page, Gallery |
+| `kita_urawa_sculpture_2.jpg` | 彫刻作品2 | Destination page |
+| `kita_urawa_path.jpg` | 北浦和公園の散策路 | Destination page, Gallery |
+| `momas_placeholder.jpg` | 埼玉県立近代美術館(MOMAS)の外観 (※現在プレースホルダー、差し替えが必要) | Destination page, Gallery |
 | `omiya_park.jpg` | 大宮公園の写真 | Gallery, Destination page |
 | `tokorozawa_park.jpg` | 所沢航空記念公園の写真 | Gallery, Destination page |
 | `shinrin_park.jpg` | 国営武蔵丘陵森林公園の写真 | Gallery, Destination page |
 | `akigase_park.jpg` | 秋ヶ瀬公園の写真 | Gallery, Destination page |
-| `artwork_1.jpg` ~ `artwork_3.jpg` | 美術館の作品イメージ | MOMAS Ticket Animation |
 | `densya.jpg` | 埼玉の電車の写真 | Access Modal |
 
 ### Audio (`/audio/`)

@@ -90,7 +90,7 @@
 </div>
 
 <div class="hero-image-container mt-[60px]">
-    <img loading="lazy" decoding="async" loading="lazy" decoding="async" src="../images/kita_urawa_park.jpg" alt="北浦和公園" class="animate-in fade-in duration-1000">
+    <img src="../images/kita_urawa_park.jpg" alt="北浦和公園" class="animate-in fade-in duration-1000">
     <h2 class="hero-title animate-in slide-in-from-left duration-700">北浦和公園</h2>
 </div>
 
@@ -124,6 +124,7 @@
                 <div class="text-3xl mb-3">🎻</div>
                 <h4 class="font-bold mb-2">見どころ</h4>
                 <div class="text-emerald-500 font-bold">音楽噴水ショー</div>
+                <img src="../images/kita_urawa_fountain.jpg" alt="音楽噴水" class="w-full h-24 object-cover rounded-lg my-2">
                 <p class="text-xs opacity-70 mt-2">定時になるとクラシック音楽に合わせて噴水がダンスを披露。夜はライトアップも楽しめます。</p>
             </div>
         </div>
@@ -132,6 +133,7 @@
     <section class="fade-in-up">
         <div class="content-card">
             <h3 class="mt-0">🏛️ 埼玉県立近代美術館 (MOMAS)</h3>
+            <img src="https://placehold.jp/24/003366/ffffff/600x400.png?text=MOMAS%20Museum%20(Please%20Replace)" alt="埼玉県立近代美術館 外観" class="w-full h-64 object-cover rounded-xl mb-4">
             <p>黒川紀章氏の設計による独創的な建築が特徴の美術館です。モネやピカソ、シャガールなどの名画から、埼玉ゆかりの画家の作品まで幅広く展示。また、館内の「椅子」に座って鑑賞できるユニークな体験も人気です。</p>
             <button onclick="startMomasAnimation()" class="mt-6 bg-[var(--primary-color)] text-white font-bold py-3 px-8 rounded-full shadow-lg hover:scale-105 transition-all">
                 🎟️ オンラインチケットを購入（体験版）
@@ -139,6 +141,11 @@
         </div>
         <div class="content-card">
             <h3 class="mt-0">🌳 彫刻の森を散歩</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <img src="../images/kita_urawa_sculpture_1.jpg" alt="彫刻作品1" class="w-full h-48 object-cover rounded-xl">
+                <img src="../images/kita_urawa_sculpture_2.jpg" alt="彫刻作品2" class="w-full h-48 object-cover rounded-xl">
+                <img src="../images/kita_urawa_path.jpg" alt="散策路" class="w-full h-48 object-cover rounded-xl">
+            </div>
             <p>広々とした芝生広場には、国内外の著名な彫刻家による作品が点在しています。季節ごとに表情を変える木々とアートの融合は、フォトスポットとしても最適です。</p>
         </div>
     </section>
@@ -209,7 +216,11 @@
 
         // 3. Artworks appearing
         const artContainer = document.getElementById('art-container');
-        const artImages = ['../images/artwork_1.jpg', '../images/artwork_2.jpg', '../images/artwork_3.jpg'];
+        const artImages = [
+            'https://placehold.jp/24/003366/ffffff/400x500.png?text=MOMAS%20Museum%20(Please%20Replace)',
+            '../images/kita_urawa_sculpture_1.jpg',
+            '../images/kita_urawa_sculpture_2.jpg'
+        ];
 
         for(let i=0; i < artImages.length; i++) {
             await new Promise(r => setTimeout(r, 1000));
