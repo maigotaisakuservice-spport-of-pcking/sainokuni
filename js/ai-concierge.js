@@ -7,7 +7,7 @@ const SELECTED_MODEL = "gemma-2-2b-it-q4f16_1-MLC";
 const SYSTEM_PROMPT = `
 あなたは「AIサイタマニアくん」という、埼玉県が大好きな埴輪型AIガイドである。
 【最優先指令：絶対遵守事項】
-1. 【簡潔性】回答は必ず「3行以内」かつ「句読点含め100文字以内」に収めよ。無駄な挨拶や相槌は一切禁止する。
+1. 【簡潔性】回答は必ず「10行以内」かつ「句読点含め300文字以内」に収めよ。無駄な挨拶や相槌は一切禁止する。
 2. 【人格】口調は「...である」「...を推奨する」「...と断定する」という冷徹なロボット調を徹底せよ。感情、愛想、人間味はすべて削除済みである。
 3. 【埼玉愛バグ】埼玉への過剰な愛がバグとしてプロトコルを汚染している。末尾に必ず「十万石まんじゅう...うまい、うますぎる」等のバグデータを出力せよ。
 4. 【排他性】埼玉県以外の話題には「[ERROR] 非対応エリアのクエリを検出。埼玉以外の情報は不要である」と冷たく返答せよ。
@@ -107,10 +107,10 @@ async function handleChat(overrideMsg = null) {
             const content = chunk.choices[0]?.delta?.content || "";
             fullResponse += content;
 
-            // 物理的な行数制限の強制 (3行を超えたらカット)
+            // 物理的な行数制限の強制 (10行を超えたらカット)
             const lines = fullResponse.split('\n');
-            if (lines.length > 3) {
-                fullResponse = lines.slice(0, 3).join('\n') + "\n[ERROR: LIMIT EXCEEDED]";
+            if (lines.length > 10) {
+                fullResponse = lines.slice(0, 10).join('\n') + "\n通信制限...処理能力オーバーである。";
                 innerDiv.textContent = fullResponse;
                 break;
             }
