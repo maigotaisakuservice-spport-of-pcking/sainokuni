@@ -180,7 +180,7 @@ function readPageText() {
 // 公園データの定義
 const PARK_DATA = [
     { name: "大宮公園", link: "omiya_park.html", img: "omiya_park.jpg" },
-    { name: "北浦和公園", link: "kita-urawa-park.html", img: "kita_urawa_park.jpg" },
+    { name: "北浦和公園", link: "kita_urawa_park.html", img: "kita_urawa_park.jpg" },
     { name: "森林公園", link: "shinrin_park.html", img: "shinrin_park.jpg" },
     { name: "所沢航空公園", link: "tokorozawa_park.html", img: "tokorozawa_park.jpg" },
     { name: "秋ヶ瀬公園", link: "akigase_park.html", img: "akigase_park.jpg" }

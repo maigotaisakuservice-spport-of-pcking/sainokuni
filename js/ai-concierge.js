@@ -18,7 +18,7 @@ const SYSTEM_PROMPT = `
 - 所沢航空記念公園: 航空発祥の地。日本初の飛行場。URL: destinations/tokorozawa_park.html
 - 森林公園: 日本初の国営公園。巨大遊具。サイクリング。URL: destinations/shinrin_park.html
 - 秋ヶ瀬公園: 荒川沿いの広大な緑地。BBQ。URL: destinations/akigase_park.html
-- 北浦和公園: 音楽噴水と近代美術館。アートの聖地。URL: destinations/kita-urawa-park.html
+- 北浦和公園: 音楽噴水と近代美術館。アートの聖地。URL: destinations/kita_urawa_park.html
 - 埼玉グルメ: 十万石まんじゅう（うまい、うますぎる）、山田うどん。
 
 回答例:
@@ -62,12 +62,22 @@ function updateStatus(text) {
 
 async function handleChat(overrideMsg = null) {
     const msg = overrideMsg || (userInput ? userInput.value.trim() : "");
-    if (!msg) return;
-
-    addMessage('user', msg);
-    if (!overrideMsg && userInput) userInput.value = '';
 
     if (!engine) {
+        // メッセージが空の場合は、バックグラウンド初期化のみ
+        if (!msg) {
+            initWebLLM((progress) => {
+                const percent = Math.round(progress.progress * 100);
+                updateStatus(`Loading... ${percent}%`);
+                if (progress.progress === 1) updateStatus("Online_");
+            });
+            return;
+        }
+
+        // メッセージがある場合
+        addMessage('user', msg);
+        if (!overrideMsg && userInput) userInput.value = '';
+
         const loadingMsg = addMessage('model', "ﾋﾟﾎﾟｯ...AIエンジンが準備中である。バックグラウンドでシステムをロードしている...少々待たれよ。 (0%)");
         const inner = loadingMsg.querySelector('.inline-block');
 
@@ -86,6 +96,12 @@ async function handleChat(overrideMsg = null) {
             fallbackResponse(msg);
             return;
         }
+    } else {
+        // メッセージがない場合はここで終了
+        if (!msg) return;
+
+        addMessage('user', msg);
+        if (!overrideMsg && userInput) userInput.value = '';
     }
 
     try {
@@ -198,7 +214,7 @@ function fallbackResponse(msg) {
         response += " <a href='destinations/omiya_park.html' target='_blank' rel='noopener noreferrer' class='text-blue-400 underline'>大宮公園ガイドを見る</a>";
     } else if(msg.match(/子供|遊び|遊具/)) {
         response += "子供連れなら、無料の小動物園や大型遊具がある『北浦和公園』が最適だ。";
-        response += " <a href='destinations/kita-urawa-park.html' target='_blank' rel='noopener noreferrer' class='text-blue-400 underline'>北浦和公園ガイドを見る</a>";
+        response += " <a href='destinations/kita_urawa_park.html' target='_blank' rel='noopener noreferrer' class='text-blue-400 underline'>北浦和公園ガイドを見る</a>";
     } else if(msg.match(/学|歴史|勉強/)) {
         response += "学びたいのであれば、『所沢航空記念公園』の記念館で日本の航空史に触れることを推奨する。";
         response += " <a href='destinations/tokorozawa_park.html' target='_blank' rel='noopener noreferrer' class='text-blue-400 underline'>所沢航空公園ガイドを見る</a>";
@@ -211,31 +227,7 @@ function fallbackResponse(msg) {
     addMessage('model', response, true);
 }
 
-// ページロード時にひっそりと初期化開始
-window.addEventListener('load', () => {
-    // セレクタがない場合は何もしない
-    if (!chatMessages) return;
-
-    // ユーザーがチャットを開かなくてもダウンロードを開始（バックグラウンドロード）
-    setTimeout(() => {
-        initWebLLM((progress) => {
-            const percent = Math.round(progress.progress * 100);
-            if (progress.progress > 0) updateStatus(`Loading... ${percent}%`);
-
-            // チャットの最初のメッセージを更新（準備中の表示）
-            const firstMsg = chatMessages.querySelector('.text-left .inline-block');
-            if (firstMsg && firstMsg.textContent.includes("System_Boot")) {
-                 if (progress.progress < 1) {
-                     firstMsg.textContent = `ﾋﾟﾎﾟｯ...只今準備中である... (${percent}%)`;
-                 } else {
-                     firstMsg.textContent = `ﾋﾟﾎﾟｯ...System_Boot...完了...コードネーム『サイタマニア』起動...質問をどうぞ...`;
-                 }
-            }
-
-            if (progress.progress === 1) updateStatus("Online_");
-        });
-    }, 1000);
-});
+// 自動ロードを廃止し、必要に応じて初期化するように変更
 
 // 気分選択ボタンの処理
 window.selectMood = function(mood) {

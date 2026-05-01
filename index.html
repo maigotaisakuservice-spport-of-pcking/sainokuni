@@ -159,7 +159,7 @@
             <button onclick="setTheme('green')" class="w-6 h-6 rounded-full bg-emerald-600 border-2 border-white/50 hover:scale-110 transition-transform" title="Saitama Green"></button>
             <button onclick="setTheme('red')" class="w-6 h-6 rounded-full bg-red-600 border-2 border-white/50 hover:scale-110 transition-transform" title="Saitama Red"></button>
         </div>
-        <a href="destinations/kita-urawa-park.html" class="hover-accent-text font-bold text-sm md:text-base random-label">公園を探す</a>
+        <a href="destinations/kita_urawa_park.html" class="hover-accent-text font-bold text-sm md:text-base random-label">公園を探す</a>
         <a href="map.html" class="hover-accent-text font-bold text-sm md:text-base">マップ</a>
         <a href="saitama-mini-game.html" class="hover-accent-text font-bold text-sm md:text-base">ゲーム</a>
         <button onclick="toggleMenu()" class="hover-accent-text font-bold text-sm md:text-base">MENU</button>
@@ -179,7 +179,7 @@
         </div>
             <nav class="flex flex-col gap-6 text-lg">
                 <a href="index.html" class="flex items-center gap-3">🏠 ホーム</a>
-                <a href="destinations/kita-urawa-park.html" class="flex items-center gap-3">🌳 公園を探す</a>
+                <a href="destinations/kita_urawa_park.html" class="flex items-center gap-3">🌳 公園を探す</a>
                 <a href="map.html" class="flex items-center gap-3">🗺️ マップ</a>
                 <a href="saitama-mini-game.html" class="flex items-center gap-3">🎮 ゲーム</a>
                 <hr class="border-slate-700">
@@ -264,7 +264,7 @@
                 <p class="opacity-70 text-sm">公園での農業体験や直売所など、土と触れ合う新しい週末の過ごし方。</p>
             </div>
         </a>
-        <a href="destinations/kita-urawa-park.html" class="article-card">
+        <a href="destinations/kita_urawa_park.html" class="article-card">
             <div class="relative">
                 <img loading="lazy" decoding="async" loading="lazy" decoding="async" src="images/kita_urawa_park.jpg" alt="北浦和公園" class="w-full h-48 object-cover" loading="lazy" decoding="async">
                 <div class="absolute top-4 left-4 bg-emerald-600 text-white text-[10px] font-bold px-2 py-1 rounded">UPATED</div>
@@ -423,7 +423,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('RSS content load error:', e);
             rssItems = [
                 { "title": "2026年 埼玉公園プロジェクト始動！", "link": "news.html" },
-                { "title": "【注目】北浦和公園の小動物園がリニューアル", "link": "destinations/kita-urawa-park.html" },
+                { "title": "【注目】北浦和公園の小動物園がリニューアル", "link": "destinations/kita_urawa_park.html" },
                 { "title": "SAITAMA PARK: 3D公園散策がスタート！", "link": "saitama-mini-game.html" }
             ];
         }
@@ -582,7 +582,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if ([1066, 1114, 1210, 1213, 1216, 1219, 1222, 1225, 1255, 1258].includes(code)) {
             recommend = { text: "雪の公園も綺麗ですよ。暖かい格好でこちらへ！", link: "destinations/omiya_park.html", name: "大宮公園" };
         } else if (code >= 1003 && code <= 1030) { // 曇りなど
-            recommend = { text: "日差しが優しい日は、のんびりお散歩！", link: "destinations/kita-urawa-park.html", name: "北浦和公園" };
+            recommend = { text: "日差しが優しい日は、のんびりお散歩！", link: "destinations/kita_urawa_park.html", name: "北浦和公園" };
         }
 
         recommendEl.innerHTML = `
@@ -645,6 +645,10 @@ function toggleChat() {
             const chatMessages = document.getElementById('chat-messages');
             if (chatMessages && chatMessages.children.length === 0) {
                 addWelcomeMessage();
+            }
+            // チャットを開いた時に初期化を開始（既に初期化済みの場合はスキップされる）
+            if (typeof handleChat === 'function') {
+                handleChat("");
             }
         }
     }

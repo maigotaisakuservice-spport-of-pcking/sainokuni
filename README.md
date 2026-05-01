@@ -16,7 +16,7 @@ Welcome to the Saitama Parks 2026 portal. This is a high-performance, accessible
 - `/index.html`: Main landing page with a hero video background.
 - `/map.html`: Facility search map.
 - `/saitama-mini-game.html`: Entry point for park games.
-- `/destinations/kita-urawa-park.html`: The new featured destination (replaces Maruyama Park).
+- `/destinations/kita_urawa_park.html`: The new featured destination (replaces Maruyama Park).
 - `/js/ai-concierge.js`: Hardened persona logic for Saitamania-kun.
 
 ## 🤖 Saitamania-kun Persona
