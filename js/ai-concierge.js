@@ -68,11 +68,51 @@ function addAiActivationPrompt() {
 }
 
 window.activateAiMode = function(btn) {
-    const container = btn.parentElement;
-    container.innerHTML = `<p class="mb-2">ﾋﾟﾎﾟｯ...システムロード中... (<span id="ai-load-percent">0</span>%)</p><div class="w-full bg-gray-700 h-2 rounded-full overflow-hidden"><div id="ai-load-bar" class="bg-emerald-500 h-full transition-all duration-300" style="width: 0%"></div></div>`;
-
-    initAiWorker();
+    showAiDownloadModal(() => {
+        const container = btn.parentElement;
+        container.innerHTML = `<p class="mb-2">ﾋﾟﾎﾟｯ...システムロード中... (<span id="ai-load-percent">0</span>%)</p><div class="w-full bg-gray-700 h-2 rounded-full overflow-hidden"><div id="ai-load-bar" class="bg-emerald-500 h-full transition-all duration-300" style="width: 0%"></div></div>`;
+        initAiWorker();
+    });
 };
+
+function showAiDownloadModal(onConfirm) {
+    let modal = document.getElementById('ai-download-modal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'ai-download-modal';
+        modal.className = 'modal'; // uses CSS from common.css
+        modal.style.display = 'flex';
+        modal.innerHTML = `
+            <div class="modal-content text-center">
+                <h3 class="text-xl font-bold mb-4 text-[var(--primary-color)]">高度なAIモードの起動</h3>
+                <p class="text-sm mb-6 leading-relaxed">
+                    AIモデルをダウンロードするためデータ通信<span class="font-bold text-red-500">(約1.5GB)</span>を行います。<br>
+                    Wifi環境でのダウンロードを推奨しております。<br><br>
+                    <span class="text-xs text-gray-500">※ダウンロード中にページが操作不能になる場合がございますが、そのままお待ちください。</span>
+                </p>
+                <div class="flex gap-4 justify-center">
+                    <button id="ai-confirm-btn" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-8 rounded-full transition-all">続行</button>
+                    <button id="ai-cancel-btn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-8 rounded-full transition-all">閉じる</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+
+        document.getElementById('ai-confirm-btn').onclick = () => {
+            modal.style.display = 'none';
+            onConfirm();
+        };
+        document.getElementById('ai-cancel-btn').onclick = () => {
+            modal.style.display = 'none';
+        };
+    } else {
+        modal.style.display = 'flex';
+        document.getElementById('ai-confirm-btn').onclick = () => {
+            modal.style.display = 'none';
+            onConfirm();
+        };
+    }
+}
 
 function initAiWorker() {
     if (aiWorker) return;
