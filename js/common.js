@@ -424,6 +424,33 @@ function initAnimations() {
 }
 
 // おすすめパークの動的生成
+function initBottomNav() {
+    const isIndex = window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('/');
+    const prefix = isIndex ? '' : (window.location.pathname.includes('/destinations/') || window.location.pathname.includes('/news/') || window.location.pathname.includes('/game/')) ? '../' : '';
+
+    const nav = document.createElement('div');
+    nav.className = 'bottom-nav';
+    nav.innerHTML = `
+        <a href="${prefix}index.html" class="bottom-nav-item ${window.location.pathname.includes('index.html') ? 'active' : ''}">
+            <span class="bottom-nav-icon">🏠</span>
+            <span>ホーム</span>
+        </a>
+        <a href="${prefix}destinations/omiya_park.html" class="bottom-nav-item ${window.location.pathname.includes('destinations') ? 'active' : ''}">
+            <span class="bottom-nav-icon">🌳</span>
+            <span>公園を探す</span>
+        </a>
+        <a href="${prefix}map.html" class="bottom-nav-item ${window.location.pathname.includes('map.html') ? 'active' : ''}">
+            <span class="bottom-nav-icon">🗺️</span>
+            <span>マップ</span>
+        </a>
+        <a href="${prefix}saitama-mini-game.html" class="bottom-nav-item ${window.location.pathname.includes('game') ? 'active' : ''}">
+            <span class="bottom-nav-icon">🎮</span>
+            <span>ゲーム</span>
+        </a>
+    `;
+    document.body.appendChild(nav);
+}
+
 function initRecommendations() {
     const grid = document.querySelector('.recommend-grid');
     if (!grid) return;
@@ -449,9 +476,34 @@ function initRecommendations() {
     `).join('');
 }
 
+// スクロール監視 (アニメーション用 - Intersection Observer)
+function initScrollReveal() {
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('reveal-visible');
+                // 一度表示されたら監視を解除（負荷軽減）
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    // 監視対象のクラスを指定
+    const revealElements = document.querySelectorAll('.reveal-on-scroll');
+    revealElements.forEach(el => observer.observe(el));
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();
     initAnimations();
+    initScrollReveal();
     initRandomParkLinks();
     initRecommendations();
+    initBottomNav();
 });

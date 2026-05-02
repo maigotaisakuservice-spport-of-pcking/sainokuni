@@ -375,7 +375,27 @@
         document.getElementById('close-list-btn').addEventListener('click', toggleSidePanel);
 
         map.whenReady(() => {
-            executeSearch();
+            // URLパラメータから座標を取得
+            const params = new URLSearchParams(window.location.search);
+            const lat = params.get('lat');
+            const lon = params.get('lon');
+            const name = params.get('name');
+
+            if (lat && lon) {
+                const pos = [parseFloat(lat), parseFloat(lon)];
+                map.setView(pos, 16);
+
+                // ターゲット地点にマーカーを立てる
+                L.marker(pos, { icon: createIcon('📍', '#E91E63') }).addTo(staticMarkers)
+                    .bindPopup(`<b>${name || '指定された場所'}</b>`).openPopup();
+
+                // 周辺施設を自動検索
+                setTimeout(() => {
+                    fetchOSMData('all', {lat: pos[0], lng: pos[1]}, 500);
+                }, 500);
+            } else {
+                executeSearch();
+            }
         });
     </script>
     <footer>

@@ -1,60 +1,47 @@
-# Saitama Parks 2026 - Official Portal
+# 埼玉公園ポータル 2026 - 公式ポータルサイト
 
-Welcome to the Saitama Parks 2026 portal. This is a high-performance, accessible, and interactive web application designed to showcase the best parks in Saitama Prefecture.
+彩の国ポータル 2026へようこそ。このサイトは、埼玉県内の素晴らしい公園を紹介するための、高機能かつインタラクティブなウェブアプリケーションです。
 
-## 🚀 Key Features
+## 🚀 主な機能
 
-- **High Performance:** Optimized with deferred scripts, lazy-loaded images, and optimized asset delivery.
-- **Hero Video:** The landing page features a majestic looping video of the Kita-Urawa Park musical fountain.
-- **AI Travel Concierge:** Meet **Saitamania-kun**, our cold, robotic haniwa guide. He is strictly concise and Saitama-obsessed.
-- **Interactive Maps:** Real-time facility search using OpenStreetMap and Overpass API.
-- **Accessibility:** Natural-sounding TTS (Text-to-Speech) and unified Saicolor theme system.
-- **MOMAS Integration:** Interactive museum experience for the Museum of Modern Art, Saitama.
+- **ハイパフォーマンス:** スクリプトの遅延読み込み、画像の遅延読み込み（Lazy Load）、Web Workerを活用したAI処理により、高速な操作感を実現しています。
+- **3D体験:** Three.jsを使用した3Dアドベンチャーゲーム「埼玉パーク・クラフトGO」で、埼玉を歩き回る体験ができます。
+- **AIコンシェルジュ:** 埴輪型AIガイド「AIサイタマニアくん」が公園を案内します。最初は軽量なキーワード検索で即答し、必要に応じて高度なAIモード（WebLLM）を起動可能です。
+- **インタラクティブ・マップ:** OpenStreetMapとOverpass APIを使用し、周辺のトイレ、駅、カフェなどの施設をリアルタイムで検索できます。
+- **アクセシビリティ:** 音声読み上げ機能や、埼玉の自然（緑）、水（青）、情熱（赤）をテーマにした「サイカラー」テーマ切り替え機能を搭載。
+- **ファミリーフレンドリー:** 授乳室やおむつ替え台の情報をアイコンで一目で確認できる「パパ・ママ安心チェック」を完備。
 
-## 📂 Project Structure
+## 📂 プロジェクト構造
 
-- `/index.html`: Main landing page with a hero video background.
-- `/map.html`: Facility search map.
-- `/saitama-mini-game.html`: Entry point for park games.
-- `/destinations/kita_urawa_park.html`: The new featured destination (replaces Maruyama Park).
-- `/js/ai-concierge.js`: Hardened persona logic for Saitamania-kun.
+- `/index.html`: メインランディングページ（音楽噴水のヒーロービデオ背景）。
+- `/map.html`: 施設検索マップ。
+- `/saitama-mini-game.html`: ゲームセンター入口。
+- `/game/park_craft_go.html`: 新登場の3D探索ゲーム。
+- `/destinations/`: 各公園の詳細ガイドページ。
+- `/js/ai-concierge.js` & `/js/ai-worker.js`: AIサイタマニアくんの論理エンジン。
 
-## 🤖 Saitamania-kun Persona
+## 🤖 AIサイタマニアくんのプロトコル
 
-Saitamania-kun is a robotic guide with the following protocol:
-1. **Conciseness:** Always responds in 3 lines or fewer.
-2. **Cold Personality:** Uses robotic, formal Japanese (断定調). No emotions allowed.
-3. **Saitama-Only:** Highly obsessed with Saitama. Non-Saitama queries may trigger system errors or cold dismissals.
+サイタマニアくんは、以下の規則に従って動作します：
+1. **簡潔性:** 回答は常に10行（300文字）以内。
+2. **冷徹な人格:** 「...である」調のロボット口調。
+3. **埼玉愛バグ:** 埼玉への愛が強すぎるため、語尾に「十万石まんじゅう...うまい、うますぎる」等のデータが混入します。
+4. **排他性:** 埼玉県以外の話題には冷たく対応します。
 
-## 🖼️ Required Asset List / 必要アセットリスト
+## 🖼️ 必要アセットリスト（未配置分）
 
-To ensure the site renders correctly, please place the following files in their respective directories:
-サイトを正しく表示するために、以下のファイルを指定のディレクトリに配置してください。
+サイトを完全に動作させるために、以下のファイルをそれぞれのディレクトリに配置してください。
+（※画像ファイル等はすでに配置済みのものを除き、以下が必要です）
 
-### Videos (`/videos/`)
-| Filename | Description (JP) | Use Case |
+### 動画 (`/videos/`)
+| ファイル名 | 説明 | 用途 |
 | :--- | :--- | :--- |
-| `kita_urawa_fountain.mp4` | 北浦和公園の音楽噴水のループ動画 | Home Page Hero Background |
+| `kita_urawa_fountain.mp4` | 北浦和公園の音楽噴水ループ動画 | ホームページ背景 |
 
-### Images (`/images/`)
-| Filename | Description (JP) | Use Case |
+### 音声 (`/audio/`)
+| ファイル名 | 説明 | 用途 |
 | :--- | :--- | :--- |
-| `kita_urawa_park.jpg` | 北浦和公園のメイン写真 | Gallery, Destination page |
-| `kita_urawa_fountain.jpg` | 北浦和公園の音楽噴水 | Destination page, Gallery |
-| `kita_urawa_sculpture_1.jpg` | 彫刻作品1 | Destination page, Gallery |
-| `kita_urawa_sculpture_2.jpg` | 彫刻作品2 | Destination page |
-| `kita_urawa_path.jpg` | 北浦和公園の散策路 | Destination page, Gallery |
-| `momas_placeholder.jpg` | 埼玉県立近代美術館(MOMAS)の外観 (※現在プレースホルダー、差し替えが必要) | Destination page, Gallery |
-| `omiya_park.jpg` | 大宮公園の写真 | Gallery, Destination page |
-| `tokorozawa_park.jpg` | 所沢航空記念公園の写真 | Gallery, Destination page |
-| `shinrin_park.jpg` | 国営武蔵丘陵森林公園の写真 | Gallery, Destination page |
-| `akigase_park.jpg` | 秋ヶ瀬公園の写真 | Gallery, Destination page |
-| `densya.jpg` | 埼玉の電車の写真 | Access Modal |
-
-### Audio (`/audio/`)
-| Filename | Description (JP) | Use Case |
-| :--- | :--- | :--- |
-| `fountain_music.mp3` | 噴水ショーの音楽 | MOMAS Ticket Animation |
+| `fountain_music.mp3` | 噴水ショーの音楽 | MOMASチケットアニメーション |
 
 ---
-© 2026 Saitama Parks Promotion Association. All Rights Reserved.
+© 2026 埼玉県公園ポータルプロジェクト. All Rights Reserved.

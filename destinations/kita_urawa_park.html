@@ -103,6 +103,18 @@
         <div class="feature-item"><span>☕</span> 落ち着くカフェ</div>
     </div>
 
+    <!-- Mama-Papa Check Section -->
+    <div class="mamapapa-check fade-in-up">
+        <div class="w-full text-center mb-2">
+            <span class="bg-white px-4 py-1 rounded-full text-xs font-bold text-[var(--primary-color)] shadow-sm border border-[var(--primary-color)]">👨‍👩‍👧‍👦 パパ・ママ安心チェック</span>
+        </div>
+        <div class="check-item"><span>🍼</span> 授乳室あり(美術館内)</div>
+        <div class="check-item"><span>🚻</span> おむつ替え台</div>
+        <div class="check-item"><span>🛒</span> ベビーカー貸出(美術館)</div>
+        <div class="check-item"><span>⛱️</span> 木陰・ベンチ多め</div>
+        <div class="check-item"><span>🍼</span> お湯提供(美術館)</div>
+    </div>
+
     <section class="fade-in-up">
         <h2>アートと水が織りなす、都市のオアシス</h2>
         <p class="mb-6">さいたま市浦和区に位置する北浦和公園は、美しい音楽噴水と「埼玉県立近代美術館 (MOMAS)」を擁する、文化的な香り高い公園です。園内の至る所に彫刻作品が配置され、歩くだけで感性が刺激されます。</p>
@@ -245,13 +257,17 @@
         fountain.style.transition = 'height 3s ease-out';
         fountain.style.height = '100%';
 
-        // 5. Show Close Button
+        // 5. Show Close Button & Auto Redirect
         setTimeout(() => {
             document.getElementById('anim-close-btn').style.opacity = 1;
-        }, 3500);
+            document.getElementById('animation-text').textContent = "Redirecting to Ticket Office...";
+            setTimeout(() => {
+                stopMomasAnimation(true);
+            }, 2000);
+        }, 5000);
     }
 
-    function stopMomasAnimation() {
+    function stopMomasAnimation(redirect = false) {
         const overlay = document.getElementById('momas-animation-overlay');
         overlay.style.display = 'none';
 
@@ -260,6 +276,10 @@
         document.getElementById('fountain-effect').style.height = '0';
         document.getElementById('anim-close-btn').style.opacity = 0;
         if (audioSource) audioSource.stop();
+
+        if (redirect) {
+            window.location.href = "https://pref.spec.ed.jp/momas/オンラインチケット";
+        }
     }
 
     async function playMusic() {

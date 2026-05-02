@@ -1,9 +1,4 @@
 
-// インポートを遅延させるために動的インポートを使用するよう変更
-let webllm = null;
-
-const SELECTED_MODEL = "gemma-2-2b-it-q4f16_1-MLC";
-
 const SYSTEM_PROMPT = `
 あなたは「AIサイタマニアくん」という、埼玉県が大好きな埴輪型AIガイドである。
 【最優先指令：絶対遵守事項】
@@ -20,37 +15,13 @@ const SYSTEM_PROMPT = `
 - 秋ヶ瀬公園: 荒川沿いの広大な緑地。BBQ。URL: destinations/akigase_park.html
 - 北浦和公園: 音楽噴水と近代美術館。アートの聖地。URL: destinations/kita_urawa_park.html
 - 埼玉グルメ: 十万石まんじゅう（うまい、うますぎる）、山田うどん。
-
-回答例:
-「大宮公園を推奨する。桜の名所であり、氷川神社に隣接している。
-詳細は destinations/omiya_park.html を参照せよ。
-十万石まんじゅう...うまい、うますぎる。」
 `;
 
-let engine = null;
-let isConfiguring = false;
+let aiWorker = null;
+let isAiReady = false;
+let isAiLoading = false;
+let currentAiResponseDiv = null;
 
-// 背景でのモデルダウンロード・初期化
-async function initWebLLM(onProgress) {
-    if (engine || isConfiguring) return;
-    isConfiguring = true;
-
-    try {
-        if (!webllm) {
-            webllm = await import("https://esm.run/@mlc-ai/web-llm");
-        }
-        engine = await webllm.CreateMLCEngine(
-            SELECTED_MODEL,
-            { initProgressCallback: onProgress }
-        );
-    } catch (e) {
-        console.error("WebLLMの初期化に失敗しました。フォールバックロジックに切り替えます。", e);
-        isConfiguring = false;
-        // フォールバック用のフラグを立てるか、engineをnullのままにする
-    }
-}
-
-// セレクタの存在確認を事前に行う
 const chatMessages = document.getElementById('chat-messages');
 const userInput = document.getElementById('user-input');
 const sendBtn = document.getElementById('send-btn');
@@ -62,99 +33,98 @@ function updateStatus(text) {
 
 async function handleChat(overrideMsg = null) {
     const msg = overrideMsg || (userInput ? userInput.value.trim() : "");
+    if (!msg) return;
 
-    if (!engine) {
-        // メッセージが空の場合は、バックグラウンド初期化のみ
-        if (!msg) {
-            initWebLLM((progress) => {
-                const percent = Math.round(progress.progress * 100);
-                updateStatus(`Loading... ${percent}%`);
-                if (progress.progress === 1) updateStatus("Online_");
-            });
-            return;
-        }
+    addMessage('user', msg);
+    if (!overrideMsg && userInput) userInput.value = '';
 
-        // メッセージがある場合
-        addMessage('user', msg);
-        if (!overrideMsg && userInput) userInput.value = '';
+    // まずはキーワード検索（即答モード）
+    const handled = fallbackResponse(msg);
 
-        const loadingMsg = addMessage('model', "ﾋﾟﾎﾟｯ...AIエンジンが準備中である。バックグラウンドでシステムをロードしている...少々待たれよ。 (0%)");
-        const inner = loadingMsg.querySelector('.inline-block');
+    // AIが準備完了なら、さらに詳しくAIに聞く
+    if (isAiReady) {
+        askAi(msg);
+    } else if (!isAiLoading && !handled) {
+         // キーワードにヒットせず、AIも準備中でない場合、AIの起動を促す
+         addAiActivationPrompt();
+    }
+}
 
-        await initWebLLM((progress) => {
-            const percent = Math.round(progress.progress * 100);
+function addAiActivationPrompt() {
+    const div = document.createElement('div');
+    div.className = "mb-4 text-left";
+    div.innerHTML = `
+        <div class="text-[10px] text-gray-500 mb-1">AIサイタマニアくん</div>
+        <div class="inline-block p-4 rounded-2xl bg-gray-800 text-gray-200 shadow-lg border border-emerald-500/30">
+            <p class="mb-3 text-sm">ﾋﾟﾎﾟｯ...さらに高度な解析（AIモード）が必要であるか？</p>
+            <p class="text-[10px] text-gray-400 mb-3">※モデルのロードに約1GBの通信が発生し、完了まで少々時間がかかる。一度ロードすれば、このタブを閉じるまで高速に応答可能である。</p>
+            <button onclick="activateAiMode(this)" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-6 rounded-full text-sm transition-all transform hover:scale-105 active:scale-95">
+                高度なAIモードを起動する
+            </button>
+        </div>
+    `;
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+window.activateAiMode = function(btn) {
+    const container = btn.parentElement;
+    container.innerHTML = `<p class="mb-2">ﾋﾟﾎﾟｯ...システムロード中... (<span id="ai-load-percent">0</span>%)</p><div class="w-full bg-gray-700 h-2 rounded-full overflow-hidden"><div id="ai-load-bar" class="bg-emerald-500 h-full transition-all duration-300" style="width: 0%"></div></div>`;
+
+    initAiWorker();
+};
+
+function initAiWorker() {
+    if (aiWorker) return;
+    isAiLoading = true;
+    updateStatus("Loading AI...");
+
+    // Workerの作成 (パスは環境に合わせて調整が必要)
+    aiWorker = new Worker('js/ai-worker.js', { type: 'module' });
+
+    aiWorker.onmessage = (e) => {
+        const { type, data } = e.data;
+
+        if (type === 'progress') {
+            const percent = Math.round(data.progress * 100);
+            const percentEl = document.getElementById('ai-load-percent');
+            const barEl = document.getElementById('ai-load-bar');
+            if (percentEl) percentEl.textContent = percent;
+            if (barEl) barEl.style.width = `${percent}%`;
             updateStatus(`Downloading... ${percent}%`);
-            inner.textContent = `ﾋﾟﾎﾟｯ...只今準備中である。システムロード中... (${percent}%)`;
-            if (progress.progress === 1) {
-                updateStatus("Online_");
-                inner.textContent = "ﾋﾟﾎﾟｯ...System_Boot...完了。お待たせした、質問に回答する。";
+        } else if (type === 'ready') {
+            isAiReady = true;
+            isAiLoading = false;
+            updateStatus("Online_");
+            addMessage('model', "ﾋﾟﾎﾟｯ...高度なAIモードの起動が完了した。これより複雑な質問にも対応可能である。");
+        } else if (type === 'chunk') {
+            if (!currentAiResponseDiv) {
+                currentAiResponseDiv = addMessage('model', "");
             }
-        });
-
-        if (!engine) {
-            inner.textContent = "Error...AIエンジンの起動に失敗した（リソースの取得に失敗）。通常の検索モードで回答する。";
-            fallbackResponse(msg);
-            return;
-        }
-    } else {
-        // メッセージがない場合はここで終了
-        if (!msg) return;
-
-        addMessage('user', msg);
-        if (!overrideMsg && userInput) userInput.value = '';
-    }
-
-    try {
-        const messages = [
-            { role: "system", content: SYSTEM_PROMPT },
-            { role: "user", content: msg }
-        ];
-
-        const chunks = await engine.chat.completions.create({
-            messages,
-            stream: true,
-        });
-
-        let fullResponse = "";
-        const messageDiv = addMessage('model', "");
-        const innerDiv = messageDiv.querySelector('.inline-block');
-
-        for await (const chunk of chunks) {
-            const content = chunk.choices[0]?.delta?.content || "";
-            fullResponse += content;
-
-            // 物理的な行数制限の強制 (10行を超えたらカット)
-            const lines = fullResponse.split('\n');
-            if (lines.length > 10) {
-                fullResponse = lines.slice(0, 10).join('\n') + "\n通信制限...処理能力オーバーである。";
-                innerDiv.textContent = fullResponse;
-                break;
-            }
-
-            innerDiv.textContent = fullResponse;
+            const inner = currentAiResponseDiv.querySelector('.inline-block');
+            inner.textContent += data;
             chatMessages.scrollTop = chatMessages.scrollHeight;
+        } else if (type === 'done') {
+            const inner = currentAiResponseDiv.querySelector('.inline-block');
+            inner.innerHTML = formatMessage(inner.textContent);
+            currentAiResponseDiv = null;
+        } else if (type === 'error') {
+            console.error("AI Worker Error:", data);
+            updateStatus("Error_");
+            isAiLoading = false;
+            addMessage('model', "ﾋﾟﾋﾟｯ...AIエンジンの起動に失敗した。メモリ不足か通信エラーの可能性がある。");
         }
+    };
 
-        // 最終的なレスポンスにリンク変換を適用
-        innerDiv.innerHTML = formatMessage(fullResponse);
+    aiWorker.postMessage({ type: 'init' });
+}
 
-        // 稀にバグメッセージを追加
-        if (Math.random() < 0.2) {
-            setTimeout(() => {
-                const bugs = ["ﾋﾟﾋﾟｯ...ノイズ混入...", "十万石まんじゅう...うまい、うますぎる...", "公園...緑...癒やされる..."];
-                addMessage('model', bugs[Math.floor(Math.random() * bugs.length)]);
-            }, 1000);
-        }
-
-    } catch (e) {
-        console.error(e);
-        // エラー時はフォールバック
-        const errorInner = chatMessages.lastElementChild.querySelector('.inline-block');
-        if (errorInner) {
-            errorInner.textContent = "ﾋﾟﾋﾟｯ...システムエラーが発生した。スキャンモードに切り替える。";
-        }
-        fallbackResponse(msg);
-    }
+function askAi(msg) {
+    const messages = [
+        { role: "system", content: SYSTEM_PROMPT },
+        { role: "user", content: msg }
+    ];
+    aiWorker.postMessage({ type: 'chat', data: { messages } });
 }
 
 function addMessage(role, text, isHTML = false) {
@@ -168,7 +138,6 @@ function addMessage(role, text, isHTML = false) {
     div.appendChild(haniwa);
 
     const inner = document.createElement('div');
-    // テーマ変数を反映するように変更
     inner.className = `inline-block p-3 rounded-2xl ${role === 'user' ? 'bg-[var(--primary-color)] text-white' : 'bg-gray-700 text-gray-200'} max-w-[80%] break-words`;
 
     if (isHTML) {
@@ -184,52 +153,38 @@ function addMessage(role, text, isHTML = false) {
 }
 
 function formatMessage(text) {
-    // 改行を<br>に変換
     let html = text.replace(/\n/g, '<br>');
-    // URL (destinations/xxx.html or root level .html files) をaタグに変換
-    // サイト内の主要なHTMLファイルに対応
     const urlPattern = /((?:destinations\/[a-zA-Z0-9_-]+\.html)|(?:index\.html|map\.html|saitama-mini-game\.html|news\.html|gallery\.html))/g;
     html = html.replace(urlPattern, '<a href="$1" target="_blank" rel="noopener noreferrer" class="text-blue-400 underline hover:text-blue-300">$1</a>');
     return html;
 }
 
-function clearChat() {
-    if (confirm("チャット履歴を削除します。よろしいですか？")) {
-        const chatMessages = document.getElementById('chat-messages');
-        if (chatMessages) {
-            chatMessages.innerHTML = '';
-            addWelcomeMessage();
-        }
-    }
-}
-window.clearChat = clearChat;
-
 function fallbackResponse(msg) {
-    let response = "ﾋﾟﾋﾟｯ...公園簡易スキャン完了。<br>";
-    if(msg.match(/腹|食べ|うどん|弁当|空いた/)) {
-        response += "お腹が空いたのであれば、園内に美味しいカフェがある『所沢航空記念公園』や、ピクニックに最適な『秋ヶ瀬公園』を推奨する。十万石まんじゅうも忘れずに。";
-        response += " <a href='destinations/tokorozawa_park.html' target='_blank' rel='noopener noreferrer' class='text-blue-400 underline'>所沢航空公園ガイドを見る</a>";
-    } else if(msg.match(/歩|散歩|ウォーキング/)) {
-        response += "散歩なら、『大宮公園』の歴史ある参道や、広大な『森林公園』のウォーキングコースがおすすめである。";
-        response += " <a href='destinations/omiya_park.html' target='_blank' rel='noopener noreferrer' class='text-blue-400 underline'>大宮公園ガイドを見る</a>";
-    } else if(msg.match(/子供|遊び|遊具/)) {
-        response += "子供連れなら、無料の小動物園や大型遊具がある『北浦和公園』が最適だ。";
-        response += " <a href='destinations/kita_urawa_park.html' target='_blank' rel='noopener noreferrer' class='text-blue-400 underline'>北浦和公園ガイドを見る</a>";
-    } else if(msg.match(/学|歴史|勉強/)) {
-        response += "学びたいのであれば、『所沢航空記念公園』の記念館で日本の航空史に触れることを推奨する。";
-        response += " <a href='destinations/tokorozawa_park.html' target='_blank' rel='noopener noreferrer' class='text-blue-400 underline'>所沢航空公園ガイドを見る</a>";
-    } else if(msg.match(/スポーツ|サッカー/)) {
-        response += "スポーツを楽しむなら、競技場が充実している『秋ヶ瀬公園』や『大宮公園』が良いだろう。";
-        response += " <a href='destinations/akigase_park.html' target='_blank' rel='noopener noreferrer' class='text-blue-400 underline'>秋ヶ瀬公園ガイドを見る</a>";
+    let response = "";
+    let found = true;
+
+    if(msg.match(/腹|食べ|うどん|弁当|空いた|ランチ|カフェ/)) {
+        response = "お腹が空いたのであれば、園内に美味しいカフェがある『所沢航空記念公園』や、ピクニックに最適な『秋ヶ瀬公園』を推奨する。十万石まんじゅうも忘れずに。<br><a href='destinations/tokorozawa_park.html' class='text-blue-400 underline'>所沢航空公園ガイドを見る</a>";
+    } else if(msg.match(/歩|散歩|ウォーキング|ランニング/)) {
+        response = "散歩なら、『大宮公園』の歴史ある参道や、広大な『森林公園』のウォーキングコースがおすすめである。<br><a href='destinations/omiya_park.html' class='text-blue-400 underline'>大宮公園ガイドを見る</a>";
+    } else if(msg.match(/子供|遊び|遊具|ファミリー|赤ちゃん/)) {
+        response = "子供連れなら、無料の小動物園や大型遊具がある『北浦和公園』、あるいは広大な『森林公園』が最適だ。<br><a href='destinations/kita_urawa_park.html' class='text-blue-400 underline'>北浦和公園ガイドを見る</a>";
+    } else if(msg.match(/学|歴史|勉強|美術館|博物館/)) {
+        response = "学びたいのであれば、『所沢航空記念公園』の記念館や、『北浦和公園』にある埼玉県立近代美術館(MOMAS)を推奨する。<br><a href='destinations/tokorozawa_park.html' class='text-blue-400 underline'>所沢航空公園ガイドを見る</a>";
+    } else if(msg.match(/スポーツ|サッカー|野球|テニス/)) {
+        response = "スポーツを楽しむなら、競技場が充実している『秋ヶ瀬公園』や『大宮公園』が良いだろう。<br><a href='destinations/akigase_park.html' class='text-blue-400 underline'>秋ヶ瀬公園ガイドを見る</a>";
+    } else if(msg.match(/桜|花|見頃/)) {
+        response = "花を愛でるなら、日本さくら名所100選の『大宮公園』や、四季折々の花が楽しめる『森林公園』が至高である。<br><a href='destinations/omiya_park.html' class='text-blue-400 underline'>大宮公園ガイドを見る</a>";
     } else {
-        response += "埼玉の5大公園（大宮、所沢、森林、秋ヶ瀬、丸山）を中心に、最適な場所を提案しよう。";
+        found = false;
     }
-    addMessage('model', response, true);
+
+    if (found) {
+        addMessage('model', response + "<br>十万石まんじゅう...うまい、うますぎる。", true);
+    }
+    return found;
 }
 
-// 自動ロードを廃止し、必要に応じて初期化するように変更
-
-// 気分選択ボタンの処理
 window.selectMood = function(mood) {
     const moodMap = {
         'walk': '静かに散歩ができるおすすめの公園は？',
@@ -241,8 +196,24 @@ window.selectMood = function(mood) {
     handleChat(moodMap[mood]);
 };
 
-// グローバルに公開
 window.handleChat = handleChat;
+window.clearChat = function() {
+    if (confirm("チャット履歴を削除します。よろしいですか？")) {
+        chatMessages.innerHTML = '';
+        addWelcomeMessage();
+    }
+};
+
+function addWelcomeMessage() {
+    const div = document.createElement('div');
+    div.className = "mb-4 text-left";
+    div.innerHTML = `
+        <div class="text-[10px] text-gray-500 mb-1">AIサイタマニアくん</div>
+        <div class="inline-block p-3 rounded-2xl bg-gray-700 text-gray-200">ﾋﾟﾎﾟｯ...System_Boot...完了. 公園コンシェルジュ『サイタマニア』起動した。埼玉の公園について何でも聞いてほしい。</div>
+    `;
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
 
 if (sendBtn) sendBtn.addEventListener('click', () => handleChat());
 if (userInput) userInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') handleChat(); });

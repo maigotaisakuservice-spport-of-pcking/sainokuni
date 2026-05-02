@@ -350,6 +350,18 @@ footer a:hover { opacity: 1; text-decoration: underline !important; }
     transform: translateY(0);
 }
 
+/* Scroll Reveal */
+.reveal-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.215, 0.61, 0.355, 1);
+    will-change: transform, opacity;
+}
+.reveal-on-scroll.reveal-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 /* Family Specifics */
 .family-info-grid {
     display: grid;
@@ -436,6 +448,72 @@ footer a:hover { opacity: 1; text-decoration: underline !important; }
 .note-link:hover {
     text-decoration: underline;
 }
+
+/* Bottom Navigation (Mobile Only) */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 70px;
+    background: var(--header-bg);
+    backdrop-filter: blur(10px);
+    display: none;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 2000;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+@media (max-width: 768px) {
+    .bottom-nav { display: flex; }
+    body { padding-bottom: 80px; } /* Space for bottom nav */
+    .go-to-top-button { bottom: 90px; } /* Adjust FAB position */
+    #chat-toggle-btn { bottom: 90px; right: 20px; }
+    #chat-widget-container { bottom: 160px; right: 10px; width: calc(100% - 20px); height: 60vh; }
+}
+
+.bottom-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    text-decoration: none;
+    font-size: 10px;
+    font-weight: 700;
+    opacity: 0.7;
+    transition: opacity 0.3s, transform 0.2s;
+}
+.bottom-nav-item.active { opacity: 1; color: var(--accent-light); }
+.bottom-nav-item:active { transform: scale(0.9); }
+.bottom-nav-icon { font-size: 20px; margin-bottom: 2px; }
+
+/* Mama-Papa Check Section */
+.mamapapa-check {
+    background: var(--accent-bg);
+    border: 2px solid var(--accent-border);
+    border-radius: 30px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+}
+.check-item {
+    background: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    border: 1px solid var(--border-color);
+}
+.check-item.missing { opacity: 0.5; filter: grayscale(1); text-decoration: line-through; }
 
 /* Modal styles for consistency */
 .modal {
