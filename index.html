@@ -159,7 +159,7 @@
             <button onclick="setTheme('green')" class="w-6 h-6 rounded-full bg-emerald-600 border-2 border-white/50 hover:scale-110 transition-transform" title="Saitama Green"></button>
             <button onclick="setTheme('red')" class="w-6 h-6 rounded-full bg-red-600 border-2 border-white/50 hover:scale-110 transition-transform" title="Saitama Red"></button>
         </div>
-        <a href="destinations/kita_urawa_park.html" class="hover-accent-text font-bold text-sm md:text-base random-label">公園を探す</a>
+        <a href="destinations/kita_urawa_park.html" class="hover-accent-text font-bold text-sm md:text-base">公園を探す</a>
         <a href="map.html" class="hover-accent-text font-bold text-sm md:text-base">マップ</a>
         <a href="saitama-mini-game.html" class="hover-accent-text font-bold text-sm md:text-base">ゲーム</a>
         <button onclick="toggleMenu()" class="hover-accent-text font-bold text-sm md:text-base">MENU</button>
@@ -454,10 +454,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initSliders();
 
-    // UIラベルのランダム化
-    if (typeof randomizeUILabel === 'function') {
-        randomizeUILabel('.random-label', ['公園を探す', 'Discovery', '自然を見つける', 'Park Search']);
-    }
+    // UIラベルのランダム化は廃止し「公園を探す」に統一
 
     // 簡易マップ (大宮駅中心) - 縮小拡大不可に設定
     async function initMiniMap() {
