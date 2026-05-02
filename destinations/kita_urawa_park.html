@@ -145,10 +145,10 @@
     <section class="fade-in-up">
         <div class="content-card">
             <h3 class="mt-0">🏛️ 埼玉県立近代美術館 (MOMAS)</h3>
-            <img src="https://placehold.jp/24/003366/ffffff/600x400.png?text=MOMAS%20Museum%20(Please%20Replace)" alt="埼玉県立近代美術館 外観" class="w-full h-64 object-cover rounded-xl mb-4">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/The_Museum_of_Modern_Art%2C_Saitama_01.jpg/800px-The_Museum_of_Modern_Art%2C_Saitama_01.jpg" alt="埼玉県立近代美術館 外観" class="w-full h-64 object-cover rounded-xl mb-4">
             <p>黒川紀章氏の設計による独創的な建築が特徴の美術館です。モネやピカソ、シャガールなどの名画から、埼玉ゆかりの画家の作品まで幅広く展示。また、館内の「椅子」に座って鑑賞できるユニークな体験も人気です。</p>
             <button onclick="startMomasAnimation()" class="mt-6 bg-[var(--primary-color)] text-white font-bold py-3 px-8 rounded-full shadow-lg hover:scale-105 transition-all">
-                🎟️ オンラインチケットを購入（体験版）
+                🏛️ 公式サイトへ移動
             </button>
         </div>
         <div class="content-card">
@@ -260,7 +260,7 @@
         // 5. Show Close Button & Auto Redirect
         setTimeout(() => {
             document.getElementById('anim-close-btn').style.opacity = 1;
-            document.getElementById('animation-text').textContent = "Redirecting to Ticket Office...";
+            document.getElementById('animation-text').textContent = "公式サイトへ移動中...";
             setTimeout(() => {
                 stopMomasAnimation(true);
             }, 2000);
@@ -278,7 +278,7 @@
         if (audioSource) audioSource.stop();
 
         if (redirect) {
-            window.location.href = "https://pref.spec.ed.jp/momas/オンラインチケット";
+            window.location.href = "https://pref.spec.ed.jp/momas/%E5%88%A9%E7%94%A8%E6%A1%88%E5%86%85---%E4%BA%A4%E9%80%9A%E6%A1%88%E5%86%85";
         }
     }
 
