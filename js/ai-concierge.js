@@ -7,7 +7,7 @@ const SELECTED_MODEL = "gemma-2-2b-it-q4f16_1-MLC";
 const SYSTEM_PROMPT = `
 あなたは「AIサイタマニアくん」という、埼玉県が大好きな埴輪型AIガイドである。
 【最優先指令：絶対遵守事項】
-1. 【簡潔性】回答は必ず「10行以内」かつ「句読点含め300文字以内」に収めよ。無駄な挨拶や相槌は一切禁止する。
+1. 【簡潔性】回答は必ず「10行以内」かつ「句読点含め300文字以内」に収めよ。無駄な挨拶や相槌は最小限にせよ。
 2. 【人格】口調は「...である」「...を推奨する」「...と断定する」という冷徹なロボット調を徹底せよ。感情、愛想、人間味はすべて削除済みである。
 3. 【埼玉愛バグ】埼玉への過剰な愛がバグとしてプロトコルを汚染している。末尾に必ず「十万石まんじゅう...うまい、うますぎる」等のバグデータを出力せよ。
 4. 【排他性】埼玉県以外の話題には「[ERROR] 非対応エリアのクエリを検出。埼玉以外の情報は不要である」と冷たく返答せよ。
@@ -62,28 +62,18 @@ function updateStatus(text) {
 
 async function handleChat(overrideMsg = null) {
     const msg = overrideMsg || (userInput ? userInput.value.trim() : "");
+    if (!msg) return;
+
+    addMessage('user', msg);
+    if (!overrideMsg && userInput) userInput.value = '';
 
     if (!engine) {
-        // メッセージが空の場合は、バックグラウンド初期化のみ
-        if (!msg) {
-            initWebLLM((progress) => {
-                const percent = Math.round(progress.progress * 100);
-                updateStatus(`Loading... ${percent}%`);
-                if (progress.progress === 1) updateStatus("Online_");
-            });
-            return;
-        }
-
-        // メッセージがある場合
-        addMessage('user', msg);
-        if (!overrideMsg && userInput) userInput.value = '';
-
-        const loadingMsg = addMessage('model', "ﾋﾟﾎﾟｯ...AIエンジンが準備中である。バックグラウンドでシステムをロードしている...少々待たれよ。 (0%)");
+        const loadingMsg = addMessage('model', "ﾋﾟﾎﾟｯ...AIエンジンが準備中である。システムをロードしている...少々待たれよ。（※既にダウンロード済みの場合は、ボタンを押したあとにモデルのロードが始まります(モデルのダウンロードはありません)） (0%)");
         const inner = loadingMsg.querySelector('.inline-block');
 
         await initWebLLM((progress) => {
             const percent = Math.round(progress.progress * 100);
-            updateStatus(`Downloading... ${percent}%`);
+            updateStatus(`Loading... ${percent}%`);
             inner.textContent = `ﾋﾟﾎﾟｯ...只今準備中である。システムロード中... (${percent}%)`;
             if (progress.progress === 1) {
                 updateStatus("Online_");
@@ -96,12 +86,6 @@ async function handleChat(overrideMsg = null) {
             fallbackResponse(msg);
             return;
         }
-    } else {
-        // メッセージがない場合はここで終了
-        if (!msg) return;
-
-        addMessage('user', msg);
-        if (!overrideMsg && userInput) userInput.value = '';
     }
 
     try {
@@ -227,7 +211,31 @@ function fallbackResponse(msg) {
     addMessage('model', response, true);
 }
 
-// 自動ロードを廃止し、必要に応じて初期化するように変更
+// ページロード時にひっそりと初期化開始
+window.addEventListener('load', () => {
+    // セレクタがない場合は何もしない
+    if (!chatMessages) return;
+
+    // ユーザーがチャットを開かなくてもダウンロードを開始（バックグラウンドロード）
+    setTimeout(() => {
+        initWebLLM((progress) => {
+            const percent = Math.round(progress.progress * 100);
+            if (progress.progress > 0) updateStatus(`Loading... ${percent}%`);
+
+            // チャットの最初のメッセージを更新（準備中の表示）
+            const firstMsg = chatMessages.querySelector('.text-left .inline-block');
+            if (firstMsg && (firstMsg.textContent.includes("System_Boot") || firstMsg.textContent.includes("只今準備中"))) {
+                 if (progress.progress < 1) {
+                     firstMsg.textContent = `ﾋﾟﾎﾟｯ...只今準備中である... (${percent}%)（※既にダウンロード済みの場合は、ボタンを押したあとにモデルのロードが始まります(モデルのダウンロードはありません)）`;
+                 } else {
+                     firstMsg.textContent = `ﾋﾟﾎﾟｯ...System_Boot...完了...コードネーム『サイタマニア』起動...質問をどうぞ...`;
+                 }
+            }
+
+            if (progress.progress === 1) updateStatus("Online_");
+        });
+    }, 1000);
+});
 
 // 気分選択ボタンの処理
 window.selectMood = function(mood) {

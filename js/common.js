@@ -191,17 +191,18 @@ function getRandomPark() {
 }
 
 function initRandomParkLinks() {
-    const isIndex = window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('/');
-    const prefix = isIndex ? 'destinations/' : '';
-    // 既にdestinations/内にいる場合はプレフィックス不要
-    const finalPrefix = window.location.pathname.includes('/destinations/') ? '' : prefix;
+    const pathname = window.location.pathname;
+    const isRoot = pathname.endsWith('/') || pathname.endsWith('index.html') ||
+                   (!pathname.includes('/destinations/') && !pathname.includes('/news/') && !pathname.includes('/game/'));
+
+    const prefix = isRoot ? 'destinations/' : (pathname.includes('/destinations/') ? '' : '../destinations/');
 
     const randomPark = getRandomPark();
     const links = document.querySelectorAll('a');
 
     links.forEach(link => {
         if (link.textContent.includes('公園を探す')) {
-            link.href = `${finalPrefix}${randomPark.link}`;
+            link.href = `${prefix}${randomPark.link}`;
         }
     });
 }
@@ -224,20 +225,24 @@ function toggleMenu() {
         menu.classList.toggle('active');
         overlay.classList.toggle('active');
 
-        // メニュー項目の動的更新 (index.html かどうかで出し分け)
-        const isIndex = window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('/');
+        // メニュー項目の動的更新
         const nav = menu.querySelector('nav');
         if (nav) {
-            const prefix = isIndex ? '' : (window.location.pathname.includes('/destinations/') || window.location.pathname.includes('/news/') || window.location.pathname.includes('/game/')) ? '../' : '';
+            const pathname = window.location.pathname;
+            const isRoot = pathname.endsWith('/') || pathname.endsWith('index.html') ||
+                           (!pathname.includes('/destinations/') && !pathname.includes('/news/') && !pathname.includes('/game/'));
+
+            const rootPrefix = isRoot ? '' : '../';
+            const destPrefix = isRoot ? 'destinations/' : (pathname.includes('/destinations/') ? '' : '../destinations/');
 
             const randomPark = getRandomPark();
-            const parkPath = isIndex ? `destinations/${randomPark.link}` : (window.location.pathname.includes('/destinations/') ? randomPark.link : `../destinations/${randomPark.link}`);
+            const parkPath = `${destPrefix}${randomPark.link}`;
 
             nav.innerHTML = `
-                <a href="${prefix}index.html" class="flex items-center gap-3">🏠 ホーム</a>
+                <a href="${rootPrefix}index.html" class="flex items-center gap-3">🏠 ホーム</a>
                 <a href="${parkPath}" class="flex items-center gap-3">🌳 公園を探す</a>
-                <a href="${prefix}map.html" class="flex items-center gap-3">🗺️ マップ</a>
-                <a href="${prefix}saitama-mini-game.html" class="flex items-center gap-3">🎮 ゲーム</a>
+                <a href="${rootPrefix}map.html" class="flex items-center gap-3">🗺️ マップ</a>
+                <a href="${rootPrefix}saitama-mini-game.html" class="flex items-center gap-3">🎮 ゲーム</a>
                 <hr class="border-slate-700">
                 <button onclick="toggleTheme()" class="flex items-center gap-3 w-full text-left"><span id="theme-toggle-icon-mobile">🌳</span> カラー変更</button>
                 <button onclick="toggleDarkMode()" class="flex items-center gap-3 w-full text-left"><span>🌓</span> ダークモード切替</button>
@@ -428,11 +433,11 @@ function initRecommendations() {
     const grid = document.querySelector('.recommend-grid');
     if (!grid) return;
 
-    // PARK_DATA を使用し、パスを調整
-    const isDestinations = window.location.pathname.includes('/destinations/');
+    const pathname = window.location.pathname;
+    const isDestinations = pathname.includes('/destinations/');
     const imgPrefix = isDestinations ? '../images/' : 'images/';
 
-    const currentFile = window.location.pathname.split('/').pop();
+    const currentFile = pathname.split('/').pop();
     const otherParks = PARK_DATA.filter(p => p.link !== currentFile);
 
     // フィッシャー・イェーツのシャッフル

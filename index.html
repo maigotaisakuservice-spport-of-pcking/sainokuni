@@ -193,7 +193,7 @@
     <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
         <source src="videos/kita_urawa_fountain.mp4" type="video/mp4">
         <!-- フォールバック画像 -->
-        <img loading="lazy" decoding="async" loading="lazy" decoding="async" src="images/kita_urawa_park.jpg" class="w-full h-full object-cover">
+        <img loading="lazy" decoding="async" src="images/kita_urawa_park.jpg" class="w-full h-full object-cover">
     </video>
     <div class="hero-overlay">
         <div class="hero-text" style="font-family: 'Mochiy Pop One';">
@@ -217,7 +217,10 @@
 <section id="widgets" class="!py-12 bg-[var(--accent-bg)] dark:bg-[var(--accent-bg-dark)] border-y border-[var(--accent-border)] dark:border-gray-800">
     <h2 class="section-title !mb-12">リアルタイム埼玉</h2>
     <div class="widget-container">
-        <div class="widget-card" id="weather-widget">
+        <div class="widget-card relative" id="weather-widget">
+            <button onclick="openWeatherModal()" class="absolute top-4 right-4 text-gray-400 hover:text-[var(--primary-color)] transition-colors" title="詳細な予報を見る">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </button>
             <h3 class="font-bold mb-4">現在の天気（さいたま市）</h3>
             <div id="weather-info" class="text-2xl font-bold text-[var(--primary-color)]">Loading...</div>
             <div id="weather-recommend" class="mt-4 text-sm font-bold animate-pulse"></div>
@@ -238,6 +241,7 @@
         <button onclick="toggleChat()" class="bg-[var(--accent-btn)] hover:bg-[var(--accent-btn-hover)] text-white font-bold py-4 px-8 rounded-full shadow-lg transition-all transform hover:scale-105">
             チャットで相談する
         </button>
+        <p class="text-[10px] mt-4 opacity-60">※AIモデルのロードに時間がかかる場合があります。既にダウンロード済みの場合は、ボタンを押したあとにモデルのロードが始まります(モデルのダウンロードはありません)。</p>
     </div>
 </section>
 
@@ -246,7 +250,7 @@
     <div class="article-grid">
         <a href="cafe.html" class="article-card">
             <div class="relative">
-                <img loading="lazy" decoding="async" loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?q=80&w=640&auto=format&fit=crop" alt="カフェ" class="w-full h-48 object-cover" loading="lazy" decoding="async">
+                <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?q=80&w=640&auto=format&fit=crop" alt="カフェ" class="w-full h-48 object-cover" loading="lazy" decoding="async">
                 <div class="absolute top-4 left-4 bg-pink-600 text-white text-[10px] font-bold px-2 py-1 rounded">FEATURE</div>
             </div>
             <div class="p-6">
@@ -256,7 +260,7 @@
         </a>
         <a href="nougyou.html" class="article-card">
             <div class="relative">
-                <img loading="lazy" decoding="async" loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1500651230702-0e2d8a49d4ad?q=80&w=640&auto=format&fit=crop" alt="農業" class="w-full h-48 object-cover" loading="lazy" decoding="async">
+                <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1500651230702-0e2d8a49d4ad?q=80&w=640&auto=format&fit=crop" alt="農業" class="w-full h-48 object-cover" loading="lazy" decoding="async">
                 <div class="absolute top-4 left-4 bg-amber-600 text-white text-[10px] font-bold px-2 py-1 rounded">LIFE</div>
             </div>
             <div class="p-6">
@@ -266,7 +270,7 @@
         </a>
         <a href="destinations/kita_urawa_park.html" class="article-card">
             <div class="relative">
-                <img loading="lazy" decoding="async" loading="lazy" decoding="async" src="images/kita_urawa_park.jpg" alt="北浦和公園" class="w-full h-48 object-cover" loading="lazy" decoding="async">
+                <img loading="lazy" decoding="async" src="images/kita_urawa_park.jpg" alt="北浦和公園" class="w-full h-48 object-cover" loading="lazy" decoding="async">
                 <div class="absolute top-4 left-4 bg-emerald-600 text-white text-[10px] font-bold px-2 py-1 rounded">UPATED</div>
             </div>
             <div class="p-6">
@@ -276,7 +280,7 @@
         </a>
         <a href="destinations/omiya_park.html" class="article-card">
             <div class="relative">
-                <img loading="lazy" decoding="async" loading="lazy" decoding="async" src="images/omiya_park.jpg" alt="大宮公園" class="w-full h-48 object-cover" loading="lazy" decoding="async">
+                <img loading="lazy" decoding="async" src="images/omiya_park.jpg" alt="大宮公園" class="w-full h-48 object-cover" loading="lazy" decoding="async">
                 <div class="absolute top-4 left-4 bg-pink-600 text-white text-[10px] font-bold px-2 py-1 rounded">定番</div>
             </div>
             <div class="p-6">
@@ -286,7 +290,7 @@
         </a>
         <a href="destinations/shinrin_park.html" class="article-card">
             <div class="relative">
-                <img loading="lazy" decoding="async" loading="lazy" decoding="async" src="images/shinrin_park.jpg" alt="森林公園" class="w-full h-48 object-cover" loading="lazy" decoding="async">
+                <img loading="lazy" decoding="async" src="images/shinrin_park.jpg" alt="森林公園" class="w-full h-48 object-cover" loading="lazy" decoding="async">
                 <div class="absolute top-4 left-4 bg-sky-600 text-white text-[10px] font-bold px-2 py-1 rounded">広い</div>
             </div>
             <div class="p-6">
@@ -307,12 +311,12 @@
 <section id="gallery" class="my-20">
     <h2 class="section-title">#埼玉公園散歩 ギャラリー</h2>
     <div class="gallery-grid">
-        <div class="gallery-item"><img loading="lazy" decoding="async" loading="lazy" decoding="async" src="images/kita_urawa_park.jpg" alt="北浦和公園" loading="lazy" decoding="async"></div>
-        <div class="gallery-item"><img loading="lazy" decoding="async" loading="lazy" decoding="async" src="images/omiya_park.jpg" alt="大宮公園" loading="lazy" decoding="async"></div>
-        <div class="gallery-item"><img loading="lazy" decoding="async" loading="lazy" decoding="async" src="images/tokorozawa_park.jpg" alt="所沢航空公園" loading="lazy" decoding="async"></div>
-        <div class="gallery-item"><img loading="lazy" decoding="async" loading="lazy" decoding="async" src="images/shinrin_park.jpg" alt="森林公園" loading="lazy" decoding="async"></div>
-        <div class="gallery-item"><img loading="lazy" decoding="async" loading="lazy" decoding="async" src="images/akigase_park.jpg" alt="秋ヶ瀬公園" loading="lazy" decoding="async"></div>
-        <div class="gallery-item"><img loading="lazy" decoding="async" loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1519331379826-f10be5486c6f?q=80&w=2070&auto=format&fit=crop" alt="公園の木々" loading="lazy" decoding="async"></div>
+        <div class="gallery-item"><img loading="lazy" decoding="async" src="images/kita_urawa_park.jpg" alt="北浦和公園" loading="lazy" decoding="async"></div>
+        <div class="gallery-item"><img loading="lazy" decoding="async" src="images/omiya_park.jpg" alt="大宮公園" loading="lazy" decoding="async"></div>
+        <div class="gallery-item"><img loading="lazy" decoding="async" src="images/tokorozawa_park.jpg" alt="所沢航空公園" loading="lazy" decoding="async"></div>
+        <div class="gallery-item"><img loading="lazy" decoding="async" src="images/shinrin_park.jpg" alt="森林公園" loading="lazy" decoding="async"></div>
+        <div class="gallery-item"><img loading="lazy" decoding="async" src="images/akigase_park.jpg" alt="秋ヶ瀬公園" loading="lazy" decoding="async"></div>
+        <div class="gallery-item"><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1519331379826-f10be5486c6f?q=80&w=2070&auto=format&fit=crop" alt="公園の木々" loading="lazy" decoding="async"></div>
     </div>
     <div class="text-center mt-10">
         <a href="gallery.html" class="inline-block border-2 border-[var(--primary-color)] text-[var(--primary-color)] hover:bg-[var(--primary-color)] hover:text-white font-bold py-3 px-10 rounded-full transition-all">
@@ -531,32 +535,37 @@ document.addEventListener('DOMContentLoaded', () => {
     const festivalEl = document.getElementById('days-to-festival');
     if (festivalEl) festivalEl.textContent = diff > 0 ? diff : '開催中!';
 
+    let weatherData = null;
+
     // 天気API & エフェクト
     async function initWeather() {
         try {
             const { CONFIG } = await import('./js/config.js');
-            const apiUrl = `https://api.weatherapi.com/v1/current.json?key=${CONFIG.WEATHER_API_KEY}&q=Saitama&lang=ja`;
-            // WeatherAPI.com supports CORS directly, so we try direct fetch first for better reliability.
+            const apiUrl = `https://api.weatherapi.com/v1/forecast.json?key=${CONFIG.WEATHER_API_KEY}&q=Saitama&days=3&lang=ja`;
+
             let res;
             try {
                 res = await fetch(apiUrl);
             } catch (e) {
-                // Fallback to proxy if direct fetch fails (e.g. strict CSP or mixed content)
                 res = await fetch(`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(apiUrl)}`);
             }
 
             if (!res.ok) throw new Error('API request failed');
-            const data = await res.json();
+            weatherData = await res.json();
 
             const weatherInfo = document.getElementById('weather-info');
             if (weatherInfo) {
                 weatherInfo.innerHTML = `
-                    <img loading="lazy" decoding="async" loading="lazy" decoding="async" src="${data.current.condition.icon}" class="mx-auto w-12 h-12">
-                    ${data.current.temp_c}℃ / ${data.current.condition.text}
+                    <img loading="lazy" decoding="async" src="${weatherData.current.condition.icon}" class="mx-auto w-12 h-12">
+                    ${weatherData.current.temp_c}℃ / ${weatherData.current.condition.text}
+                    <div class="text-xs font-normal text-gray-500 mt-1 flex items-center justify-center gap-1">
+                        風速: ${weatherData.current.wind_kph}km/h
+                        <span style="display:inline-block; transform: rotate(${weatherData.current.wind_degree + 180}deg)">↑</span>
+                    </div>
                 `;
             }
-            updateWeatherRecommend(data.current.condition.code);
-            startWeatherEffect(data.current.condition.code);
+            updateWeatherRecommend(weatherData.current.condition.code);
+            startWeatherEffect(weatherData.current.condition.code);
         } catch (e) {
             console.error('Weather fetch error:', e);
             const weatherInfo = document.getElementById('weather-info');
@@ -634,6 +643,72 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ウィジェット情報のロード
     initWeather();
+
+    window.openWeatherModal = function() {
+        if (!weatherData) return;
+        const modal = document.getElementById('info-modal');
+        const body = document.getElementById('modal-body');
+        if (!modal || !body) return;
+
+        // 24時間予報の構築
+        const now = new Date();
+        let hourlyHtml = '';
+        const allHours = [...weatherData.forecast.forecastday[0].hour, ...weatherData.forecast.forecastday[1].hour];
+        const futureHours = allHours.filter(h => new Date(h.time) >= now).slice(0, 24);
+
+        futureHours.forEach(h => {
+            const time = new Date(h.time).getHours();
+            hourlyHtml += `
+                <div class="flex-shrink-0 text-center p-2 bg-slate-50 dark:bg-slate-800 rounded-xl min-w-[80px]">
+                    <div class="text-[10px] font-bold">${time}時</div>
+                    <img loading="lazy" decoding="async" src="${h.condition.icon}" class="w-8 h-8 mx-auto">
+                    <div class="text-xs font-bold">${h.temp_c}℃</div>
+                    <div class="text-[8px] opacity-60 flex items-center justify-center gap-0.5">
+                        <span style="display:inline-block; transform: rotate(${h.wind_degree + 180}deg)">↑</span>
+                        ${h.wind_kph}k/h
+                    </div>
+                </div>
+            `;
+        });
+
+        // 3日間予報の構築
+        let forecastHtml = '';
+        weatherData.forecast.forecastday.forEach(d => {
+            const date = new Date(d.date);
+            const dateStr = `${date.getMonth() + 1}/${date.getDate()}`;
+            forecastHtml += `
+                <div class="flex items-center justify-between p-3 border-b border-gray-100 dark:border-gray-700 last:border-0">
+                    <div class="font-bold w-12">${dateStr}</div>
+                    <img loading="lazy" decoding="async" src="${d.day.condition.icon}" class="w-8 h-8">
+                    <div class="flex gap-3 text-sm">
+                        <span class="text-red-500 font-bold">${d.day.maxtemp_c}℃</span>
+                        <span class="text-blue-500 font-bold">${d.day.mintemp_c}℃</span>
+                    </div>
+                </div>
+            `;
+        });
+
+        body.innerHTML = `
+            <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                🌡️ さいたま市の詳細予報
+            </h2>
+
+            <div class="mb-6">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">24時間予報 (風向・風速)</h3>
+                <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                    ${hourlyHtml}
+                </div>
+            </div>
+
+            <div class="mb-2">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">3日間週間予報</h3>
+                <div class="bg-slate-50 dark:bg-slate-800 rounded-2xl p-2">
+                    ${forecastHtml}
+                </div>
+            </div>
+        `;
+        modal.style.display = 'flex';
+    };
 });
 
 // チャットUI (グローバルスコープ)
@@ -645,10 +720,6 @@ function toggleChat() {
             const chatMessages = document.getElementById('chat-messages');
             if (chatMessages && chatMessages.children.length === 0) {
                 addWelcomeMessage();
-            }
-            // チャットを開いた時に初期化を開始（既に初期化済みの場合はスキップされる）
-            if (typeof handleChat === 'function') {
-                handleChat("");
             }
         }
     }
