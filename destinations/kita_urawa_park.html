@@ -32,25 +32,6 @@
         iframe { width: 100%; height: 500px; border-radius: 20px; border: none; margin-top: 2rem; }
         .info-list { list-style: none; padding: 0; }
         .info-list li { background: var(--card-bg); padding: 1.2rem; margin-bottom: 0.8rem; border-radius: 15px; border-left: 6px solid var(--primary-color); box-shadow: 0 2px 5px var(--card-shadow); }
-
-        /* MOMAS Ticket Animation Styles */
-        #momas-animation-overlay {
-            position: fixed; inset: 0; z-index: 9999;
-            background: black; display: none;
-            flex-direction: column; align-items: center; justify-content: center;
-            overflow: hidden;
-        }
-        .art-piece {
-            position: absolute; width: 300px; height: 400px;
-            object-fit: cover; border: 10px solid white;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            opacity: 0; transform: scale(0.5);
-        }
-        #fountain-effect {
-            position: absolute; bottom: 0; width: 100%; height: 0;
-            background: linear-gradient(to top, rgba(100,200,255,0.8), transparent);
-            z-index: 100;
-        }
     </style>
 </head>
 <body>
@@ -105,7 +86,7 @@
 
     <section class="fade-in-up">
         <h2>アートと水が織りなす、都市のオアシス</h2>
-        <p class="mb-6">さいたま市浦和区に位置する北浦和公園は、美しい音楽噴水と「埼玉県立近代美術館 (MOMAS)」を擁する、文化的な香り高い公園です。園内の至る所に彫刻作品が配置され、歩くだけで感性が刺激されます。</p>
+        <p class="mb-6">さいたま市浦和区に位置する<a href="https://www.pref.saitama.lg.jp/a1105/910-20091204-94.html" target="_blank" rel="noopener" class="text-[var(--primary-color)] underline">北浦和公園</a>は、美しい音楽噴水と「<a href="https://pref.spec.ed.jp/momas/" target="_blank" rel="noopener" class="text-[var(--primary-color)] underline">埼玉県立近代美術館 (MOMAS)</a>」を擁する、文化的な香り高い公園です。園内の至る所に彫刻作品が配置され、歩くだけで感性が刺激されます。</p>
 
         <div class="family-info-grid">
             <div class="family-info-card">
@@ -133,9 +114,9 @@
         <div class="content-card">
             <h3 class="mt-0">🏛️ 埼玉県立近代美術館 (MOMAS)</h3>
             <p>黒川紀章氏の設計による独創的な建築が特徴の美術館です。モネやピカソ、シャガールなどの名画から、埼玉ゆかりの画家の作品まで幅広く展示。また、館内の「椅子」に座って鑑賞できるユニークな体験も人気です。</p>
-            <button onclick="startMomasAnimation()" class="mt-6 bg-[var(--primary-color)] text-white font-bold py-3 px-8 rounded-full shadow-lg hover:scale-105 transition-all">
-                🎟️ オンラインチケットを購入（体験版）
-            </button>
+            <a href="https://pref.spec.ed.jp/momas/" target="_blank" rel="noopener" class="inline-block mt-6 bg-[var(--primary-color)] text-white font-bold py-3 px-8 rounded-full shadow-lg hover:scale-105 transition-all no-underline">
+                🏛️ 公式サイトで展示情報を確認
+            </a>
         </div>
         <div class="content-card">
             <h3 class="mt-0">🌳 彫刻の森を散歩</h3>
@@ -174,98 +155,8 @@
     </div>
 </footer>
 
-<!-- MOMAS Ticket Animation Overlay -->
-<div id="momas-animation-overlay">
-    <div id="fountain-effect"></div>
-    <div class="relative z-[200] text-center text-white">
-        <h2 id="animation-text" class="text-3xl font-bold mb-8 opacity-0">Art is loading...</h2>
-        <div id="art-container" class="relative w-[400px] h-[500px] mx-auto">
-            <!-- Images will be injected here -->
-        </div>
-        <button onclick="stopMomasAnimation()" class="mt-12 border-2 border-white px-8 py-2 rounded-full hover:bg-white hover:text-black transition-all opacity-0" id="anim-close-btn">Close</button>
-    </div>
-</div>
-
 <button onclick="scrollToTop()" class="go-to-top-button" aria-label="トップへ戻る">↑</button>
 
-<script defer src="../js/common.js" defer></script>
-<script>
-    let audioContext = null;
-    let audioBuffer = null;
-    let audioSource = null;
-
-    async function startMomasAnimation() {
-        const overlay = document.getElementById('momas-animation-overlay');
-        overlay.style.display = 'flex';
-
-        // 1. Text fades in
-        const text = document.getElementById('animation-text');
-        text.classList.add('animate-pulse');
-        text.style.opacity = 1;
-        text.textContent = "Welcome to MOMAS Experience";
-
-        // 2. Load and Play Music (Simulated or Real)
-        playMusic();
-
-        // 3. Artworks appearing
-        const artContainer = document.getElementById('art-container');
-        const artImages = ['../images/artwork_1.jpg', '../images/artwork_2.jpg', '../images/artwork_3.jpg'];
-
-        for(let i=0; i < artImages.length; i++) {
-            await new Promise(r => setTimeout(r, 1000));
-            const img = document.createElement('img');
-            img.src = artImages[i];
-            img.className = 'art-piece';
-            img.style.left = `${(i-1)*50}px`;
-            img.style.top = `${(i-1)*30}px`;
-            img.style.zIndex = 200 + i;
-            artContainer.appendChild(img);
-
-            // Trigger animation
-            setTimeout(() => {
-                img.style.transition = 'all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-                img.style.opacity = 1;
-                img.style.transform = `scale(1) rotate(${(i-1)*5}deg)`;
-            }, 100);
-        }
-
-        // 4. Fountain Blowing up
-        const fountain = document.getElementById('fountain-effect');
-        fountain.style.transition = 'height 3s ease-out';
-        fountain.style.height = '100%';
-
-        // 5. Show Close Button
-        setTimeout(() => {
-            document.getElementById('anim-close-btn').style.opacity = 1;
-        }, 3500);
-    }
-
-    function stopMomasAnimation() {
-        const overlay = document.getElementById('momas-animation-overlay');
-        overlay.style.display = 'none';
-
-        // Reset states
-        document.getElementById('art-container').innerHTML = '';
-        document.getElementById('fountain-effect').style.height = '0';
-        document.getElementById('anim-close-btn').style.opacity = 0;
-        if (audioSource) audioSource.stop();
-    }
-
-    async function playMusic() {
-        try {
-            if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            const res = await fetch('../audio/fountain_music.mp3');
-            if (!res.ok) throw new Error('Audio not found');
-            const arrayBuffer = await res.arrayBuffer();
-            audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-            audioSource = audioContext.createBufferSource();
-            audioSource.buffer = audioBuffer;
-            audioSource.connect(audioContext.destination);
-            audioSource.start();
-        } catch (e) {
-            console.log("Audio play failed (maybe missing file or user gesture required):", e);
-        }
-    }
-</script>
+<script defer src="../js/common.js"></script>
 </body>
 </html>

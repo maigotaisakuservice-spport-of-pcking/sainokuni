@@ -218,8 +218,9 @@
     <h2 class="section-title !mb-12">リアルタイム埼玉</h2>
     <div class="widget-container">
         <div class="widget-card relative" id="weather-widget">
-            <button onclick="openWeatherModal()" class="absolute top-4 right-4 text-gray-400 hover:text-[var(--primary-color)] transition-colors" title="詳細な予報を見る">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <button onclick="openWeatherModal()" class="absolute top-4 right-4 flex items-center gap-1 text-gray-400 hover:text-[var(--primary-color)] transition-all group border border-gray-200 dark:border-gray-700 rounded-full px-2 py-1 bg-white/50 dark:bg-black/20 hover:border-[var(--primary-color)]" title="詳細な予報を見る">
+                <span class="text-[10px] font-bold">詳細な予報</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
             </button>
             <h3 class="font-bold mb-4">現在の天気（さいたま市）</h3>
             <div id="weather-info" class="text-2xl font-bold text-[var(--primary-color)]">Loading...</div>
