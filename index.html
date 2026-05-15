@@ -161,7 +161,7 @@
         </div>
         <a href="destinations/kita_urawa_park.html" class="hover-accent-text font-bold text-sm md:text-base random-label">公園を探す</a>
         <a href="map.html" class="hover-accent-text font-bold text-sm md:text-base">マップ</a>
-        <a href="saitama-mini-game.html" class="hover-accent-text font-bold text-sm md:text-base">ゲーム</a>
+        <a href="saitama_mini_game.html" class="hover-accent-text font-bold text-sm md:text-base">ゲーム</a>
         <button onclick="toggleMenu()" class="hover-accent-text font-bold text-sm md:text-base">MENU</button>
         <div class="flex items-center gap-2 ml-2 border-l border-white/20 pl-4">
             <button onclick="toggleAccessibilityPanel()" class="hover:scale-110 transition-transform text-xl" id="theme-toggle-icon" title="アクセシビリティ設定">⚙️</button>
@@ -181,7 +181,7 @@
                 <a href="index.html" class="flex items-center gap-3">🏠 ホーム</a>
                 <a href="destinations/kita_urawa_park.html" class="flex items-center gap-3">🌳 公園を探す</a>
                 <a href="map.html" class="flex items-center gap-3">🗺️ マップ</a>
-                <a href="saitama-mini-game.html" class="flex items-center gap-3">🎮 ゲーム</a>
+                <a href="saitama_mini_game.html" class="flex items-center gap-3">🎮 ゲーム</a>
                 <hr class="border-slate-700">
                 <button onclick="toggleTheme()" class="flex items-center gap-3 w-full text-left"><span id="theme-toggle-icon-mobile">🌳</span> カラー変更</button>
                 <button onclick="toggleDarkMode()" class="flex items-center gap-3 w-full text-left"><span>🌓</span> ダークモード切替</button>
@@ -412,7 +412,7 @@
 <button onclick="scrollToTop()" class="go-to-top-button" aria-label="トップへ戻る">↑</button>
 
 <script defer src="js/common.js" defer></script>
-<script type="module" src="js/ai-concierge.js" defer></script>
+<script type="module" src="js/ai_concierge.js" defer></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     // メイン背景スライダー & RSS統合
@@ -421,7 +421,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function initSliders() {
         try {
-            const res = await fetch('js/slider-content.json');
+            const res = await fetch('js/slider_content.json');
             if (!res.ok) throw new Error('Fetch failed');
             rssItems = await res.json();
         } catch (e) {
@@ -429,7 +429,7 @@ document.addEventListener('DOMContentLoaded', () => {
             rssItems = [
                 { "title": "2026年 埼玉公園プロジェクト始動！", "link": "news.html" },
                 { "title": "【注目】北浦和公園の小動物園がリニューアル", "link": "destinations/kita_urawa_park.html" },
-                { "title": "SAITAMA PARK: 3D公園散策がスタート！", "link": "saitama-mini-game.html" }
+                { "title": "SAITAMA PARK: 3D公園散策がスタート！", "link": "saitama_mini_game.html" }
             ];
         }
         updateRssDisplay();
@@ -459,10 +459,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initSliders();
 
-    // UIラベルのランダム化
-    if (typeof randomizeUILabel === 'function') {
-        randomizeUILabel('.random-label', ['公園を探す', 'Discovery', '自然を見つける', 'Park Search']);
-    }
+    // UIラベルの統一
+    document.querySelectorAll('.random-label').forEach(el => {
+        el.textContent = '公園を探す';
+    });
 
     // 簡易マップ (大宮駅中心) - 縮小拡大不可に設定
     async function initMiniMap() {
@@ -713,38 +713,13 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // チャットUI (グローバルスコープ)
-function toggleChat() {
-    const container = document.getElementById('chat-widget-container');
-    if (container) {
-        container.classList.toggle('active');
-        if(container.classList.contains('active')) {
-            const chatMessages = document.getElementById('chat-messages');
-            if (chatMessages && chatMessages.children.length === 0) {
-                addWelcomeMessage();
-            }
-        }
-    }
-}
+// toggleChat, addWelcomeMessage は js/ai_concierge.js に統合・管理
 
 function nextRss() {
     if (typeof window.triggerNextRss === 'function') {
         window.triggerNextRss();
     }
 }
-
-function addWelcomeMessage() {
-        const chatMessages = document.getElementById('chat-messages');
-        if (chatMessages) {
-            const div = document.createElement('div');
-            div.className = "mb-4 text-left";
-            div.innerHTML = `
-                <div class="text-[10px] text-gray-500 mb-1">AIサイタマニアくん</div>
-                <div class="inline-block p-3 rounded-2xl bg-gray-700 text-gray-200">ﾋﾟﾎﾟｯ...System_Boot...完了. 公園コンシェルジュ『サイタマニア』起動した。埼玉の公園について何でも聞いてほしい。</div>
-            `;
-            chatMessages.appendChild(div);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-    }
 </script>
 </body>
 </html>

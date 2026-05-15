@@ -15,9 +15,9 @@ Welcome to the Saitama Parks 2026 portal. This is a high-performance, accessible
 
 - `/index.html`: Main landing page with a hero video background.
 - `/map.html`: Facility search map.
-- `/saitama-mini-game.html`: Entry point for park games.
-- `/destinations/kita-urawa-park.html`: The new featured destination (replaces Maruyama Park).
-- `/js/ai-concierge.js`: Hardened persona logic for Saitamania-kun.
+- `/saitama_mini_game.html`: Entry point for park games.
+- `/destinations/kita_urawa_park.html`: The new featured destination (replaces Maruyama Park).
+- `/js/ai_concierge.js`: Hardened persona logic for Saitamania-kun.
 
 ## 🤖 Saitamania-kun Persona
 
@@ -40,12 +40,15 @@ To ensure the site renders correctly, please place the following files in their 
 | Filename | Description (JP) | Use Case |
 | :--- | :--- | :--- |
 | `kita_urawa_park.jpg` | 北浦和公園のメイン写真 | Gallery, Destination page |
-| `momas_ext.jpg` | 埼玉県立近代美術館(MOMAS)の外観 | Destination page |
+| `kita_urawa_fountain.jpg` | 音楽噴水の写真 | Gallery |
+| `kita_urawa_path.jpg` | 散策路の写真 | Gallery |
+| `kita_urawa_sculpture_1.jpg` | 彫刻作品の写真 1 | Gallery |
+| `kita_urawa_sculpture_2.jpg` | 彫刻作品の写真 2 | Gallery |
+| `momas_placeholder.jpg` | 埼玉県立近代美術館(MOMAS)の代わりの画像 | Destination page |
 | `omiya_park.jpg` | 大宮公園の写真 | Gallery, Destination page |
 | `tokorozawa_park.jpg` | 所沢航空記念公園の写真 | Gallery, Destination page |
 | `shinrin_park.jpg` | 国営武蔵丘陵森林公園の写真 | Gallery, Destination page |
 | `akigase_park.jpg` | 秋ヶ瀬公園の写真 | Gallery, Destination page |
-| `artwork_1.jpg` ~ `artwork_3.jpg` | 美術館の作品イメージ | MOMAS Ticket Animation |
 | `densya.jpg` | 埼玉の電車の写真 | Access Modal |
 
 ### Audio (`/audio/`)

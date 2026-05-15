@@ -172,7 +172,7 @@ function formatMessage(text) {
     let html = text.replace(/\n/g, '<br>');
     // URL (destinations/xxx.html or root level .html files) をaタグに変換
     // サイト内の主要なHTMLファイルに対応
-    const urlPattern = /((?:destinations\/[a-zA-Z0-9_-]+\.html)|(?:index\.html|map\.html|saitama-mini-game\.html|news\.html|gallery\.html))/g;
+    const urlPattern = /((?:destinations\/[a-zA-Z0-9_-]+\.html)|(?:index\.html|map\.html|saitama_mini_game\.html|news\.html|gallery\.html))/g;
     html = html.replace(urlPattern, '<a href="$1" target="_blank" rel="noopener noreferrer" class="text-blue-400 underline hover:text-blue-300">$1</a>');
     return html;
 }
@@ -206,36 +206,12 @@ function fallbackResponse(msg) {
         response += "スポーツを楽しむなら、競技場が充実している『秋ヶ瀬公園』や『大宮公園』が良いだろう。";
         response += " <a href='destinations/akigase_park.html' target='_blank' rel='noopener noreferrer' class='text-blue-400 underline'>秋ヶ瀬公園ガイドを見る</a>";
     } else {
-        response += "埼玉の5大公園（大宮、所沢、森林、秋ヶ瀬、丸山）を中心に、最適な場所を提案しよう。";
+        response += "埼玉の5大公園（大宮、所沢、森林、秋ヶ瀬、北浦和）を中心に、最適な場所を提案しよう。";
     }
     addMessage('model', response, true);
 }
 
-// ページロード時にひっそりと初期化開始
-window.addEventListener('load', () => {
-    // セレクタがない場合は何もしない
-    if (!chatMessages) return;
-
-    // ユーザーがチャットを開かなくてもダウンロードを開始（バックグラウンドロード）
-    setTimeout(() => {
-        initWebLLM((progress) => {
-            const percent = Math.round(progress.progress * 100);
-            if (progress.progress > 0) updateStatus(`Loading... ${percent}%`);
-
-            // チャットの最初のメッセージを更新（準備中の表示）
-            const firstMsg = chatMessages.querySelector('.text-left .inline-block');
-            if (firstMsg && (firstMsg.textContent.includes("System_Boot") || firstMsg.textContent.includes("只今準備中"))) {
-                 if (progress.progress < 1) {
-                     firstMsg.textContent = `ﾋﾟﾎﾟｯ...只今準備中である... (${percent}%)（※既にダウンロード済みの場合は、ボタンを押したあとにモデルのロードが始まります(モデルのダウンロードはありません)）`;
-                 } else {
-                     firstMsg.textContent = `ﾋﾟﾎﾟｯ...System_Boot...完了...コードネーム『サイタマニア』起動...質問をどうぞ...`;
-                 }
-            }
-
-            if (progress.progress === 1) updateStatus("Online_");
-        });
-    }, 1000);
-});
+// ページロード時の自動初期化は停止（ユーザーの同意を得るため）
 
 // 気分選択ボタンの処理
 window.selectMood = function(mood) {
@@ -249,8 +225,102 @@ window.selectMood = function(mood) {
     handleChat(moodMap[mood]);
 };
 
+function showAiInitModal() {
+    if (engine || isConfiguring) return;
+
+    const modal = document.createElement('div');
+    modal.id = 'ai-init-modal';
+    modal.className = 'fixed inset-0 bg-black/80 z-[6000] flex items-center justify-center p-4';
+    modal.innerHTML = `
+        <div class="bg-slate-900 border border-slate-700 p-8 rounded-3xl max-w-md w-full shadow-2xl text-center">
+            <div class="w-20 h-20 bg-emerald-900/50 rounded-full flex items-center justify-center mx-auto mb-6 border border-emerald-500/30">
+                <span class="text-4xl">🤖</span>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-4">AIコンシェルジュを開始しますか？</h3>
+            <p class="text-slate-400 text-sm mb-6 leading-relaxed">
+                高精度なAIモデル（約1.7GB）を使用します。<br>
+                初回はインターネット経由でのダウンロードが発生し、お使いのデバイスのストレージに保存されます。<br><br>
+                <span class="text-emerald-400 font-bold">【重要】既にダウンロード済みの場合は、ボタンを押すとすぐにロードが始まります（再ダウンロードは行われません）。</span>
+            </p>
+            <div class="flex gap-4">
+                <button id="ai-consent-cancel" class="flex-1 py-3 px-6 rounded-xl border border-slate-700 text-slate-400 hover:bg-slate-800 transition-colors font-bold">キャンセル</button>
+                <button id="ai-consent-start" class="flex-1 py-3 px-6 rounded-xl bg-emerald-600 text-white hover:bg-emerald-500 transition-all font-bold shadow-lg shadow-emerald-900/20">開始する</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+
+    const closeModal = () => {
+        document.body.removeChild(modal);
+    };
+
+    document.getElementById('ai-consent-cancel').onclick = closeModal;
+    document.getElementById('ai-consent-start').onclick = () => {
+        closeModal();
+        toggleChat(); // チャットウィンドウを開く
+        initAndHandleLoad(); // ロード開始
+    };
+}
+
+async function initAndHandleLoad() {
+    if (engine || isConfiguring) return;
+
+    // チャット画面にロード中のメッセージを表示
+    addWelcomeMessage();
+    const loadingMsg = addMessage('model', "ﾋﾟﾎﾟｯ...AIエンジンの初期化を開始する。システムをロード中... (0%)");
+    const inner = loadingMsg.querySelector('.inline-block');
+
+    await initWebLLM((progress) => {
+        const percent = Math.round(progress.progress * 100);
+        updateStatus(`Loading... ${percent}%`);
+        inner.textContent = `ﾋﾟﾎﾟｯ...只今準備中である。システムロード中... (${percent}%)`;
+        if (progress.progress === 1) {
+            updateStatus("Online_");
+            inner.textContent = "ﾋﾟﾎﾟｯ...System_Boot...完了。埼玉の公園について何でも聞いてほしい。";
+        }
+    });
+}
+
+// チャットウィンドウの開閉制御をjs/common.jsから移動/統合
+function toggleChat() {
+    const container = document.getElementById('chat-widget-container');
+    if (!container) return;
+
+    if (!engine && !isConfiguring && !container.classList.contains('active')) {
+        showAiInitModal();
+        return;
+    }
+
+    container.classList.toggle('active');
+    if(container.classList.contains('active')) {
+        const chatMessages = document.getElementById('chat-messages');
+        if (chatMessages && chatMessages.children.length === 0) {
+            if (engine) {
+                addWelcomeMessage();
+            } else {
+                initAndHandleLoad();
+            }
+        }
+    }
+}
+
+function addWelcomeMessage() {
+    const chatMessages = document.getElementById('chat-messages');
+    if (chatMessages && chatMessages.children.length === 0) {
+        const div = document.createElement('div');
+        div.className = "mb-4 text-left";
+        div.innerHTML = `
+            <div class="text-[10px] text-gray-500 mb-1">AIサイタマニアくん</div>
+            <div class="inline-block p-3 rounded-2xl bg-gray-700 text-gray-200">ﾋﾟﾎﾟｯ...System_Boot...待機中。</div>
+        `;
+        chatMessages.appendChild(div);
+    }
+}
+
 // グローバルに公開
 window.handleChat = handleChat;
+window.toggleChat = toggleChat;
+window.showAiInitModal = showAiInitModal;
 
 if (sendBtn) sendBtn.addEventListener('click', () => handleChat());
 if (userInput) userInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') handleChat(); });

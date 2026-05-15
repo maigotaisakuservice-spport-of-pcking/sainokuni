@@ -242,7 +242,7 @@ function toggleMenu() {
                 <a href="${rootPrefix}index.html" class="flex items-center gap-3">🏠 ホーム</a>
                 <a href="${parkPath}" class="flex items-center gap-3">🌳 公園を探す</a>
                 <a href="${rootPrefix}map.html" class="flex items-center gap-3">🗺️ マップ</a>
-                <a href="${rootPrefix}saitama-mini-game.html" class="flex items-center gap-3">🎮 ゲーム</a>
+                <a href="${rootPrefix}saitama_mini_game.html" class="flex items-center gap-3">🎮 ゲーム</a>
                 <hr class="border-slate-700">
                 <button onclick="toggleTheme()" class="flex items-center gap-3 w-full text-left"><span id="theme-toggle-icon-mobile">🌳</span> カラー変更</button>
                 <button onclick="toggleDarkMode()" class="flex items-center gap-3 w-full text-left"><span>🌓</span> ダークモード切替</button>

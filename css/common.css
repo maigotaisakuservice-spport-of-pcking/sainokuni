@@ -80,11 +80,11 @@
 
 body {
     font-family: 'Noto Sans JP', sans-serif;
-    font-size: clamp(14px, 2vw, 18px);
+    font-size: clamp(16px, 2vw, 18px); /* Slightly larger base size for mobile readability */
     background-color: var(--bg-color);
     color: var(--text-color);
     transition: background-color 0.3s, color 0.3s;
-    line-height: 1.6;
+    line-height: 1.8; /* Increased line-height for better legibility */
 }
 
 /* 読了インジケーター */
@@ -279,9 +279,13 @@ header {
     color: #fff !important;
     border-bottom: 1px solid rgba(255,255,255,0.1);
     transition: background-color 0.5s;
-    height: 70px;
+    height: 60px; /* Slimmer header for mobile space */
     display: flex;
     align-items: center;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    z-index: 1000;
 }
 header a { color: #fff !important; text-decoration: none !important; }
 header a:hover { color: #fff !important; opacity: 0.8; }
@@ -312,19 +316,23 @@ footer a:hover { opacity: 1; text-decoration: underline !important; }
 /* Park Feature Icons */
 .feature-list {
     display: flex;
-    flex-wrap: wrap;
+    overflow-x: auto; /* Horizontal scroll on small screens */
     gap: 10px;
     margin: 1.5rem 0;
+    padding-bottom: 10px;
+    scrollbar-width: none; /* Hide scrollbar for clean look */
 }
+.feature-list::-webkit-scrollbar { display: none; }
 .feature-item {
     display: flex;
     align-items: center;
+    flex-shrink: 0; /* Don't squash items */
     gap: 6px;
     padding: 8px 16px;
     border-radius: 12px;
     background: var(--card-bg);
     border: 1px solid var(--border-color);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 700;
     box-shadow: 0 2px 4px var(--card-shadow);
     transition: transform 0.2s, box-shadow 0.2s;
@@ -466,4 +474,32 @@ footer a:hover { opacity: 1; text-decoration: underline !important; }
     font-size: 28px;
     cursor: pointer;
     color: #718096;
+}
+
+/* Mobile-First UI/UX Overhaul Fixes */
+@media (max-width: 768px) {
+    header { height: 50px; }
+    .header-main { padding: 0 0.75rem; height: 50px; }
+    .header-main h1 { font-size: 1.2rem !important; }
+    .header-main nav > a { display: none; } /* Hide text links on mobile, use MENU instead */
+    .header-main nav .border-l { border-left: none; padding-left: 0.5rem; }
+
+    .hero-slider { height: 50vh; }
+    .hero-text { font-size: 2rem !important; padding: 0 1rem; }
+    .section-title { font-size: 1.5rem; margin-bottom: 1.5rem; }
+    section { padding: 2.5rem 1rem; }
+    .article-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+    .widget-container { flex-direction: column; gap: 1rem; }
+    .widget-card { min-width: 100%; padding: 1.25rem; }
+
+    #chat-widget-container { width: 94vw; right: 3vw; bottom: 85px; height: 80vh; }
+    .chat-toggle-btn { bottom: 20px; right: 20px; width: 50px; height: 50px; }
+    .go-to-top-button { bottom: 20px; right: 80px; width: 50px; height: 50px; }
+
+    .hero-image-container { height: 35vh; border-radius: 0 0 25px 25px; margin-top: 50px !important; }
+    .family-info-grid { grid-template-columns: 1fr; gap: 1rem; }
+    main { padding: 0 1rem 3rem; }
+    .hero-title { left: 15px; bottom: 15px; font-size: 1.6rem; }
+
+    #rss-mini-slider { bottom: 5px; padding: 0.5rem; font-size: 0.75rem; }
 }
