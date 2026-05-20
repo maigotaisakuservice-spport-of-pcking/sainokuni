@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>埼玉マスタークイズ | PLAY-HUB SAITAMA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "selector"
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Mochiy+Pop+One&family=DotGothic16&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/common.css">
+    <style>
+        body { font-family: 'Noto Sans JP', sans-serif; background: #f0fdf4; color: #166534; }
+        .accent-font { font-family: 'Mochiy Pop One', sans-serif; }
+        .quiz-card { background: white; border-radius: 40px; box-shadow: 0 20px 60px rgba(22, 101, 52, 0.15); border: 4px solid #dcfce7; }
+        .option-btn {
+            width: 100%; text-align: left; padding: 24px; margin-bottom: 16px;
+            border: 3px solid #f0fdf4; border-radius: 24px; transition: all 0.2s;
+            background: #f8fafc; cursor: pointer; font-weight: bold; font-size: 1.1rem;
+            display: flex; align-items: center; gap: 15px;
+        }
+        .option-btn:hover { border-color: #4ade80; background: #f0fdf4; transform: translateX(10px); }
+        .option-btn.correct { background: #4ade80 !important; color: white; border-color: #22c55e; }
+        .option-btn.wrong { background: #f87171 !important; color: white; border-color: #ef4444; }
+
+        .progress-bar { height: 12px; background: #dcfce7; border-radius: 6px; overflow: hidden; margin-bottom: 2rem; }
+        .progress-fill { height: 100%; background: #22c55e; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        #result-screen { display: none; }
+        .confetti { position: fixed; width: 10px; height: 10px; background: #ffd700; z-index: 1000; pointer-events: none; }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-6 transition-colors">
+
+    <a href="../saitama_mini_game.html" class="fixed top-8 left-8 bg-white dark:bg-slate-800 p-3 px-6 rounded-full shadow-xl font-bold z-50 hover:scale-105 transition-transform">🔙 ゲーム一覧</a>
+
+    <div id="quiz-container" class="quiz-card max-w-2xl w-full p-10 md:p-16 relative overflow-hidden">
+
+        <!-- スタート画面 -->
+        <div id="start-screen" class="text-center">
+            <div class="text-6xl mb-6">🎓</div>
+            <h1 class="text-4xl accent-font mb-6" style="color: var(--primary-color);">埼玉マスターへの道</h1>
+            <p class="text-lg mb-10 text-slate-600 leading-relaxed">公園にまつわるクイズに答えて、<br><span class="font-bold text-green-600">「埼玉マスター」</span>の称号を手に入れよう！<br>子育て世帯なら知っておきたい豆知識も満載です。</p>
+            <button onclick="startQuiz()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-5 px-16 rounded-full text-2xl shadow-xl transition-all hover:scale-105 active:scale-95">
+                挑戦をはじめる！
+            </button>
+        </div>
+
+        <!-- ゲーム画面 -->
+        <div id="game-screen" class="hidden">
+            <div class="progress-bar">
+                <div id="progress-fill" class="progress-fill" style="width: 20%;"></div>
+            </div>
+            <div class="flex justify-between items-center mb-6">
+                <span id="q-number" class="text-green-600 font-bold tracking-widest uppercase text-sm">Question 1 / 5</span>
+                <span id="score-text" class="bg-yellow-100 text-yellow-700 font-bold px-4 py-1 rounded-full text-xs">正解: 0</span>
+            </div>
+            <h2 id="question-text" class="text-2xl md:text-3xl font-black mb-10 leading-tight text-slate-800"></h2>
+            <div id="options-container">
+                <!-- ボタンはJSで生成 -->
+            </div>
+        </div>
+
+        <!-- 結果画面 -->
+        <div id="result-screen" class="text-center">
+            <div id="result-emoji" class="text-8xl mb-6 animate-bounce">🏆</div>
+            <h2 class="text-4xl accent-font mb-4 text-slate-800">結果発表！</h2>
+            <div class="text-slate-500 mb-2">あなたの正解数は...</div>
+            <div id="final-score" class="text-7xl font-black text-green-600 mb-8" style="font-family: 'DotGothic16';">5 / 5</div>
+
+            <div class="bg-slate-50 rounded-3xl p-8 mb-10 border-2 border-slate-100">
+                <p class="text-slate-500 text-sm mb-2 font-bold uppercase tracking-widest">獲得称号</p>
+                <p id="rank-name" class="text-3xl font-black text-slate-800 mb-4" style="font-family: 'Mochiy Pop One';">伝説の埼玉マスター</p>
+                <p id="rank-desc" class="text-slate-600 leading-relaxed">すごい！あなたは埼玉の公園を知り尽くした、まさにマスターです！家族みんなで公園に出かけましょう！</p>
+            </div>
+
+            <div class="flex flex-col md:flex-row gap-4 justify-center">
+                <button onclick="location.reload()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-10 rounded-2xl shadow-lg transition-all hover:scale-105">もう一回挑戦する</button>
+                <a href="../saitama_mini_game.html" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-4 px-10 rounded-2xl transition-all">ゲーム一覧へ</a>
+            </div>
+        </div>
+
+        <!-- 装飾用 -->
+        <div class="absolute -bottom-10 -right-10 text-[180px] opacity-5 pointer-events-none select-none accent-font">SAITAMA</div>
+    </div>
+
+    <script src="../js/common.js" defer></script>
+    <script>
+        const quizData = [
+            {
+                q: "埼玉県の大宮公園にある、入園無料の人気の施設は？",
+                o: ["本格的な遊園地", "小さな動物園", "大きな水族館", "巨大な美術館"],
+                a: 1,
+                hint: "ワオキツネザルやヤギ、カピバラなどがいます！"
+            },
+            {
+                q: "「航空発祥の地」として、本物の飛行機が展示されている公園は？",
+                o: ["大宮公園", "北浦和公園", "森林公園", "所沢航空記念公園"],
+                a: 3,
+                hint: "西武新宿線の駅名にもなっています。"
+            },
+            {
+                q: "「ぽんぽこマウンテン」という日本最大級のトランポリンがあるのは？",
+                o: ["秋ヶ瀬公園", "別所沼公園", "国営武蔵丘陵森林公園", "県民活動総合センター"],
+                a: 2,
+                hint: "比企郡滑川町にある、広大な国営公園です。"
+            },
+            {
+                q: "北浦和公園（さいたま市浦和区）の、赤ちゃん連れに優しいポイントは？",
+                o: ["全エリアに冷房完備", "自然学習館内に授乳室がある", "ベビーカーの自動運転", "ミルクの無料配布"],
+                a: 1,
+                hint: "室内で涼しく休憩できる場所があります。"
+            },
+            {
+                q: "埼玉県の公園で、子どもが一番喜ぶのはどれ？",
+                o: ["全部！(埼玉の公園は最高だから)", "全部！(どれも楽しいから)", "全部！(遊び場がいっぱいだから)", "選べない！(全部最高！)"],
+                a: 0, // 全て正解にしたいがロジック上0
+                hint: "これはボーナス問題です！"
+            }
+        ];
+
+        let currentQ = 0;
+        let score = 0;
+        let canClick = true;
+
+        function startQuiz() {
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('game-screen').classList.remove('hidden');
+            showQuestion();
+        }
+
+        function showQuestion() {
+            canClick = true;
+            const data = quizData[currentQ];
+            document.getElementById('q-number').textContent = `Question ${currentQ + 1} / ${quizData.length}`;
+            document.getElementById('question-text').textContent = data.q;
+            document.getElementById('progress-fill').style.width = `${((currentQ + 1) / quizData.length) * 100}%`;
+
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+
+            data.o.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerHTML = `<span class="text-2xl opacity-40">${String.fromCharCode(65 + idx)}</span> ${opt}`;
+                btn.onclick = () => handleSelect(idx, btn);
+                container.appendChild(btn);
+            });
+        }
+
+        function handleSelect(idx, btn) {
+            if (!canClick) return;
+            canClick = false;
+
+            const correct = quizData[currentQ].a;
+            const btns = document.querySelectorAll('.option-btn');
+
+            if (idx === correct || currentQ === 4) { // 最後の問題は全部正解扱い
+                btn.classList.add('correct');
+                score++;
+                document.getElementById('score-text').textContent = `正解: ${score}`;
+                spawnConfetti();
+            } else {
+                btn.classList.add('wrong');
+                btns[correct].classList.add('correct');
+            }
+
+            setTimeout(() => {
+                currentQ++;
+                if (currentQ < quizData.length) {
+                    showQuestion();
+                } else {
+                    showResult();
+                }
+            }, 1800);
+        }
+
+        function showResult() {
+            document.getElementById('game-screen').classList.add('hidden');
+            document.getElementById('result-screen').style.display = 'block';
+            document.getElementById('final-score').textContent = `${score} / ${quizData.length}`;
+
+            let name = "埼玉初心者";
+            let desc = "もっと公園に出かけて、埼玉の魅力を発見しよう！";
+            let emoji = "🔰";
+
+            if (score === 5) {
+                name = "伝説の埼玉マスター";
+                desc = "完璧です！あなたは埼玉の公園を知り尽くした、まさにマスター。秘密のクーポン『SAITAMA-MAX』を公園売店（風）で伝えよう！";
+                emoji = "🏆";
+                for(let i=0; i<5; i++) setTimeout(spawnConfetti, i * 300);
+            } else if (score >= 3) {
+                name = "埼玉探検家";
+                desc = "なかなかの知識ですね！あと一歩でマスターです。週末は新しい公園を開拓してみませんか？";
+                emoji = "✨";
+            }
+
+            document.getElementById('rank-name').textContent = name;
+            document.getElementById('rank-desc').textContent = desc;
+            document.getElementById('result-emoji').textContent = emoji;
+        }
+
+        function spawnConfetti() {
+            for (let i = 0; i < 30; i++) {
+                const c = document.createElement('div');
+                c.className = 'confetti';
+                c.style.left = Math.random() * 100 + 'vw';
+                c.style.top = '-10px';
+                c.style.backgroundColor = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'][Math.floor(Math.random() * 6)];
+                c.style.transform = `rotate(${Math.random() * 360}deg)`;
+                document.body.appendChild(c);
+
+                const anim = c.animate([
+                    { top: '-10px', opacity: 1 },
+                    { top: '100vh', opacity: 0 }
+                ], {
+                    duration: Math.random() * 2000 + 1000,
+                    easing: 'cubic-bezier(0, 1, 1, 1)'
+                });
+                anim.onfinish = () => c.remove();
+            }
+        }
+    </script>
+</body>
+</html>

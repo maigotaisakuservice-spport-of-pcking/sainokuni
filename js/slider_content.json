@@ -1,0 +1,32 @@
+[
+    {
+        "title": "大宮公園：春のさくら祭り2026",
+        "link": "destinations/omiya_park.html",
+        "description": "「日本さくら名所100選」に選ばれた県内屈指の桜スポット。夜桜ライトアップや屋台も楽しめます。",
+        "source": "大宮公園"
+    },
+    {
+        "title": "国営武蔵丘陵森林公園：新アスレチック登場",
+        "link": "destinations/shinrin_park.html",
+        "description": "日本最大級のネット遊具「冒険コース」がリニューアル！広大な森の中で一日中遊び尽くせます。",
+        "source": "森林公園"
+    },
+    {
+        "title": "所沢航空記念公園：空と緑のフェスタ",
+        "link": "destinations/tokorozawa_park.html",
+        "description": "日本航空発祥の地。広い芝生広場や航空発祥記念館、テニスコートなど家族で楽しめる施設が充実。",
+        "source": "所沢航空公園"
+    },
+    {
+        "title": "北浦和公園：音楽噴水と芸術の散歩道",
+        "link": "destinations/kita_urawa_park.html",
+        "description": "彫刻が点在する美しい園内と、定時に奏でられる音楽噴水が魅力。県立近代美術館も併設された芸術の公園。",
+        "source": "北浦和公園"
+    },
+    {
+        "title": "秋ヶ瀬公園：広大な自然のオアシス",
+        "link": "destinations/akigase_park.html",
+        "description": "荒川河川敷に広がる野鳥の宝庫。バーベキューエリアやスポーツ施設も充実した県民の憩いの場。",
+        "source": "秋ヶ瀬公園"
+    }
+]

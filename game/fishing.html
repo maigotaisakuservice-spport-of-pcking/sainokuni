@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>長瀞フィッシング！ | PLAY-HUB SAITAMA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "selector"
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Mochiy+Pop+One&family=DotGothic16&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/common.css">
+    <style>
+        body { font-family: 'Noto Sans JP', sans-serif; overflow: hidden; background: #0288d1; }
+        #game-container { position: relative; width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; }
+        canvas { background: linear-gradient(#4fc3f7, #0288d1); border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.4); max-width: 95%; max-height: 85%; }
+
+        .ui-layer { position: absolute; inset: 0; pointer-events: none; padding: 1rem; display: flex; flex-direction: column; justify-content: space-between; }
+        .back-btn { position: absolute; top: 1rem; left: 1rem; pointer-events: auto; background: white; padding: 0.4rem 1rem; border-radius: 50px; font-weight: bold; color: #0288d1; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: all 0.2s; z-index: 100; font-size: 0.8rem; }
+        .back-btn:hover { transform: scale(1.05); background: #f0f9ff; }
+
+        .score-board { background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); color: white; padding: 0.8rem 1.5rem; border-radius: 20px; border: 2px solid rgba(255,255,255,0.2); pointer-events: auto; }
+
+        .action-area { display: flex; justify-content: center; padding-bottom: 1rem; }
+        .hit-btn {
+            pointer-events: auto; width: 100px; height: 100px; background: #ff5722; color: white; border-radius: 50%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'Mochiy Pop One';
+            border: 6px solid #fbe9e7; box-shadow: 0 8px 20px rgba(0,0,0,0.4); cursor: pointer; transition: all 0.1s;
+        }
+        .hit-btn:active { transform: scale(0.9) translateY(4px); box-shadow: 0 2px 5px rgba(0,0,0,0.4); }
+        .hit-btn .label { font-size: 1.2rem; line-height: 1; margin-bottom: 2px; }
+        .hit-btn .sub { font-size: 0.6rem; opacity: 0.8; }
+
+        #result-screen { position: absolute; inset: 0; background: rgba(0,10,30,0.85); backdrop-filter: blur(10px); display: none; flex-direction: column; items: center; justify-content: center; color: white; z-index: 200; }
+        .badge { font-size: 5rem; margin-bottom: 1rem; animation: bounce 1s infinite; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+    </style>
+</head>
+<body>
+
+    <div id="game-container">
+        <a href="../saitama_mini_game.html" class="back-btn">🔙 ゲーム一覧</a>
+
+        <canvas id="gameCanvas" width="900" height="550"></canvas>
+
+        <div class="ui-layer">
+            <div class="flex justify-between items-start pointer-events-auto mt-12 md:mt-0">
+                <div class="score-board">
+                    <div class="text-xs opacity-70 uppercase tracking-widest mb-1">Total Score</div>
+                    <div id="score" class="text-2xl md:text-4xl font-black" style="font-family: 'DotGothic16';">00000</div>
+                </div>
+                <div class="score-board text-center">
+                    <div class="text-xs opacity-70 mb-1">Time Left</div>
+                    <div id="timer" class="text-2xl md:text-4xl font-black text-yellow-400" style="font-family: 'DotGothic16';">60</div>
+                </div>
+            </div>
+
+            <div class="action-area">
+                <button id="hit-btn" class="hit-btn">
+                    <span class="label">HIT!</span>
+                    <span class="sub">釣る！</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="result-screen">
+            <div id="result-badge" class="badge">🐟</div>
+            <h2 id="result-title" class="text-4xl font-black mb-2" style="font-family: 'Mochiy Pop One';">お疲れ様！</h2>
+            <p id="result-score-text" class="text-2xl mb-8">スコア: 0 pts</p>
+            <div id="rank-card" class="bg-white/10 p-6 rounded-3xl border border-white/20 text-center mb-8 max-w-sm">
+                <h3 class="text-yellow-400 font-bold text-xl mb-2">称号獲得！</h3>
+                <p id="rank-name" class="text-3xl font-black mb-4" style="font-family: 'DotGothic16';">長瀞の見習い</p>
+                <p id="rank-desc" class="text-sm opacity-80">もっと練習して「埼玉フィッシングマスター」を目指そう！</p>
+            </div>
+            <div class="flex gap-4">
+                <button onclick="location.reload()" class="bg-white text-blue-900 font-bold py-3 px-8 rounded-full hover:bg-yellow-400 hover:text-blue-900 transition-colors">もう一回あそぶ</button>
+                <a href="../saitama_mini_game.html" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-full hover:bg-blue-500 transition-colors">戻る</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/common.js" defer></script>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreEl = document.getElementById('score');
+        const timerEl = document.getElementById('timer');
+        const hitBtn = document.getElementById('hit-btn');
+        const resultScreen = document.getElementById('result-screen');
+
+        let score = 0;
+        let timeLeft = 45;
+        let isGameOver = false;
+
+        // ボートとフック
+        const boat = { x: 450, y: 80, width: 140, height: 60 };
+        const hook = { x: 450, y: 120, state: 'idle', speed: 10, angle: 0, swingRange: 0.8, swingSpeed: 0.03 };
+
+        // 魚の種類
+        const fishTypes = [
+            { emoji: '🐟', name: 'アユ', color: '#bdbdbd', size: 25, points: 100, speed: 2 },
+            { emoji: '🐠', name: 'イワナ', color: '#795548', size: 30, points: 250, speed: 3.5 },
+            { emoji: '🐡', name: 'ヤマメ', color: '#8d6e63', size: 28, points: 180, speed: 2.8 },
+            { emoji: '🦈', name: 'コイ', color: '#424242', size: 45, points: 600, speed: 1.5 },
+            { emoji: '🦐', name: 'エビ', color: '#ff8a65', size: 15, points: 50, speed: 4 }
+        ];
+
+        let fishes = [];
+        let particles = [];
+
+        function spawnFish() {
+            if (fishes.length < 8) {
+                const type = fishTypes[Math.floor(Math.random() * fishTypes.length)];
+                const dir = Math.random() < 0.5 ? 1 : -1;
+                fishes.push({
+                    x: dir === 1 ? -100 : canvas.width + 100,
+                    y: 250 + Math.random() * 200,
+                    dir: dir,
+                    caught: false,
+                    ...type
+                });
+            }
+        }
+
+        function createParticles(x, y, color) {
+            for(let i=0; i<10; i++) {
+                particles.push({
+                    x: x, y: y,
+                    vx: (Math.random() - 0.5) * 10,
+                    vy: (Math.random() - 0.5) * 10,
+                    life: 1.0,
+                    color: color
+                });
+            }
+        }
+
+        function update() {
+            if (isGameOver) return;
+
+            // フックのスイング
+            if (hook.state === 'idle') {
+                hook.angle = Math.sin(Date.now() * hook.swingSpeed) * hook.swingRange;
+            } else if (hook.state === 'dropping') {
+                hook.y += hook.speed;
+                hook.x += Math.sin(hook.angle) * hook.speed;
+                if (hook.y > canvas.height - 50 || hook.x < 50 || hook.x > canvas.width - 50) {
+                    hook.state = 'retracting';
+                }
+            } else if (hook.state === 'retracting') {
+                const dx = 450 - hook.x;
+                const dy = 120 - hook.y;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                if (dist < hook.speed) {
+                    hook.x = 450;
+                    hook.y = 120;
+                    hook.state = 'idle';
+                } else {
+                    hook.x += (dx / dist) * hook.speed;
+                    hook.y += (dy / dist) * hook.speed;
+                }
+            }
+
+            // 魚のアップデート
+            fishes.forEach((fish, i) => {
+                if (fish.caught) {
+                    fish.x = hook.x;
+                    fish.y = hook.y + 10;
+                    if (hook.state === 'idle') {
+                        score += fish.points;
+                        scoreEl.textContent = score.toString().padStart(5, '0');
+                        createParticles(hook.x, hook.y, '#ffd54f');
+                        fishes.splice(i, 1);
+                    }
+                } else {
+                    fish.x += fish.dir * fish.speed;
+                    if (fish.x < -150 || fish.x > canvas.width + 150) {
+                        fishes.splice(i, 1);
+                    }
+                    // 当たり判定
+                    if (hook.state === 'dropping') {
+                        const dx = hook.x - fish.x;
+                        const dy = hook.y - fish.y;
+                        if (Math.sqrt(dx*dx + dy*dy) < fish.size + 10) {
+                            fish.caught = true;
+                            hook.state = 'retracting';
+                            createParticles(hook.x, hook.y, '#ffffff');
+                        }
+                    }
+                }
+            });
+
+            // パーティクル
+            particles.forEach((p, i) => {
+                p.x += p.vx; p.y += p.vy; p.life -= 0.02;
+                if (p.life <= 0) particles.splice(i, 1);
+            });
+
+            spawnFish();
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 水面下
+            ctx.fillStyle = 'rgba(2, 136, 209, 0.4)';
+            ctx.fillRect(0, 150, canvas.width, canvas.height - 150);
+
+            // 泡エフェクト
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+            for(let i=0; i<5; i++) {
+                const x = (Date.now() * 0.05 + i * 200) % canvas.width;
+                const y = 200 + (i * 80) % 300;
+                ctx.beginPath(); ctx.arc(x, y, 10 + Math.sin(Date.now()*0.01 + i)*5, 0, Math.PI*2); ctx.fill();
+            }
+
+            // 釣り糸
+            ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.moveTo(450, 100); ctx.lineTo(hook.x, hook.y); ctx.stroke();
+
+            // フック (針)
+            ctx.save();
+            ctx.translate(hook.x, hook.y);
+            ctx.rotate(hook.angle);
+            ctx.strokeStyle = '#ffd54f'; ctx.lineWidth = 4;
+            ctx.beginPath(); ctx.arc(0, 0, 10, 0, Math.PI, false); ctx.stroke();
+            ctx.restore();
+
+            // ボート (丸みのある可愛いデザイン)
+            ctx.fillStyle = '#795548';
+            ctx.beginPath(); ctx.roundRect(450 - 70, 80 - 30, 140, 50, [0, 0, 30, 30]); ctx.fill();
+            ctx.fillStyle = '#a1887f';
+            ctx.fillRect(450-20, 50, 40, 10);
+
+            // 魚の描画
+            fishes.forEach(fish => {
+                ctx.font = `${fish.size * 1.5}px serif`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.save();
+                ctx.translate(fish.x, fish.y);
+                if (fish.dir === -1) ctx.scale(-1, 1);
+                ctx.fillText(fish.emoji, 0, 0);
+                ctx.restore();
+            });
+
+            // パーティクル
+            particles.forEach(p => {
+                ctx.globalAlpha = p.life; ctx.fillStyle = p.color;
+                ctx.beginPath(); ctx.arc(p.x, p.y, 4, 0, Math.PI*2); ctx.fill();
+            });
+            ctx.globalAlpha = 1.0;
+        }
+
+        function gameLoop() {
+            update();
+            draw();
+            if (!isGameOver) requestAnimationFrame(gameLoop);
+        }
+
+        hitBtn.addEventListener('click', () => {
+            if (hook.state === 'idle' && !isGameOver) {
+                hook.state = 'dropping';
+            }
+        });
+
+        const gameTimer = setInterval(() => {
+            if (timeLeft > 0) {
+                timeLeft--;
+                timerEl.textContent = timeLeft;
+                if (timeLeft <= 10) timerEl.classList.add('animate-pulse', 'text-red-500');
+            } else {
+                showResult();
+            }
+        }, 1000);
+
+        function showResult() {
+            isGameOver = true;
+            clearInterval(gameTimer);
+
+            let rank = "長瀞の見習い";
+            let desc = "もっと練習して「埼玉フィッシングマスター」を目指そう！";
+            let icon = "🐟";
+
+            if (score >= 5000) {
+                rank = "埼玉フィッシングマスター";
+                desc = "すごい！君は長瀞の川を知り尽くした本物の名人だ！";
+                icon = "🏆";
+            } else if (score >= 3000) {
+                rank = "ベテラン釣り師";
+                desc = "なかなかの腕前だね。次は5000点を目指してみよう！";
+                icon = "✨";
+            }
+
+            document.getElementById('result-badge').textContent = icon;
+            document.getElementById('rank-name').textContent = rank;
+            document.getElementById('rank-desc').textContent = desc;
+            document.getElementById('result-score-text').textContent = `スコア: ${score} pts`;
+            resultScreen.style.display = 'flex';
+        }
+
+        gameLoop();
+    </script>
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PARK NEWS | SAITAMA PARKS 2026</title>
+    <script defer src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "selector"
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Mochiy+Pop+One&family=DotGothic16&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        .header-main {
+            background: var(--header-bg);
+            backdrop-filter: blur(10px);
+            color: #ecf0f1;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0; width: 100%; z-index: 1000;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+<header class="header-main">
+    <div class="flex items-center gap-4">
+        <h1 class="text-2xl font-bold tracking-tighter" style="font-family: 'Mochiy Pop One';"><a href="index.html">SAITAMA PARKS</a></h1>
+    </div>
+    <nav class="flex items-center gap-4 md:gap-8">
+        <a href="destinations/kita_urawa_park.html" class="hover-accent-text font-bold text-sm md:text-base">公園を探す</a>
+        <a href="map.html" class="hover-accent-text font-bold text-sm md:text-base">マップ</a>
+        <a href="saitama_mini_game.html" class="hover-accent-text font-bold text-sm md:text-base">ゲーム</a>
+        <button onclick="toggleMenu()" class="hover-accent-text font-bold text-sm md:text-base">MENU</button>
+        <div class="flex items-center gap-2 ml-2 border-l border-white/20 pl-4">
+            <button onclick="toggleAccessibilityPanel()" class="hover:scale-110 transition-transform text-xl" id="theme-toggle-icon" title="アクセシビリティ設定">⚙️</button>
+        </div>
+    </nav>
+</header>
+
+    <!-- モバイルメニュー -->
+    <div id="menu-overlay" class="menu-overlay" onclick="toggleMenu()"></div>
+    <div id="menu-content" class="menu-content">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-xl font-bold" style="font-family: 'Mochiy Pop One';">MENU</h2>
+                <button onclick="toggleMenu()" class="text-2xl">&times;</button>
+            </div>
+            <nav class="flex flex-col gap-6 text-lg">
+                <a href="index.html" class="flex items-center gap-3">🏠 ホーム</a>
+                <a href="destinations/kita_urawa_park.html" class="flex items-center gap-3">🌳 公園を探す</a>
+                <a href="map.html" class="flex items-center gap-3">🗺️ マップ</a>
+                <a href="saitama_mini_game.html" class="flex items-center gap-3">🎮 ゲーム</a>
+                <hr class="border-slate-700">
+                <button onclick="toggleTheme()" class="flex items-center gap-3 w-full text-left"><span id="theme-toggle-icon-mobile">🌳</span> カラー変更</button>
+                <button onclick="toggleDarkMode()" class="flex items-center gap-3 w-full text-left"><span>🌓</span> ダークモード切替</button>
+            </nav>
+        </div>
+    </div>
+
+    <main class="max-w-7xl mx-auto px-6 mt-[120px] mb-20">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-bold mb-4" style="font-family: 'Mochiy Pop One'; color: var(--primary-color);">PARK NEWS</h2>
+            <div class="h-1 w-20 bg-[var(--primary-color)] mx-auto mb-6"></div>
+            <p class="text-gray-500">埼玉の公園の「今」をお届けします（2026年3月22日更新）</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Article Card 1 -->
+            <article class="bg-[var(--card-bg)] rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-gray-100 dark:border-slate-700 flex flex-col">
+                <a href="news/kita_urawa_event.html" class="block aspect-video overflow-hidden">
+                    <img loading="lazy" decoding="async" src="images/kita_urawa_park.jpg" alt="北浦和公園キャンプ" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500" loading="lazy" decoding="async">
+                </a>
+                <div class="p-6 flex-1 flex flex-col">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">EVENT</span>
+                        <time class="text-xs text-gray-400">2026.03.22</time>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 leading-tight hover:text-[var(--primary-color)] transition-colors">
+                        <a href="news/kita_urawa_event.html">北浦和公園：春のファミリーキャンプフェスタ開催！</a>
+                    </h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-3 mb-6 flex-1">
+                        手ぶらで楽しめるデイキャンプ体験や、地元の新鮮野菜を使ったBBQコーナーが登場。小動物園も夜間特別開園！
+                    </p>
+                    <a href="news/kita_urawa_event.html" class="text-sm font-bold flex items-center gap-2" style="color: var(--primary-color);">
+                        詳しく見る
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </a>
+                </div>
+            </article>
+
+            <!-- Article Card 2 -->
+            <article class="bg-[var(--card-bg)] rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-gray-100 dark:border-slate-700 flex flex-col">
+                <a href="news/omiya_barrier_free.html" class="block aspect-video overflow-hidden">
+                    <img loading="lazy" decoding="async" src="images/omiya_park.jpg" alt="大宮公園バリアフリー" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500" loading="lazy" decoding="async">
+                </a>
+                <div class="p-6 flex-1 flex flex-col">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">FACILITY</span>
+                        <time class="text-xs text-gray-400">2026.03.18</time>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 leading-tight hover:text-[var(--primary-color)] transition-colors">
+                        <a href="news/omiya_barrier_free.html">大宮公園：日本庭園エリアのバリアフリー改修が完了</a>
+                    </h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-3 mb-6 flex-1">
+                        車いすやベビーカーでもスムーズに散策できるよう通路を改修。多目的トイレも最新設備にリニューアル。
+                    </p>
+                    <a href="news/omiya_barrier_free.html" class="text-sm font-bold flex items-center gap-2" style="color: var(--primary-color);">
+                        詳しく見る
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </a>
+                </div>
+            </article>
+
+            <!-- Article Card 3 -->
+            <article class="bg-[var(--card-bg)] rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-gray-100 dark:border-slate-700 flex flex-col">
+                <a href="news/shinrin_nemophila.html" class="block aspect-video overflow-hidden">
+                    <img loading="lazy" decoding="async" src="images/shinrin_park.jpg" alt="森林公園ネモフィラ" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500" loading="lazy" decoding="async">
+                </a>
+                <div class="p-6 flex-1 flex flex-col">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">INFO</span>
+                        <time class="text-xs text-gray-400">2026.03.12</time>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 leading-tight hover:text-[var(--primary-color)] transition-colors">
+                        <a href="news/shinrin_nemophila.html">森林公園：ネモフィラの花畑が見頃を迎えました</a>
+                    </h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-3 mb-6 flex-1">
+                        西口エリアにある広大な花畑で、約10万本のネモフィラが満開。空と溶け合う青い絶景を楽しめます。
+                    </p>
+                    <a href="news/shinrin_nemophila.html" class="text-sm font-bold flex items-center gap-2" style="color: var(--primary-color);">
+                        詳しく見る
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </a>
+                </div>
+            </article>
+        </div>
+
+        <div class="mt-20">
+            <!-- External Link Section -->
+            <div class="bg-gray-50 dark:bg-slate-800 p-8 rounded-3xl border border-gray-100 dark:border-slate-700">
+                <h4 class="font-bold mb-4">県内公園の開花情報・イベント（公式）</h4>
+                <ul class="space-y-4">
+                    <li>
+                        <a href="https://www.pref.saitama.lg.jp/news/index.html" target="_blank" class="flex justify-between items-center group">
+                            <span class="group-hover:font-bold transition-colors">埼玉県 公園・緑地情報公式サイト</span>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+<footer>
+    <div class="max-w-6xl mx-auto px-6">
+        <div class="footer-logo">SAITAMA PARKS</div>
+        <hr>
+        <p class="text-sm opacity-80">© 2026 埼玉県公園ガイドポータル - 自然と共に生きる。</p>
+        <div class="footer-links mt-8 flex justify-center gap-12 text-sm flex-wrap">
+            <a onclick="openModal('about')" class="cursor-pointer">サイトについて</a>
+            <a onclick="openModal('access')" class="cursor-pointer">アクセス</a>
+            <a onclick="openModal('copyright')" class="cursor-pointer">著作権</a>
+        </div>
+    </div>
+</footer>
+
+    <button onclick="scrollToTop()" class="go-to-top-button" aria-label="トップへ戻る">↑</button>
+    <script defer src="js/common.js" defer></script>
+</body>
+</html>

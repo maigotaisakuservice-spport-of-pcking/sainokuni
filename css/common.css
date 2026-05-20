@@ -1,0 +1,505 @@
+
+:root {
+    /* Base Colors */
+    --saitama-blue: #00ACC1;
+    --saitama-green: #2E7D32;
+    --saitama-red: #F44336;
+
+    /* Default Theme (Green) */
+    --primary-color: var(--saitama-green);
+    --bg-color: #ffffff;
+    --text-color: #1a202c;
+    --card-bg: #f8fafc;
+    --card-shadow: rgba(0, 0, 0, 0.1);
+    --header-bg: #1b5e20;
+    --footer-bg: #1b5e20;
+    --border-color: #e2e8f0;
+    --recommend-bg: #f0f4f8;
+    --accent-bg: #ecfdf5; /* emerald-50 equivalent */
+    --accent-bg-dark: #111827; /* gray-900 equivalent for dark */
+    --accent-btn: #059669; /* emerald-600 equivalent */
+    --accent-btn-hover: #047857; /* emerald-700 equivalent */
+    --accent-border: #d1fae5; /* emerald-100 equivalent */
+    --accent-light: #34d399; /* emerald-400 equivalent */
+}
+
+/* Blue Theme */
+[data-theme="blue"] {
+    --primary-color: var(--saitama-blue);
+    --header-bg: #007c91;
+    --footer-bg: #007c91;
+    --accent-bg: #f0f9ff; /* sky-50 equivalent */
+    --accent-btn: #0284c7; /* sky-600 equivalent */
+    --accent-btn-hover: #0369a1; /* sky-700 equivalent */
+    --accent-border: #e0f2fe; /* sky-100 equivalent */
+    --accent-light: #38bdf8; /* sky-400 equivalent */
+}
+
+/* Red Theme */
+[data-theme="red"] {
+    --primary-color: var(--saitama-red);
+    --header-bg: #b91d1d;
+    --footer-bg: #b91d1d;
+    --accent-bg: #fef2f2; /* red-50 equivalent */
+    --accent-btn: #dc2626; /* red-600 equivalent */
+    --accent-btn-hover: #b91c1c; /* red-700 equivalent */
+    --accent-border: #fee2e2; /* red-100 equivalent */
+    --accent-light: #f87171; /* red-400 equivalent */
+}
+
+.hover-accent-text:hover {
+    color: var(--accent-light) !important;
+}
+
+/* Dark Mode Overlay */
+[data-mode="dark"] {
+    --bg-color: #0f172a;
+    --text-color: #f8fafc; /* Slightly brighter for better contrast */
+    --card-bg: #1e293b;
+    --card-shadow: rgba(0, 0, 0, 0.6);
+    --border-color: #334155;
+    --header-bg: #1e293b;
+    --footer-bg: #020617; /* Deeper black for footer in dark mode */
+}
+
+[data-mode="dark"] .text-slate-500 {
+    color: #94a3b8 !important; /* Brighter slate for readability */
+}
+
+[data-mode="dark"] .bg-slate-100 {
+    background-color: #334155 !important;
+}
+
+[data-mode="dark"] .bg-slate-50 {
+    background-color: #1e293b !important;
+}
+
+[data-mode="dark"] .bg-white {
+    background-color: #1e293b !important;
+}
+
+body {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: clamp(16px, 2vw, 18px); /* Slightly larger base size for mobile readability */
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
+    line-height: 1.8; /* Increased line-height for better legibility */
+}
+
+/* 読了インジケーター */
+#reading-progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: transparent;
+    z-index: 10000;
+}
+#reading-progress-bar {
+    width: 0%;
+    height: 100%;
+    background: var(--saitama-blue);
+    transition: width 0.1s;
+}
+
+/* FAB - トップへ戻るボタン */
+.go-to-top-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background-color: var(--saitama-blue);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    cursor: pointer;
+    z-index: 999;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    transition: transform 0.3s, background-color 0.3s, opacity 0.3s;
+    opacity: 0;
+}
+.go-to-top-button.visible {
+    display: flex;
+    opacity: 1;
+    animation: fadeIn 0.3s forwards;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.go-to-top-button:hover {
+    transform: scale(1.1);
+    opacity: 0.9;
+}
+
+/* 観光地ページテンプレート用追加スタイル */
+.hero-image-container {
+    width: 100%;
+    height: 60vh;
+    overflow: hidden;
+    position: relative;
+    border-radius: 0 0 50px 50px;
+    margin-bottom: 2rem;
+}
+.hero-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0;
+}
+.hero-title {
+    position: absolute;
+    bottom: 30px;
+    left: 30px;
+    color: white;
+    text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+    font-size: clamp(24px, 5vw, 48px);
+    font-weight: 700;
+    margin: 0;
+}
+
+.recommend-section {
+    margin-top: 4rem;
+    padding: 2rem;
+    background: var(--recommend-bg);
+    border-radius: 20px;
+    transition: background-color 0.3s;
+}
+.recommend-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+.recommend-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px var(--card-shadow);
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.3s, background-color 0.3s;
+    text-align: center;
+}
+.recommend-card:hover {
+    transform: translateY(-5px);
+}
+.recommend-card img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 0;
+}
+.recommend-card p {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* ハンバーガーメニュー (共通) */
+.hamburger-menu {
+    position: relative;
+}
+.hamburger-btn {
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 1100;
+}
+.menu-content {
+    position: fixed;
+    top: 0;
+    right: -300px;
+    width: 300px;
+    height: 100vh;
+    background: var(--header-bg);
+    color: #fff;
+    z-index: 1050;
+    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 80px 30px;
+    box-shadow: -5px 0 20px rgba(0,0,0,0.5);
+    overflow-y: auto;
+    visibility: hidden;
+    pointer-events: none;
+}
+.menu-content.active {
+    right: 0;
+    visibility: visible;
+    pointer-events: auto;
+}
+.menu-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1040;
+    display: none;
+}
+.menu-overlay.active {
+    display: block;
+}
+.menu-list {
+    list-style: none;
+    padding: 0;
+}
+.menu-list li {
+    margin-bottom: 20px;
+}
+.menu-list a {
+    color: inherit;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+.menu-list a:hover {
+    color: var(--saitama-blue);
+}
+.menu-title {
+    font-size: 0.8rem;
+    color: #cbd5e0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    margin-top: 30px;
+}
+
+/* ヘッダー・フッター追加スタイル */
+header {
+    background-color: var(--header-bg);
+    color: #fff !important;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    transition: background-color 0.5s;
+    height: 60px; /* Slimmer header for mobile space */
+    display: flex;
+    align-items: center;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+}
+header a { color: #fff !important; text-decoration: none !important; }
+header a:hover { color: #fff !important; opacity: 0.8; }
+
+footer {
+    background-color: var(--footer-bg);
+    color: #fff !important;
+    transition: background-color 0.5s;
+    padding: 3rem 0;
+    margin-top: 5rem;
+}
+footer .footer-logo {
+    font-family: 'Mochiy Pop One', sans-serif;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+footer hr {
+    border: none;
+    border-top: 1px solid rgba(255,255,255,0.2);
+    margin: 1.5rem 0;
+}
+footer a { color: #fff !important; opacity: 0.8; text-decoration: none !important; }
+footer a:hover { opacity: 1; text-decoration: underline !important; }
+
+/* Elements using Primary Color */
+.section-title::after { background: var(--primary-color) !important; }
+
+/* Park Feature Icons */
+.feature-list {
+    display: flex;
+    overflow-x: auto; /* Horizontal scroll on small screens */
+    gap: 10px;
+    margin: 1.5rem 0;
+    padding-bottom: 10px;
+    scrollbar-width: none; /* Hide scrollbar for clean look */
+}
+.feature-list::-webkit-scrollbar { display: none; }
+.feature-item {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0; /* Don't squash items */
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 12px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    font-size: 0.85rem;
+    font-weight: 700;
+    box-shadow: 0 2px 4px var(--card-shadow);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.feature-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px var(--card-shadow);
+}
+.feature-item.inactive {
+    opacity: 0.4;
+    filter: grayscale(1);
+    font-weight: 400;
+}
+
+/* Animations */
+.fade-in-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+.fade-in-up.appear {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Family Specifics */
+.family-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+.family-info-card {
+    background: var(--card-bg);
+    padding: 1.5rem;
+    border-radius: 20px;
+    border-top: 4px solid var(--primary-color);
+    box-shadow: 0 4px 12px var(--card-shadow);
+}
+.toilet-rating {
+    display: inline-flex;
+    gap: 2px;
+    color: #fbbf24; /* amber-400 */
+    font-size: 1.2rem;
+}
+
+/* Animations & Hover Effects */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.hover-lift {
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s;
+}
+.hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px var(--card-shadow);
+}
+
+/* note-style news classes */
+.note-container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+.note-article {
+    margin-bottom: 60px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--border-color);
+}
+.note-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+.note-meta {
+    font-size: 0.85rem;
+    color: #718096;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.note-thumbnail {
+    width: 100%;
+    aspect-ratio: 1.91 / 1;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+.note-excerpt {
+    font-size: 1rem;
+    color: var(--text-color);
+    line-height: 1.7;
+    margin-bottom: 20px;
+}
+.note-link {
+    color: var(--primary-color);
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+.note-link:hover {
+    text-decoration: underline;
+}
+
+/* Modal styles for consistency */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 5000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+}
+.modal-content {
+    background-color: var(--bg-color);
+    padding: 2.5rem;
+    border-radius: 24px;
+    max-width: 600px;
+    width: 90%;
+    position: relative;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+.modal-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 28px;
+    cursor: pointer;
+    color: #718096;
+}
+
+/* Mobile-First UI/UX Overhaul Fixes */
+@media (max-width: 768px) {
+    header { height: 50px; }
+    .header-main { padding: 0 0.75rem; height: 50px; }
+    .header-main h1 { font-size: 1.2rem !important; }
+    .header-main nav > a { display: none; } /* Hide text links on mobile, use MENU instead */
+    .header-main nav .border-l { border-left: none; padding-left: 0.5rem; }
+
+    .hero-slider { height: 50vh; }
+    .hero-text { font-size: 2rem !important; padding: 0 1rem; }
+    .section-title { font-size: 1.5rem; margin-bottom: 1.5rem; }
+    section { padding: 2.5rem 1rem; }
+    .article-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+    .widget-container { flex-direction: column; gap: 1rem; }
+    .widget-card { min-width: 100%; padding: 1.25rem; }
+
+    #chat-widget-container { width: 94vw; right: 3vw; bottom: 85px; height: 80vh; }
+    .chat-toggle-btn { bottom: 20px; right: 20px; width: 50px; height: 50px; }
+    .go-to-top-button { bottom: 20px; right: 80px; width: 50px; height: 50px; }
+
+    .hero-image-container { height: 35vh; border-radius: 0 0 25px 25px; margin-top: 50px !important; }
+    .family-info-grid { grid-template-columns: 1fr; gap: 1rem; }
+    main { padding: 0 1rem 3rem; }
+    .hero-title { left: 15px; bottom: 15px; font-size: 1.6rem; }
+
+    #rss-mini-slider { bottom: 5px; padding: 0.5rem; font-size: 0.75rem; }
+}
