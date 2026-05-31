@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>彩の国ポータル 2026 | 埼玉県紹介サイト</title>
+    <title>SAITAMA PARKS 2026 | SAITAMA PARKS</title>
     <script defer src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -229,7 +229,7 @@
         <div class="widget-card">
             <h3 class="font-bold mb-4">イベントカウントダウン</h3>
             <div id="countdown" class="text-xl">
-                森林公園・紅葉ライトアップまで あと <span id="days-to-festival" class="text-red-500 font-bold">--</span> 日
+                さいたま市花火大会（大和田会場）まで あと <span id="days-to-festival" class="text-red-500 font-bold">--</span> 日
             </div>
         </div>
     </div>
@@ -276,7 +276,7 @@
             </div>
             <div class="p-6">
                 <h3 class="text-xl font-bold mb-2">北浦和公園：水と緑のオアシス</h3>
-                <p class="opacity-70 text-sm">小動物園や水遊び場など、一日中楽しめる総合公園。</p>
+                <p class="opacity-70 text-sm">音楽噴水や美術館、彫刻が楽しめる文化的な総合公園。</p>
             </div>
         </a>
         <a href="destinations/omiya_park.html" class="article-card">
@@ -289,14 +289,14 @@
                 <p class="opacity-70 text-sm">日本さくら名所100選にも選ばれた、県内屈指の広大な公園。</p>
             </div>
         </a>
-        <a href="destinations/shinrin_park.html" class="article-card">
+        <a href="destinations/oowada_park.html" class="article-card">
             <div class="relative">
-                <img loading="lazy" decoding="async" src="images/shinrin_park.jpg" alt="森林公園" class="w-full h-48 object-cover" loading="lazy" decoding="async">
-                <div class="absolute top-4 left-4 bg-sky-600 text-white text-[10px] font-bold px-2 py-1 rounded">広い</div>
+                <img loading="lazy" decoding="async" src="images/omiya_park.jpg" alt="大和田公園" class="w-full h-48 object-cover" loading="lazy" decoding="async">
+                <div class="absolute top-4 left-4 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded">イチオシ</div>
             </div>
             <div class="p-6">
-                <h3 class="text-xl font-bold mb-2">国営武蔵丘陵森林公園</h3>
-                <p class="opacity-70 text-sm">東京ドーム65個分の広さ！サイクリングや大型遊具が充実。</p>
+                <h3 class="text-xl font-bold mb-2">大和田公園：花火の聖地</h3>
+                <p class="opacity-70 text-sm">さいたま市花火大会の会場。夏は市民プールも大人気！</p>
             </div>
         </a>
     </div>
@@ -314,8 +314,8 @@
     <div class="gallery-grid">
         <div class="gallery-item"><img loading="lazy" decoding="async" src="images/kita_urawa_park.jpg" alt="北浦和公園" loading="lazy" decoding="async"></div>
         <div class="gallery-item"><img loading="lazy" decoding="async" src="images/omiya_park.jpg" alt="大宮公園" loading="lazy" decoding="async"></div>
-        <div class="gallery-item"><img loading="lazy" decoding="async" src="images/tokorozawa_park.jpg" alt="所沢航空公園" loading="lazy" decoding="async"></div>
-        <div class="gallery-item"><img loading="lazy" decoding="async" src="images/shinrin_park.jpg" alt="森林公園" loading="lazy" decoding="async"></div>
+        <div class="gallery-item"><img loading="lazy" decoding="async" src="images/omiya_park.jpg" alt="大和田公園" loading="lazy" decoding="async"></div>
+        <div class="gallery-item"><img loading="lazy" decoding="async" src="images/shinrin_park.jpg" alt="国営武蔵丘陵森林公園" loading="lazy" decoding="async"></div>
         <div class="gallery-item"><img loading="lazy" decoding="async" src="images/akigase_park.jpg" alt="秋ヶ瀬公園" loading="lazy" decoding="async"></div>
         <div class="gallery-item"><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1519331379826-f10be5486c6f?q=80&w=2070&auto=format&fit=crop" alt="公園の木々" loading="lazy" decoding="async"></div>
     </div>
@@ -341,7 +341,7 @@
     <div class="max-w-6xl mx-auto px-6">
         <div class="footer-logo">SAITAMA PARKS</div>
         <hr>
-        <p class="text-sm opacity-80">© 2026 埼玉県公園ガイドポータル - 自然と共に生きる。</p>
+        <p class="text-sm opacity-80">© 2026 SAITAMA PARKS - 自然と共に生きる。</p>
         <div class="footer-links mt-8 flex justify-center gap-8 text-sm flex-wrap">
             <a onclick="openModal('about')" class="cursor-pointer">サイトについて</a>
             <a onclick="openModal('access')" class="cursor-pointer">アクセス</a>
@@ -428,7 +428,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('RSS content load error:', e);
             rssItems = [
                 { "title": "2026年 埼玉公園プロジェクト始動！", "link": "news.html" },
-                { "title": "【注目】北浦和公園の小動物園がリニューアル", "link": "destinations/kita_urawa_park.html" },
+                { "title": "【注目】北浦和公園の音楽噴水ショーがリニューアル", "link": "destinations/kita_urawa_park.html" },
                 { "title": "SAITAMA PARK: 3D公園散策がスタート！", "link": "saitama_mini_game.html" }
             ];
         }
@@ -530,7 +530,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initMiniMap();
 
-    const nextFestival = new Date('2026-11-01');
+    const nextFestival = new Date('2026-07-30'); // 大和田花火大会予定日
     const today = new Date();
     const diff = Math.ceil((nextFestival - today) / (1000 * 60 * 60 * 24));
     const festivalEl = document.getElementById('days-to-festival');
@@ -585,10 +585,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const recommendEl = document.getElementById('weather-recommend');
         if (!recommendEl) return;
 
-        let recommend = { text: "公園日和です！外で遊びましょう！", link: "destinations/shinrin_park.html", name: "森林公園" };
+        let recommend = { text: "公園日和です！イチオシの公園はこちら！", link: "destinations/oowada_park.html", name: "大和田公園" };
 
         if ([1063, 1183, 1186, 1189, 1192, 1195, 1240, 1243, 1246].includes(code)) {
-            recommend = { text: "雨ですね。室内展示が充実したこちらがおすすめ！", link: "destinations/tokorozawa_park.html", name: "所沢航空記念公園" };
+            recommend = { text: "雨ですね。美術館があるこちらがおすすめ！", link: "destinations/kita_urawa_park.html", name: "北浦和公園" };
         } else if ([1066, 1114, 1210, 1213, 1216, 1219, 1222, 1225, 1255, 1258].includes(code)) {
             recommend = { text: "雪の公園も綺麗ですよ。暖かい格好でこちらへ！", link: "destinations/omiya_park.html", name: "大宮公園" };
         } else if (code >= 1003 && code <= 1030) { // 曇りなど

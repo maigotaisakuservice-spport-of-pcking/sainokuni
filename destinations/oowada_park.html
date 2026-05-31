@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大和田公園 | SAITAMA PARKS 2026</title>
+    <!-- Tailwind CSS (CORS/Layout) -->
+    <script defer src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "selector"
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Mochiy+Pop+One&family=DotGothic16&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/common.css">
+    <style>
+        .header-main {
+            background: var(--header-bg);
+            backdrop-filter: blur(10px);
+            color: #ecf0f1;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0; width: 100%; z-index: 1000;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        main { max-width: 900px; margin: 0 auto 4rem; padding: 0 1.5rem; }
+        section { margin-top: 4rem; }
+        h2 { font-size: 2rem; border-bottom: 4px solid var(--primary-color); padding-bottom: 0.5rem; margin-bottom: 1.5rem; }
+        h3 { font-size: 1.5rem; color: var(--primary-color); margin-top: 2rem; }
+        .content-card { background: var(--card-bg); padding: 2rem; border-radius: 24px; box-shadow: 0 4px 15px var(--card-shadow); margin-bottom: 2rem; border: 1px solid var(--border-color); }
+        iframe { width: 100%; height: 500px; border-radius: 20px; border: none; margin-top: 2rem; }
+        .info-list { list-style: none; padding: 0; }
+        .info-list li { background: var(--card-bg); padding: 1.2rem; margin-bottom: 0.8rem; border-radius: 15px; border-left: 6px solid var(--primary-color); box-shadow: 0 2px 5px var(--card-shadow); }
+
+        /* 花火アニメーション用Canvas */
+        #fireworks-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+        .hero-image-container {
+            position: relative;
+            overflow: hidden;
+        }
+        .ichioshi-badge {
+            background: #ff3e3e;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 99px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 1rem;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+<div id="reading-progress-container"><div id="reading-progress-bar"></div></div>
+<header class="header-main">
+    <div class="flex items-center gap-4">
+        <h1 class="text-2xl font-bold tracking-tighter" style="font-family: 'Mochiy Pop One';"><a href="../index.html">SAITAMA PARKS</a></h1>
+    </div>
+    <nav class="flex items-center gap-4 md:gap-8">
+        <a href="kita_urawa_park.html" class="hover-accent-text font-bold text-sm md:text-base">公園を探す</a>
+        <a href="../map.html" class="hover-accent-text font-bold text-sm md:text-base">マップ</a>
+        <a href="../saitama_mini_game.html" class="hover-accent-text font-bold text-sm md:text-base">ゲーム</a>
+        <button onclick="toggleMenu()" class="hover-accent-text font-bold text-sm md:text-base">MENU</button>
+        <div class="flex items-center gap-2 ml-2 border-l border-white/20 pl-4">
+            <button onclick="toggleAccessibilityPanel()" class="hover:scale-110 transition-transform text-xl" id="theme-toggle-icon" title="アクセシビリティ設定">⚙️</button>
+        </div>
+    </nav>
+</header>
+
+<div id="menu-overlay" class="menu-overlay" onclick="toggleMenu()"></div>
+<div id="menu-content" class="menu-content">
+    <div class="p-6">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-xl font-bold" style="font-family: 'Mochiy Pop One';">MENU</h2>
+            <button onclick="toggleMenu()" class="text-2xl">&times;</button>
+        </div>
+            <nav class="flex flex-col gap-6 text-lg">
+                <a href="../index.html" class="flex items-center gap-3">🏠 ホーム</a>
+                <a href="kita_urawa_park.html" class="flex items-center gap-3">🌳 公園を探す</a>
+                <a href="../map.html" class="flex items-center gap-3">🗺️ マップ</a>
+                <a href="../saitama_mini_game.html" class="flex items-center gap-3">🎮 ゲーム</a>
+                <hr class="border-slate-700">
+                <button onclick="toggleTheme()" class="flex items-center gap-3 w-full text-left"><span id="theme-toggle-icon-mobile">🌳</span> カラー変更</button>
+                <button onclick="toggleDarkMode()" class="flex items-center gap-3 w-full text-left"><span>🌓</span> ダークモード切替</button>
+            </nav>
+    </div>
+</div>
+
+<div class="hero-image-container mt-[60px]">
+    <canvas id="fireworks-canvas"></canvas>
+    <img loading="lazy" decoding="async" src="../images/omiya_park.jpg" alt="大和田公園" class="animate-in fade-in duration-1000">
+    <h2 class="hero-title animate-in slide-in-from-left duration-700">大和田公園</h2>
+</div>
+
+<main>
+    <div class="ichioshi-badge">✨ 今月のイチオシ公園！</div>
+
+    <div class="feature-list fade-in-up">
+        <div class="feature-item"><span>🎆</span> 花火大会会場</div>
+        <div class="feature-item"><span>🏊</span> 市民プール</div>
+        <div class="feature-item"><span>🎾</span> テニスコート</div>
+        <div class="feature-item"><span>👶</span> 授乳室完備</div>
+        <div class="feature-item"><span>🚻</span> 多目的トイレ</div>
+    </div>
+
+    <section class="fade-in-up">
+        <h2>さいたまの夏を彩る、情熱の花火スポット</h2>
+        <p class="mb-6">さいたま市大見区に位置する<a href="https://www.city.saitama.lg.jp/004/006/003/003/p000000.html" target="_blank" rel="noopener" class="text-[var(--primary-color)] underline">大和田公園</a>は、「さいたま市花火大会 大和田会場」として知られる、地域に愛される総合公園です。広々とした敷地は、花火の迫力を間近で感じるのに最適な場所です。</p>
+
+        <div class="family-info-grid">
+            <div class="family-info-card">
+                <div class="text-3xl mb-3">🚻</div>
+                <h4 class="font-bold mb-2">トイレのキレイ度</h4>
+                <div class="toilet-rating">★★★☆☆</div>
+                <p class="text-xs opacity-70 mt-2">プールや野球場併設のため、多目的トイレも完備されています。花火大会当日は非常に混雑するので注意が必要です。</p>
+            </div>
+            <div class="family-info-card">
+                <div class="text-3xl mb-3">🍼</div>
+                <h4 class="font-bold mb-2">授乳室・おむつ替え</h4>
+                <div class="text-emerald-500 font-bold">プール管理棟にあり</div>
+                <p class="text-xs opacity-70 mt-2">夏季営業中のプール管理棟内などに授乳スペースがあります。赤ちゃん連れでも安心して来園できます。</p>
+            </div>
+            <div class="family-info-card">
+                <div class="text-3xl mb-3">🏊</div>
+                <h4 class="font-bold mb-2">夏のレジャー</h4>
+                <div class="text-emerald-500 font-bold">大型市民プール</div>
+                <p class="text-xs opacity-70 mt-2">流れるプールやスライダーがあり、夏休み期間中は多くの子どもたちで賑わいます。</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="fade-in-up">
+        <div class="content-card">
+            <h3 class="mt-0">🎆 さいたま市花火大会 (大和田会場)</h3>
+            <p>毎年夏に開催される花火大会。遮るものが少ない開放的な空間で打ち上げられる花火は圧巻です。家族でレジャーシートを広げて、夜空を見上げる最高の夏の思い出作りができます。</p>
+        </div>
+        <div class="content-card">
+            <h3 class="mt-0">🏃 充実のスポーツ施設</h3>
+            <p>野球場やテニスコート、さらには市民プールまで併設された総合運動公園です。健康的な休日を過ごすのにもぴったりのスポットです。</p>
+        </div>
+    </section>
+
+    <section class="fade-in-up">
+        <h2>アクセス・基本情報</h2>
+        <ul class="info-list">
+            <li><strong>アクセス:</strong> 東武アーバンパークライン「大宮公園駅」より徒歩約10分。</li>
+            <li><strong>入園料:</strong> 無料（プールやスポーツ施設は有料）</li>
+            <li><strong>駐車場:</strong> 周辺に有料駐車場あり（花火大会時は交通規制あり）</li>
+        </ul>
+        <iframe src="https://www.google.com/maps?q=大和田公園&output=embed"></iframe>
+    </section>
+
+    <section class="recommend-section fade-in-up">
+        <h3 class="mt-0 mb-6">ここに行った人はここもチェック！</h3>
+        <div class="recommend-grid">
+            <!-- リンクは common.js により動的にシャッフルされます -->
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="max-w-6xl mx-auto px-6">
+        <div class="footer-logo">SAITAMA PARKS</div>
+        <hr>
+        <p class="text-sm opacity-80">© 2026 SAITAMA PARKS - 自然と共に生きる。</p>
+        <div class="footer-links mt-8 flex justify-center gap-12 text-sm flex-wrap">
+            <a onclick="openModal('about')" class="cursor-pointer">サイトについて</a>
+            <a onclick="openModal('access')" class="cursor-pointer">アクセス</a>
+            <a onclick="openModal('copyright')" class="cursor-pointer">著作権</a>
+        </div>
+    </div>
+</footer>
+
+<button onclick="scrollToTop()" class="go-to-top-button" aria-label="トップへ戻る">↑</button>
+
+<!-- 花火アニメーションJS -->
+<script>
+    const canvas = document.getElementById('fireworks-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resize() {
+        canvas.width = canvas.parentElement.offsetWidth;
+        canvas.height = canvas.parentElement.offsetHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    class Particle {
+        constructor(x, y, color) {
+            this.x = x;
+            this.y = y;
+            this.color = color;
+            this.velocity = {
+                x: (Math.random() - 0.5) * 8,
+                y: (Math.random() - 0.5) * 8
+            };
+            this.alpha = 1;
+            this.friction = 0.95;
+        }
+        draw() {
+            ctx.globalAlpha = this.alpha;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+        }
+        update() {
+            this.velocity.x *= this.friction;
+            this.velocity.y *= this.friction;
+            this.x += this.velocity.x;
+            this.y += this.velocity.y;
+            this.alpha -= 0.01;
+        }
+    }
+
+    function createFirework(x, y) {
+        const count = 50;
+        const color = `hsl(${Math.random() * 360}, 50%, 50%)`;
+        for (let i = 0; i < count; i++) {
+            particles.push(new Particle(x, y, color));
+        }
+    }
+
+    function animate() {
+        requestAnimationFrame(animate);
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        particles.forEach((p, i) => {
+            if (p.alpha > 0) {
+                p.update();
+                p.draw();
+            } else {
+                particles.splice(i, 1);
+            }
+        });
+
+        if (Math.random() < 0.03) {
+            createFirework(Math.random() * canvas.width, Math.random() * canvas.height);
+        }
+    }
+    animate();
+</script>
+
+<script defer src="../js/common.js"></script>
+</body>
+</html>
