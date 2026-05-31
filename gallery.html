@@ -181,7 +181,7 @@
     <button onclick="scrollToTop()" class="go-to-top-button" aria-label="トップへ戻る">↑</button>
     <script defer src="js/common.js" defer></script>
     <script>
-        function openLightbox(card) {
+        window.openLightbox = function(card) {
             const img = card.querySelector('img');
             const caption = card.querySelector('.overlay').textContent;
             const lightbox = document.getElementById('lightbox');
@@ -191,11 +191,11 @@
             lightboxImg.src = img.src;
             lightboxCap.textContent = caption;
             lightbox.classList.add('active');
-        }
+        };
 
-        function closeLightbox() {
+        window.closeLightbox = function() {
             document.getElementById('lightbox').classList.remove('active');
-        }
+        };
     </script>
 </body>
 </html>

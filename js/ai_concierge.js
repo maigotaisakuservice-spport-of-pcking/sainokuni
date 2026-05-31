@@ -321,6 +321,16 @@ async function initAndHandleLoad(originalMsg) {
 }
 
 /**
+ * Clears the chat history.
+ */
+function clearChat() {
+    if (chatMessages) {
+        chatMessages.innerHTML = '';
+        addWelcomeMessage();
+    }
+}
+
+/**
  * Toggles the visibility of the chat widget.
  */
 function toggleChat() {
@@ -352,6 +362,7 @@ function addWelcomeMessage() {
 // Global Exports
 window.handleChat = handleChat;
 window.toggleChat = toggleChat;
+window.clearChat = clearChat;
 window.showAiInitModal = showAiInitModal;
 
 if (sendBtn) sendBtn.addEventListener('click', () => handleChat());

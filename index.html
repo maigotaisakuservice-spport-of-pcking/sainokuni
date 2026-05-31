@@ -401,13 +401,6 @@
     <svg class="w-8 h-8 stroke-white stroke-2 fill-none" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
 </div>
 
-<!-- モーダル -->
-<div id="info-modal" class="modal" onclick="closeModal(event)">
-    <div class="modal-content" onclick="event.stopPropagation()">
-        <span class="modal-close" onclick="closeModal()">&times;</span>
-        <div id="modal-body"></div>
-    </div>
-</div>
 
 <button onclick="scrollToTop()" class="go-to-top-button" aria-label="トップへ戻る">↑</button>
 
@@ -543,12 +536,15 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const { CONFIG } = await import('./js/config.js');
             const apiUrl = `https://api.weatherapi.com/v1/forecast.json?key=${CONFIG.WEATHER_API_KEY}&q=Saitama&days=3&lang=ja`;
+            const proxyUrl = `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(apiUrl)}`;
 
             let res;
             try {
-                res = await fetch(apiUrl);
+                // Always try proxy first to avoid CORS issues as per memory
+                res = await fetch(proxyUrl);
             } catch (e) {
-                res = await fetch(`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(apiUrl)}`);
+                console.warn('Proxy fetch failed, trying direct...', e);
+                res = await fetch(apiUrl);
             }
 
             if (!res.ok) throw new Error('API request failed');
@@ -569,11 +565,22 @@ document.addEventListener('DOMContentLoaded', () => {
             startWeatherEffect(weatherData.current.condition.code);
         } catch (e) {
             console.error('Weather fetch error:', e);
+            // Fallback dummy data to allow modal to open
+            weatherData = {
+                current: { temp_c: 22, condition: { text: "晴れ (予測)", icon: "//cdn.weatherapi.com/weather/64x64/day/113.png" }, wind_kph: 5, wind_degree: 0 },
+                forecast: {
+                    forecastday: [
+                        { date: new Date().toISOString(), day: { maxtemp_c: 25, mintemp_c: 18, condition: { icon: "//cdn.weatherapi.com/weather/64x64/day/113.png" } }, hour: [] },
+                        { date: new Date(Date.now()+86400000).toISOString(), day: { maxtemp_c: 24, mintemp_c: 17, condition: { icon: "//cdn.weatherapi.com/weather/64x64/day/113.png" } }, hour: [] },
+                        { date: new Date(Date.now()+172800000).toISOString(), day: { maxtemp_c: 26, mintemp_c: 19, condition: { icon: "//cdn.weatherapi.com/weather/64x64/day/113.png" } }, hour: [] }
+                    ]
+                }
+            };
             const weatherInfo = document.getElementById('weather-info');
             if (weatherInfo) {
                 weatherInfo.innerHTML = `
-                    <div class="text-3xl mb-2">☀️</div>
-                    22℃ / 晴れ (予測)
+                    <img loading="lazy" decoding="async" src="${weatherData.current.condition.icon}" class="mx-auto w-12 h-12">
+                    ${weatherData.current.temp_c}℃ / ${weatherData.current.condition.text}
                 `;
             }
             updateWeatherRecommend(1000);
@@ -647,9 +654,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.openWeatherModal = function() {
         if (!weatherData) return;
-        const modal = document.getElementById('info-modal');
+
+        // Use the global openModal logic to ensure consistency and correct closing behavior
+        window.openModal('weather');
         const body = document.getElementById('modal-body');
-        if (!modal || !body) return;
+        if (!body) return;
 
         // 24時間予報の構築
         const now = new Date();

@@ -1,0 +1,22 @@
+name: Verify Site
+on: [push, pull_request]
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: npm install playwright
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
+      - name: Run verification
+        run: node scripts/verify_site_ci.js
+      - name: Upload bug report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bug-report
+          path: bug報告.txt

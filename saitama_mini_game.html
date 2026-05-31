@@ -176,16 +176,16 @@
             }
         };
 
-        function openHelp(game) {
+        window.openHelp = function(game) {
             const data = helpData[game];
             document.getElementById('help-title').textContent = data.title;
             document.getElementById('help-content').innerHTML = data.content;
             document.getElementById('help-modal').classList.remove('hidden');
-        }
+        };
 
-        function closeHelp() {
+        window.closeHelp = function() {
             document.getElementById('help-modal').classList.add('hidden');
-        }
+        };
     </script>
     <script defer src="js/common.js" defer></script>
 </body>

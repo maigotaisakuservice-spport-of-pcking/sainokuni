@@ -44,7 +44,7 @@
             <div class="text-6xl mb-6">🎓</div>
             <h1 class="text-4xl accent-font mb-6" style="color: var(--primary-color);">埼玉マスターへの道</h1>
             <p class="text-lg mb-10 text-slate-600 leading-relaxed">公園にまつわるクイズに答えて、<br><span class="font-bold text-green-600">「埼玉マスター」</span>の称号を手に入れよう！<br>子育て世帯なら知っておきたい豆知識も満載です。</p>
-            <button onclick="startQuiz()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-5 px-16 rounded-full text-2xl shadow-xl transition-all hover:scale-105 active:scale-95">
+            <button onclick="window.startQuiz()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-5 px-16 rounded-full text-2xl shadow-xl transition-all hover:scale-105 active:scale-95">
                 挑戦をはじめる！
             </button>
         </div>
@@ -126,7 +126,7 @@
         let score = 0;
         let canClick = true;
 
-        function startQuiz() {
+        window.startQuiz = function() {
             document.getElementById('start-screen').style.display = 'none';
             document.getElementById('game-screen').classList.remove('hidden');
             showQuestion();
