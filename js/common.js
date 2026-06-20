@@ -6,7 +6,10 @@ if (window.tailwind) {
     };
 }
 
-// テーマ・モード管理
+/**
+ * テーマ・モード管理
+ * ユーザーが選択したカラーテーマとダークモードの状態を管理します
+ */
 function initTheme() {
     const savedMode = localStorage.getItem('saitama-mode') || 'light';
     const savedTheme = localStorage.getItem('saitama-theme') || 'green';
@@ -16,6 +19,10 @@ function initTheme() {
     updateThemeIcon(savedMode, savedTheme);
 }
 
+/**
+ * カラーテーマの切り替え
+ * グリーン、ブルー、レッドの3色を順繰りに切り替えます
+ */
 function toggleTheme() {
     // パークカラー（青・緑・赤）の切り替え
     const themes = ['green', 'blue', 'red'];
@@ -28,6 +35,10 @@ function toggleTheme() {
     updateThemeIcon(document.documentElement.getAttribute('data-mode'), newTheme);
 }
 
+/**
+ * ダークモードの切り替え
+ * ページ全体の色調を反転させ、設定をlocalStorageに保存します
+ */
 function toggleDarkMode() {
     const currentMode = document.documentElement.getAttribute('data-mode');
     const newMode = currentMode === 'dark' ? 'light' : 'dark';
@@ -74,7 +85,10 @@ function updateThemeIcon(mode, theme) {
     }
 }
 
-// SNSシェア機能
+/**
+ * SNSシェア機能
+ * @param {string} platform - 'x', 'line', 'facebook' のいずれか
+ */
 function shareSNS(platform) {
     const url = encodeURIComponent(window.location.href);
     const title = encodeURIComponent(document.title);
@@ -130,7 +144,10 @@ function scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// 読み上げ機能
+/**
+ * 読み上げ機能 (TTS)
+ * ページ内のメインコンテンツを抽出し、日本語音声で読み上げます
+ */
 function readPageText() {
     if (window.speechSynthesis.speaking) {
         window.speechSynthesis.cancel();
@@ -182,7 +199,7 @@ const PARK_DATA = [
     { name: "大宮公園", link: "omiya_park.html", img: "omiya_park.jpg" },
     { name: "北浦和公園", link: "kita_urawa_park.html", img: "kita_urawa_park.jpg" },
     { name: "森林公園", link: "shinrin_park.html", img: "shinrin_park.jpg" },
-    { name: "所沢航空公園", link: "tokorozawa_park.html", img: "tokorozawa_park.jpg" },
+    { name: "大和田公園", link: "owada_park.html", img: "https://images.unsplash.com/photo-1533230392659-911598284149?q=80&w=640&auto=format&fit=crop", isFeatured: true },
     { name: "秋ヶ瀬公園", link: "akigase_park.html", img: "akigase_park.jpg" }
 ];
 
@@ -190,19 +207,32 @@ function getRandomPark() {
     return PARK_DATA[Math.floor(Math.random() * PARK_DATA.length)];
 }
 
+/**
+ * 「公園を探す」リンクにランダムな公園のパスを設定
+ * イチオシの公園（大和田公園）が選ばれやすいように重み付けを行う
+ */
 function initRandomParkLinks() {
     const pathname = window.location.pathname;
     const isRoot = pathname.endsWith('/') || pathname.endsWith('index.html') ||
                    (!pathname.includes('/destinations/') && !pathname.includes('/news/') && !pathname.includes('/game/'));
 
+    // パスプレフィックスの決定
     const prefix = isRoot ? 'destinations/' : (pathname.includes('/destinations/') ? '' : '../destinations/');
 
-    const randomPark = getRandomPark();
+    // イチオシを優先するロジック（40%の確率でイチオシ、残りをランダム）
+    let selectedPark;
+    if (Math.random() < 0.4) {
+        selectedPark = PARK_DATA.find(p => p.isFeatured) || getRandomPark();
+    } else {
+        selectedPark = getRandomPark();
+    }
+
     const links = document.querySelectorAll('a');
 
     links.forEach(link => {
         if (link.textContent.includes('公園を探す')) {
-            link.href = `${prefix}${randomPark.link}`;
+            link.href = `${prefix}${selectedPark.link}`;
+            // イチオシの場合はバッジなどを付けることも検討可能（現在はリンク先変更のみ）
         }
     });
 }
@@ -258,7 +288,10 @@ function toggleMenu() {
     }
 }
 
-// アクセシビリティ・ウィジェット
+/**
+ * アクセシビリティ・パネル（設定画面）の表示切り替え
+ * 画面右下の歯車アイコンから呼び出される設定メニューを生成・表示します
+ */
 function toggleAccessibilityPanel() {
     let panel = document.getElementById('accessibility-panel');
     if (!panel) {
@@ -362,7 +395,7 @@ const modalContents = {
 
             <ul class="text-sm space-y-2">
                 <li><strong class="text-emerald-600">大宮公園:</strong> 大宮公園駅より徒歩10分</li>
-                <li><strong class="text-emerald-600">所沢航空公園:</strong> 航空公園駅直結</li>
+                <li><strong class="text-emerald-600">大和田公園:</strong> 大宮公園駅より徒歩15分</li>
                 <li><strong class="text-emerald-600">森林公園:</strong> 森林公園駅からバス</li>
             </ul>
         </div>
@@ -430,28 +463,40 @@ function initAnimations() {
 
 // おすすめパークの動的生成
 function initRecommendations() {
+    /**
+     * 各ページの「ここに行った人はここもチェック！」セクションを初期化
+     * 現在表示中の公園以外の公園をランダムに4つ表示
+     */
     const grid = document.querySelector('.recommend-grid');
     if (!grid) return;
 
     const pathname = window.location.pathname;
     const isDestinations = pathname.includes('/destinations/');
+    // 画像のパスプレフィックス（サブディレクトリからの相対パス考慮）
     const imgPrefix = isDestinations ? '../images/' : 'images/';
 
     const currentFile = pathname.split('/').pop();
+    // 現在のページ以外の公園を抽出
     const otherParks = PARK_DATA.filter(p => p.link !== currentFile);
 
-    // フィッシャー・イェーツのシャッフル
+    // フィッシャー・イェーツのシャッフルアルゴリズムでランダム化
     for (let i = otherParks.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [otherParks[i], otherParks[j]] = [otherParks[j], otherParks[i]];
     }
 
-    grid.innerHTML = otherParks.slice(0, 4).map(p => `
-        <a href="${p.link}" class="recommend-card">
-            <img src="${imgPrefix}${p.img}" alt="${p.name}" loading="lazy">
-            <p>${p.name}</p>
-        </a>
-    `).join('');
+    // カードのHTMLを生成
+    grid.innerHTML = otherParks.slice(0, 4).map(p => {
+        const imgUrl = p.img.startsWith('http') ? p.img : imgPrefix + p.img;
+        const featuredTag = p.isFeatured ? '<span class="absolute top-2 right-2 bg-red-600 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full z-10 animate-pulse">イチオシ</span>' : '';
+        return `
+            <a href="${p.link}" class="recommend-card relative">
+                ${featuredTag}
+                <img src="${imgUrl}" alt="${p.name}" loading="lazy">
+                <p>${p.name}</p>
+            </a>
+        `;
+    }).join('');
 }
 
 document.addEventListener('DOMContentLoaded', () => {

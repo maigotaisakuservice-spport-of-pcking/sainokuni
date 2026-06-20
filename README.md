@@ -17,6 +17,7 @@ Welcome to the Saitama Parks 2026 portal. This is a high-performance, accessible
 - `/map.html`: Facility search map.
 - `/saitama_mini_game.html`: Entry point for park games.
 - `/destinations/kita_urawa_park.html`: The new featured destination (replaces Maruyama Park).
+- `/destinations/owada_park.html`: The featured (イチオシ) destination known for fireworks.
 - `/js/ai_concierge.js`: Hardened persona logic for Saitamania-kun.
 
 ## 🤖 Saitamania-kun Persona
@@ -46,7 +47,7 @@ To ensure the site renders correctly, please place the following files in their 
 | `kita_urawa_sculpture_2.jpg` | 彫刻作品の写真 2 | Gallery |
 | `momas_placeholder.jpg` | 埼玉県立近代美術館(MOMAS)の代わりの画像 | Destination page |
 | `omiya_park.jpg` | 大宮公園の写真 | Gallery, Destination page |
-| `tokorozawa_park.jpg` | 所沢航空記念公園の写真 | Gallery, Destination page |
+| `owada_park.jpg` | 大和田公園の写真 (現在はUnsplashを使用) | Gallery, Destination page |
 | `shinrin_park.jpg` | 国営武蔵丘陵森林公園の写真 | Gallery, Destination page |
 | `akigase_park.jpg` | 秋ヶ瀬公園の写真 | Gallery, Destination page |
 | `densya.jpg` | 埼玉の電車の写真 | Access Modal |

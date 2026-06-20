@@ -5,14 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>さいたま周辺施設マップ | 2026年版</title>
 
+    <!-- Tailwind CSS: ユーティリティファーストのスタイリングに使用 -->
     <script defer src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             darkMode: "selector"
         }
     </script>
+
+    <!-- Leaflet: 地図表示のメインライブラリ -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
     <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
+    <!-- Leaflet.markercluster: 地図上の大量のアイコンをグループ化（クラスター化）して表示する拡張機能 -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
     <script defer src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
@@ -171,10 +176,15 @@
     </main>
 
     <script type="module">
-        // 埼玉 5大公園の座標
+        /**
+         * マップ機能の初期化
+         * Leaflet.jsを使用して地図を表示し、Overpass APIから周辺施設を取得します
+         */
+
+        // 埼玉 5大公園の座標 (所沢航空記念公園に代わり、イチオシの大和田公園を追加)
         const big5Parks = [
             { name: "大宮公園", pos: [35.9224, 139.6338], url: "destinations/omiya_park.html" },
-            { name: "所沢航空記念公園", pos: [35.7981, 139.4715], url: "destinations/tokorozawa_park.html" },
+            { name: "大和田公園", pos: [35.9252, 139.6425], url: "destinations/owada_park.html", featured: true },
             { name: "国営武蔵丘陵森林公園", pos: [36.0858, 139.3755], url: "destinations/shinrin_park.html" },
             { name: "秋ヶ瀬公園", pos: [35.8504, 139.6053], url: "destinations/akigase_park.html" },
             { name: "北浦和公園", pos: [35.9680, 139.5444], url: "destinations/kita_urawa_park.html" }
@@ -201,13 +211,15 @@
 
         function initBig5() {
             big5Parks.forEach(p => {
+                const icon = p.featured ? createIcon('🔥', '#FF4500') : createIcon('⭐', '#FFD700');
                 const marker = L.marker(p.pos, {
-                    icon: createIcon('⭐', '#FFD700')
+                    icon: icon
                 }).addTo(staticMarkers);
                 marker.bindPopup(`
                     <div class="p-2">
-                        <b class="text-lg">${p.name}</b><br>
-                        <span class="text-xs font-bold">埼玉5大公園の1つ</span><br>
+                        ${p.featured ? '<div class="bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full mb-1 inline-block">イチオシ！</div>' : ''}
+                        <b class="text-lg block">${p.name}</b>
+                        <span class="text-xs font-bold">${p.featured ? '今、最も注目の公園' : '埼玉5大公園の1つ'}</span><br>
                         <a href="${p.url}" class="inline-block mt-2 text-white text-xs px-2 py-1 rounded" style="background-color: var(--primary-color);">詳細ページを見る</a>
                     </div>
                 `);

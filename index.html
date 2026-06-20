@@ -4,17 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>彩の国ポータル 2026 | 埼玉県紹介サイト</title>
+
+    <!-- Tailwind CSS: ユーティリティファーストのスタイリングに使用 -->
     <script defer src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             darkMode: 'selector'
         }
     </script>
+
+    <!-- Google Fonts: サイト全体およびロゴ用のフォント読み込み -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Mochiy+Pop+One&family=DotGothic16&display=swap" rel="stylesheet">
+
+    <!-- Leaflet: 簡易マップ表示に使用する地図ライブラリ -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
     <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
+    <!-- サイト共通スタイル -->
     <link rel="stylesheet" href="css/common.css">
     <style>
         .header-main {
@@ -269,14 +277,14 @@
                 <p class="opacity-70 text-sm">公園での農業体験や直売所など、土と触れ合う新しい週末の過ごし方。</p>
             </div>
         </a>
-        <a href="destinations/kita_urawa_park.html" class="article-card">
+        <a href="destinations/owada_park.html" class="article-card">
             <div class="relative">
-                <img loading="lazy" decoding="async" src="images/kita_urawa_park.jpg" alt="北浦和公園" class="w-full h-48 object-cover" loading="lazy" decoding="async">
-                <div class="absolute top-4 left-4 bg-emerald-600 text-white text-[10px] font-bold px-2 py-1 rounded">UPATED</div>
+                <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1533230392659-911598284149?q=80&w=640&auto=format&fit=crop" alt="大和田公園" class="w-full h-48 object-cover" loading="lazy" decoding="async">
+                <div class="absolute top-4 left-4 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded-full animate-pulse">イチオシ！</div>
             </div>
             <div class="p-6">
-                <h3 class="text-xl font-bold mb-2">北浦和公園：水と緑のオアシス</h3>
-                <p class="opacity-70 text-sm">小動物園や水遊び場など、一日中楽しめる総合公園。</p>
+                <h3 class="text-xl font-bold mb-2">大和田公園：夏の花火大会</h3>
+                <p class="opacity-70 text-sm">さいたま市の夏を彩る「イチオシ」公園。花火やプールを楽しもう！</p>
             </div>
         </a>
         <a href="destinations/omiya_park.html" class="article-card">
@@ -289,14 +297,14 @@
                 <p class="opacity-70 text-sm">日本さくら名所100選にも選ばれた、県内屈指の広大な公園。</p>
             </div>
         </a>
-        <a href="destinations/shinrin_park.html" class="article-card">
+        <a href="destinations/kita_urawa_park.html" class="article-card">
             <div class="relative">
-                <img loading="lazy" decoding="async" src="images/shinrin_park.jpg" alt="森林公園" class="w-full h-48 object-cover" loading="lazy" decoding="async">
-                <div class="absolute top-4 left-4 bg-sky-600 text-white text-[10px] font-bold px-2 py-1 rounded">広い</div>
+                <img loading="lazy" decoding="async" src="images/kita_urawa_park.jpg" alt="北浦和公園" class="w-full h-48 object-cover" loading="lazy" decoding="async">
+                <div class="absolute top-4 left-4 bg-emerald-600 text-white text-[10px] font-bold px-2 py-1 rounded">UPATED</div>
             </div>
             <div class="p-6">
-                <h3 class="text-xl font-bold mb-2">国営武蔵丘陵森林公園</h3>
-                <p class="opacity-70 text-sm">東京ドーム65個分の広さ！サイクリングや大型遊具が充実。</p>
+                <h3 class="text-xl font-bold mb-2">北浦和公園：水と緑のオアシス</h3>
+                <p class="opacity-70 text-sm">音楽噴水や近代美術館など、芸術と自然が融合した公園。</p>
             </div>
         </a>
     </div>
@@ -314,7 +322,10 @@
     <div class="gallery-grid">
         <div class="gallery-item"><img loading="lazy" decoding="async" src="images/kita_urawa_park.jpg" alt="北浦和公園" loading="lazy" decoding="async"></div>
         <div class="gallery-item"><img loading="lazy" decoding="async" src="images/omiya_park.jpg" alt="大宮公園" loading="lazy" decoding="async"></div>
-        <div class="gallery-item"><img loading="lazy" decoding="async" src="images/tokorozawa_park.jpg" alt="所沢航空公園" loading="lazy" decoding="async"></div>
+        <div class="gallery-item relative">
+            <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1533230392659-911598284149?q=80&w=640&auto=format&fit=crop" alt="大和田公園" loading="lazy" decoding="async">
+            <div class="absolute top-2 right-2 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded-full animate-pulse">イチオシ！</div>
+        </div>
         <div class="gallery-item"><img loading="lazy" decoding="async" src="images/shinrin_park.jpg" alt="森林公園" loading="lazy" decoding="async"></div>
         <div class="gallery-item"><img loading="lazy" decoding="async" src="images/akigase_park.jpg" alt="秋ヶ瀬公園" loading="lazy" decoding="async"></div>
         <div class="gallery-item"><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1519331379826-f10be5486c6f?q=80&w=2070&auto=format&fit=crop" alt="公園の木々" loading="lazy" decoding="async"></div>
@@ -428,8 +439,8 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('RSS content load error:', e);
             rssItems = [
                 { "title": "2026年 埼玉公園プロジェクト始動！", "link": "news.html" },
-                { "title": "【注目】北浦和公園の小動物園がリニューアル", "link": "destinations/kita_urawa_park.html" },
-                { "title": "SAITAMA PARK: 3D公園散策がスタート！", "link": "saitama_mini_game.html" }
+                { "title": "【注目】北浦和公園の音楽噴水ショー、夜間ライトアップ実施中", "link": "destinations/kita_urawa_park.html" },
+                { "title": "SAITAMA PARK: 2Dゲームで遊ぼう！", "link": "saitama_mini_game.html" }
             ];
         }
         updateRssDisplay();
@@ -538,21 +549,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let weatherData = null;
 
-    // 天気API & エフェクト
+    /**
+     * 天気APIの初期化とエフェクトの開始
+     * 外部APIを直接叩くとCORSエラーになる場合があるため、プロキシを経由させる
+     */
     async function initWeather() {
         try {
             const { CONFIG } = await import('./js/config.js');
             const apiUrl = `https://api.weatherapi.com/v1/forecast.json?key=${CONFIG.WEATHER_API_KEY}&q=Saitama&days=3&lang=ja`;
 
             let res;
-            try {
-                res = await fetch(apiUrl);
-            } catch (e) {
-                res = await fetch(`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(apiUrl)}`);
-            }
+            // CORS回避のため、常にプロキシ（AllOrigins）を使用するよう変更
+            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`;
 
-            if (!res.ok) throw new Error('API request failed');
-            weatherData = await res.json();
+            try {
+                const proxyRes = await fetch(proxyUrl);
+                if (!proxyRes.ok) throw new Error('Proxy failed');
+                const proxyData = await proxyRes.json();
+                weatherData = JSON.parse(proxyData.contents);
+            } catch (e) {
+                console.warn('Primary proxy failed, trying fallback proxy...');
+                res = await fetch(`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(apiUrl)}`);
+                if (!res.ok) throw new Error('Fallback proxy failed');
+                weatherData = await res.json();
+            }
 
             const weatherInfo = document.getElementById('weather-info');
             if (weatherInfo) {
@@ -585,14 +605,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const recommendEl = document.getElementById('weather-recommend');
         if (!recommendEl) return;
 
-        let recommend = { text: "公園日和です！外で遊びましょう！", link: "destinations/shinrin_park.html", name: "森林公園" };
+        let recommend = { text: "公園日和です！外で遊びましょう！", link: "destinations/owada_park.html", name: "大和田公園 (イチオシ！)" };
 
         if ([1063, 1183, 1186, 1189, 1192, 1195, 1240, 1243, 1246].includes(code)) {
-            recommend = { text: "雨ですね。室内展示が充実したこちらがおすすめ！", link: "destinations/tokorozawa_park.html", name: "所沢航空記念公園" };
+            recommend = { text: "雨ですね。そんな日は美術館があるこちらがおすすめ！", link: "destinations/kita_urawa_park.html", name: "北浦和公園" };
         } else if ([1066, 1114, 1210, 1213, 1216, 1219, 1222, 1225, 1255, 1258].includes(code)) {
             recommend = { text: "雪の公園も綺麗ですよ。暖かい格好でこちらへ！", link: "destinations/omiya_park.html", name: "大宮公園" };
         } else if (code >= 1003 && code <= 1030) { // 曇りなど
-            recommend = { text: "日差しが優しい日は、のんびりお散歩！", link: "destinations/kita_urawa_park.html", name: "北浦和公園" };
+            recommend = { text: "日差しが優しい日は、広大な自然の中へ！", link: "destinations/shinrin_park.html", name: "森林公園" };
         }
 
         recommendEl.innerHTML = `
