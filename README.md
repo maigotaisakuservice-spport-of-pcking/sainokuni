@@ -1,61 +1,61 @@
-# Saitama Parks 2026 - Official Portal
+# 埼玉県公園ガイド 2026 - 公式ポータル
 
-Welcome to the Saitama Parks 2026 portal. This is a high-performance, accessible, and interactive web application designed to showcase the best parks in Saitama Prefecture.
+埼玉県公園ガイド 2026 ポータルへようこそ。このサイトは、埼玉県の優れた公園を紹介するために設計された、高性能でアクセシブルかつインタラクティブなウェブアプリケーションです。
 
-## 🚀 Key Features
+## 🚀 主な機能
 
-- **High Performance:** Optimized with deferred scripts, lazy-loaded images, and optimized asset delivery.
-- **Hero Video:** The landing page features a majestic looping video of the Kita-Urawa Park musical fountain.
-- **AI Travel Concierge:** Meet **Saitamania-kun**, our cold, robotic haniwa guide. He is strictly concise and Saitama-obsessed.
-- **Interactive Maps:** Real-time facility search using OpenStreetMap and Overpass API.
-- **Accessibility:** Natural-sounding TTS (Text-to-Speech) and unified Saicolor theme system.
-- **MOMAS Integration:** Interactive museum experience for the Museum of Modern Art, Saitama.
+- **ハイパフォーマンス:** スクリプトの遅延読み込み、画像の遅延読み込み、アセット配信の最適化により高速化。
+- **ヒーロービデオ:** ランディングページには、北浦和公園の音楽噴水がループする迫力あるビデオを配置。
+- **AI トラベルコンシェルジュ:** 「**サイタマニアくん**」が登場。埴輪（はにわ）型の冷徹でロボット的なガイドが、埼玉の魅力を簡潔に案内します。
+- **インタラクティブマップ:** OpenStreetMapとOverpass APIを使用した、施設（トイレ、駅、公園など）のリアルタイム検索。
+- **アクセシビリティ:** 自然な音声の読み上げ機能（TTS）と、統一された「彩カラー（Saicolor）」テーマシステム。
+- **MOMAS 連携:** 埼玉県立近代美術館（MOMAS）の詳細情報と連携。
+- **大和田公園（イチオシ）:** 夏の花火大会で有名な大和田公園をイチオシスポットとして紹介。
 
-## 📂 Project Structure
+## 📂 プロジェクト構成
 
-- `/index.html`: Main landing page with a hero video background.
-- `/map.html`: Facility search map.
-- `/saitama_mini_game.html`: Entry point for park games.
-- `/destinations/kita_urawa_park.html`: The new featured destination (replaces Maruyama Park).
-- `/destinations/owada_park.html`: The featured (イチオシ) destination known for fireworks.
-- `/js/ai_concierge.js`: Hardened persona logic for Saitamania-kun.
+- `/index.html`: ヒーロービデオを背景としたメインランディングページ。
+- `/map.html`: 施設検索マップ。
+- `/saitama_mini_game.html`: 公園ゲームへの入り口。
+- `/destinations/kita_urawa_park.html`: 芸術と水が融合した主要スポット。
+- `/destinations/owada_park.html`: 花火とレジャーが楽しめる「イチオシ」スポット。
+- `/js/ai_concierge.js`: サイタマニアくんの論理プロトコルを制御。
 
-## 🤖 Saitamania-kun Persona
+## 🤖 サイタマニアくんの性格（ペルソナ）
 
-Saitamania-kun is a robotic guide with the following protocol:
-1. **Conciseness:** Always responds in 3 lines or fewer.
-2. **Cold Personality:** Uses robotic, formal Japanese (断定調). No emotions allowed.
-3. **Saitama-Only:** Highly obsessed with Saitama. Non-Saitama queries may trigger system errors or cold dismissals.
+サイタマニアくんは、以下のプロトコルに従うロボットガイドです。
+1. **簡潔性:** 常に10行以内、300文字以内で回答します。
+2. **冷徹な性格:** 感情を排除したロボット調（...である、...を推奨する）で話します。
+3. **埼玉至上主義:** 埼玉県を極端に愛しており、埼玉県以外の話題にはエラーを返したり、冷たくあしらったりします。
 
-## 🖼️ Required Asset List / 必要アセットリスト
+## 🖼️ 必要アセットリスト
 
-To ensure the site renders correctly, please place the following files in their respective directories:
 サイトを正しく表示するために、以下のファイルを指定のディレクトリに配置してください。
 
-### Videos (`/videos/`)
-| Filename | Description (JP) | Use Case |
+### 動画 (`/videos/`)
+| ファイル名 | 説明 | 用途 |
 | :--- | :--- | :--- |
-| `kita_urawa_fountain.mp4` | 北浦和公園の音楽噴水のループ動画 | Home Page Hero Background |
+| `kita_urawa_fountain.mp4` | 北浦和公園の音楽噴水のループ動画 | ホームページのヒーロー背景 |
 
-### Images (`/images/`)
-| Filename | Description (JP) | Use Case |
+### 画像 (`/images/`)
+| ファイル名 | 説明 | 用途 |
 | :--- | :--- | :--- |
-| `kita_urawa_park.jpg` | 北浦和公園のメイン写真 | Gallery, Destination page |
-| `kita_urawa_fountain.jpg` | 音楽噴水の写真 | Gallery |
-| `kita_urawa_path.jpg` | 散策路の写真 | Gallery |
-| `kita_urawa_sculpture_1.jpg` | 彫刻作品の写真 1 | Gallery |
-| `kita_urawa_sculpture_2.jpg` | 彫刻作品の写真 2 | Gallery |
-| `momas_placeholder.jpg` | 埼玉県立近代美術館(MOMAS)の代わりの画像 | Destination page |
-| `omiya_park.jpg` | 大宮公園の写真 | Gallery, Destination page |
-| `owada_park.jpg` | 大和田公園の写真 (現在はUnsplashを使用) | Gallery, Destination page |
-| `shinrin_park.jpg` | 国営武蔵丘陵森林公園の写真 | Gallery, Destination page |
-| `akigase_park.jpg` | 秋ヶ瀬公園の写真 | Gallery, Destination page |
-| `densya.jpg` | 埼玉の電車の写真 | Access Modal |
+| `kita_urawa_park.jpg` | 北浦和公園のメイン写真 | ギャラリー、目的地ページ |
+| `kita_urawa_fountain.jpg` | 音楽噴水の写真 | ギャラリー |
+| `kita_urawa_path.jpg` | 散策路の写真 | ギャラリー |
+| `kita_urawa_sculpture_1.jpg` | 彫刻作品の写真 1 | ギャラリー |
+| `kita_urawa_sculpture_2.jpg` | 彫刻作品の写真 2 | ギャラリー |
+| `momas_placeholder.jpg` | 埼玉県立近代美術館(MOMAS)の画像 | 目的地ページ |
+| `omiya_park.jpg` | 大宮公園の写真 | ギャラリー、目的地ページ |
+| `owada_park.jpg` | 大和田公園の写真 | ギャラリー、目的地ページ |
+| `shinrin_park.jpg` | 国営武蔵丘陵森林公園の写真 | ギャラリー、目的地ページ |
+| `akigase_park.jpg` | 秋ヶ瀬公園の写真 | ギャラリー、目的地ページ |
+| `densya.jpg` | 埼玉の電車の写真 | アクセスモーダル |
 
-### Audio (`/audio/`)
-| Filename | Description (JP) | Use Case |
+### 音声 (`/audio/`)
+| ファイル名 | 説明 | 用途 |
 | :--- | :--- | :--- |
-| `fountain_music.mp3` | 噴水ショーの音楽 | MOMAS Ticket Animation |
+| `fountain_music.mp3` | 噴水ショーの音楽 | BGM |
 
 ---
 © 2026 Saitama Parks Promotion Association. All Rights Reserved.
