@@ -12,7 +12,7 @@
 
 ### 2. インタラクティブなシネマティック体験
 - **ヒーロー動画背景:** メインのランディングページ（トップページ）のファーストビューには、北浦和公園のシンボルである音楽噴水が美しくループする高解像度ビデオ背景（Fallback用ポスター画像付き）を実装。
-- **大和田公園（イチオシ）専用 Canvas 演出:** イチオシ公園に指定されている「大和田公園」詳細ページには、夏の風物詩である花火大会を再現した、軽量かつ流麗な HTML5 Canvas ベースのインタラクティブパーティクルアニメーションを搭載。
+- **大和田公園（イチオシ）専用 Canvas 演出:** イチオシ公園に指定されている「大和田公園」詳細ページには、夏の風物詩である花火大会を再現した、軽量かつ流麗な HTML5 Canvas ベース of インタラクティブパーティクルアニメーションを搭載。
 
 ### 3. AI トラベルコンシェルジュ「サイタマニアくん」
 - **最先端ローカル＋ハイブリッドAI:** クライアントサイドで動作する「WebLLM」を用いた高速オンデバイス生成AIと、迅速なキーワード応答システムを融合したデュアルモード（ハイエンドAI/シンプルモード）を搭載。
@@ -80,24 +80,24 @@
 
 サイトの全機能および全ページを完璧に表示するために使用される、すべての内部アセット、外部アセット、未実装（将来用）アセット、および各種外部サービス・APIの一覧です。
 
-### 1. ローカル配置動画 (`/videos/`)
-| ファイル名 | 解像度/形式 | 搭載先ページ | 用途・詳細 |
+### 1. 外部配信動画 / YouTube 埋め込み (`index.html`)
+| アセット名 / リンク | 解像度/形式 | 搭載先ページ | 用途・詳細 |
 | :--- | :--- | :--- | :--- |
-| `kita_urawa_fountain.mp4` | MP4 / H.264 | `index.html` | ファーストビュー（ヒーロー背景）でループ再生される、北浦和公園の音楽噴水の実写映像。 |
+| [北浦和公園 音楽噴水ショー (YouTube 動画)](https://www.youtube.com/watch?v=S0T2LgGWh28) | YouTube / 1080p | `index.html` | ファーストビュー（ヒーロー背景）に埋め込まれ、自動再生・ループ・消音で流れる音楽噴水の実写YouTube動画。 |
 
 ### 2. ローカル配置画像 (`/images/`)
 | ファイル名 | 形式 | 搭載先ページ | 用途・ステータス |
 | :--- | :--- | :--- | :--- |
-| `kita_urawa_park.jpg` | JPEG | 各種 | 北浦和公園の景観（メインビジュアル）。トップ、ギャラリー、各詳細ページで使用。 |
-| `kita_urawa_fountain.jpg` | JPEG | `gallery.html` | 北浦和公園音楽噴水の静止画。 |
-| `kita_urawa_path.jpg` | JPEG | `gallery.html` | 北浦和公園の緑に囲まれた散策路の風景。 |
-| `kita_urawa_sculpture_1.jpg`| JPEG | `gallery.html` | 園内に展示されている野外彫刻アート作品その1。 |
-| `kita_urawa_sculpture_2.jpg`| JPEG | `gallery.html` | 園内に展示されている野外彫刻アート作品その2。 |
-| `momas_placeholder.jpg` | JPEG | `gallery.html` | 園内にある「埼玉県立近代美術館 (MOMAS)」の外観写真。 |
-| `omiya_park.jpg` | JPEG | 各種 | 歴史ある大宮公園のメイン景観写真。 |
-| `shinrin_park.jpg` | JPEG | 各種 | 国営武蔵丘陵森林公園の広大なサイクリングロード・自然写真。 |
-| `akigase_park.jpg` | JPEG | 各種 | 秋ヶ瀬公園の広大な芝生とレジャーエリアの写真。 |
-| `densya.jpg` | JPEG | 共通モーダル | アクセスモーダル内の、埼玉を走る電車のイメージ写真。 |
+| `kita_urawa_park.jpg` | JPEG | 各種 | 北浦和公園の景観（メインビジュアル）。トップ、ギャラリー、各詳細ページで使用。 **【取得状況：未取得】** |
+| `kita_urawa_fountain.jpg` | JPEG | `gallery.html` | 北浦和公園音楽噴水の静止画。 **【取得状況：未取得】** |
+| `kita_urawa_path.jpg` | JPEG | `gallery.html` | 北浦和公園の緑に囲まれた散策路の風景。 **【取得状況：未取得】** |
+| `kita_urawa_sculpture_1.jpg`| JPEG | `gallery.html` | 園内に展示されている野外彫刻アート作品その1。 **【取得状況：未取得】** |
+| `kita_urawa_sculpture_2.jpg`| JPEG | `gallery.html` | 園内に展示されている野外彫刻アート作品その2。 **【取得状況：未取得】** |
+| `momas_placeholder.jpg` | JPEG | `gallery.html` | 園内にある「埼玉県立近代美術館 (MOMAS)」の外観写真。 **【取得状況：未取得】** |
+| `omiya_park.jpg` | JPEG | 各種 | 歴史ある大宮公園のメイン景観写真。 **【取得状況：未取得】** |
+| `shinrin_park.jpg` | JPEG | 各種 | 国営武蔵丘陵森林公園の広大なサイクリングロード・自然写真。 **【取得状況：未取得】** |
+| `akigase_park.jpg` | JPEG | 各種 | 秋ヶ瀬公園の広大な芝生とレジャーエリアの写真。 **【取得状況：未取得】** |
+| `densya.jpg` | JPEG | 共通モーダル | アクセスモーダル内の、埼玉を走る電車のイメージ写真。 **【取得状況：未取得】** |
 | `maruyama_park.jpg` | JPEG | (未使用) | 上尾丸山公園の画像。アセットフォルダ内に保持（将来の展開用）。 |
 | `tokorozawa_park.jpg` | JPEG | (未使用) | 所沢航空記念公園の画像。アセットフォルダ内に保持（将来の展開用）。 |
 
@@ -135,6 +135,25 @@
 | **CORS Proxies** | `api.allorigins.win` / `api.codetabs.com`| ブラウザの同一生成元ポリシー（CORS）を回避し、気象APIのデータを確実に中継取得するプロキシサーバー。 |
 | **WebLLM** | `https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm`| ブラウザの WebGPU を活用し、外部サーバーを使わずにユーザーのPC上でローカルにAIを完全駆動させる先進フレームワーク（ハイエンドAI用）。 |
 | **Google Translate** | `translate.google.com` | アクセシビリティ・設定メニューから瞬時にページ全体を世界各国の言語へ翻訳するエンジン。 |
+
+---
+
+## 🤖 画像アセット自動収集・同期 (GitHub Actions)
+
+当リポジトリには、手動での画像収集作業を自動化する **GitHub Actions ワークフロー** が組み込まれています。
+
+### 1. 特徴
+- **手動実行可能（`workflow_dispatch`）:** GitHubの「Actions」タブから、管理者がいつでも好みのタイミングで実行できます。
+- **Unsplash API / 高品質フォールバック対応:** `UNSPLASH_ACCESS_KEY` を GitHub Secrets に設定すると、設定キーワードに基づき API 経由で高品質かつライセンスフリーな写真をリアルタイム検索・自動取得します。未設定の場合でも、高品質プリセットURLから確実にダウンロードします。
+- **自動コミット・直接プッシュ:** 取得された画像は `images/` ディレクトリ配下に snake_case の適切なファイル名で保存され、現在の開発ブランチに GitHub Actions Bot から自動でコミット＆直接プッシュされます。
+
+### 2. 実行・カスタマイズ手順
+1. **画像の追加・キーワード変更:**
+   `.github/image_sync_config.json` を編集し、追加したいファイル名、検索キーワード（英語推奨）、およびフォールバック用の静的URLを指定します。
+2. **手動実行:**
+   GitHub の該当リポジトリページに移動 ➜ 「Actions」タブ ➜ 「Image Asset Synchronization」 ➜ 「Run workflow」をクリックします。
+3. **APIキーの設定（推奨）:**
+   Unsplash でデベロッパー登録を行い、取得した Access Key を GitHub のリポジトリ Secrets に `UNSPLASH_ACCESS_KEY` という名前で登録してください。
 
 ---
 

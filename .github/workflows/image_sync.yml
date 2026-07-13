@@ -1,0 +1,47 @@
+name: "Image Asset Synchronization"
+
+on:
+  workflow_dispatch:
+    inputs:
+      force_sync:
+        description: "Force download all images even if they exist"
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  sync-images:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout repository"
+        uses: actions/checkout@v4
+
+      - name: "Set up Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: "Download and synchronize assets"
+        env:
+          UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
+          FORCE_SYNC: ${{ github.event.inputs.force_sync }}
+        run: |
+          python3 .github/scripts/fetch_images.py
+
+      - name: "Commit and Push changes directly to active branch"
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions@github.com"
+
+          # ステージングして差分を確認 (images ディレクトリと更新された README.md を追加)
+          git add images/ README.md
+
+          if git diff --cached --quiet; then
+            echo "No changes in image assets or README.md detected."
+          else
+            git commit -m "chore: auto-synchronized free image assets and updated status in README.md"
+            git push origin HEAD:${{ github.ref_name }}
+          fi
