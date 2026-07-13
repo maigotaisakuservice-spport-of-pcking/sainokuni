@@ -88,16 +88,16 @@
 ### 2. ローカル配置画像 (`/images/`)
 | ファイル名 | 形式 | 搭載先ページ | 用途・ステータス |
 | :--- | :--- | :--- | :--- |
-| `kita_urawa_park.jpg` | JPEG | 各種 | 北浦和公園の景観（メインビジュアル）。トップ、ギャラリー、各詳細ページで使用。 **【取得状況：取得済み】** |
-| `kita_urawa_fountain.jpg` | JPEG | `gallery.html` | 北浦和公園音楽噴水の静止画。 **【取得状況：取得済み】** |
-| `kita_urawa_path.jpg` | JPEG | `gallery.html` | 北浦和公園の緑に囲まれた散策路の風景。 **【取得状況：取得済み】** |
-| `kita_urawa_sculpture_1.jpg`| JPEG | `gallery.html` | 園内に展示されている野外彫刻アート作品その1。 **【取得状況：取得済み】** |
-| `kita_urawa_sculpture_2.jpg`| JPEG | `gallery.html` | 園内に展示されている野外彫刻アート作品その2。 **【取得状況：取得済み】** |
-| `momas_placeholder.jpg` | JPEG | `gallery.html` | 園内にある「埼玉県立近代美術館 (MOMAS)」の外観写真。 **【取得状況：取得済み】** |
-| `omiya_park.jpg` | JPEG | 各種 | 歴史ある大宮公園のメイン景観写真。 **【取得状況：取得済み】** |
-| `shinrin_park.jpg` | JPEG | 各種 | 国営武蔵丘陵森林公園の広大なサイクリングロード・自然写真。 **【取得状況：取得済み】** |
-| `akigase_park.jpg` | JPEG | 各種 | 秋ヶ瀬公園の広大な芝生とレジャーエリアの写真。 **【取得状況：取得済み】** |
-| `densya.jpg` | JPEG | 共通モーダル | アクセスモーダル内の、埼玉を走る電車のイメージ写真。 **【取得状況：取得済み】** |
+| `kita_urawa_park.jpg` | JPEG | 各種 | 北浦和公園の景観（メインビジュアル）。トップ、ギャラリー、各詳細ページで使用。 **【取得状況：未取得】** |
+| `kita_urawa_fountain.jpg` | JPEG | `gallery.html` | 北浦和公園音楽噴水の静止画。 **【取得状況：未取得】** |
+| `kita_urawa_path.jpg` | JPEG | `gallery.html` | 北浦和公園の緑に囲まれた散策路の風景。 **【取得状況：未取得】** |
+| `kita_urawa_sculpture_1.jpg`| JPEG | `gallery.html` | 園内に展示されている野外彫刻アート作品その1。 **【取得状況：未取得】** |
+| `kita_urawa_sculpture_2.jpg`| JPEG | `gallery.html` | 園内に展示されている野外彫刻アート作品その2。 **【取得状況：未取得】** |
+| `momas_placeholder.jpg` | JPEG | `gallery.html` | 園内にある「埼玉県立近代美術館 (MOMAS)」の外観写真。 **【取得状況：未取得】** |
+| `omiya_park.jpg` | JPEG | 各種 | 歴史ある大宮公園のメイン景観写真。 **【取得状況：未取得】** |
+| `shinrin_park.jpg` | JPEG | 各種 | 国営武蔵丘陵森林公園の広大なサイクリングロード・自然写真。 **【取得状況：未取得】** |
+| `akigase_park.jpg` | JPEG | 各種 | 秋ヶ瀬公園の広大な芝生とレジャーエリアの写真。 **【取得状況：未取得】** |
+| `densya.jpg` | JPEG | 共通モーダル | アクセスモーダル内の、埼玉を走る電車のイメージ写真。 **【取得状況：未取得】** |
 | `maruyama_park.jpg` | JPEG | (未使用) | 上尾丸山公園の画像。アセットフォルダ内に保持（将来の展開用）。 |
 | `tokorozawa_park.jpg` | JPEG | (未使用) | 所沢航空記念公園の画像。アセットフォルダ内に保持（将来の展開用）。 |
 
