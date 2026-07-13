@@ -24,12 +24,18 @@ jobs:
         with:
           python-version: "3.x"
 
-      - name: "Download and synchronize assets"
+      - name: "Install dependencies"
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install playwright beautifulsoup4
+          playwright install chromium
+
+      - name: "Download and synchronize assets (AI/Vision guided)"
         env:
           UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
           FORCE_SYNC: ${{ github.event.inputs.force_sync }}
         run: |
-          python3 .github/scripts/fetch_images.py
+          python3 .github/scripts/fetch_images_vision.py
 
       - name: "Commit and Push changes directly to active branch"
         run: |
@@ -42,6 +48,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "No changes in image assets or README.md detected."
           else
-            git commit -m "chore: auto-synchronized free image assets and updated status in README.md"
+            git commit -m "chore: auto-synchronized free image assets and updated status in README.md via Playwright Vision Scraper"
             git push origin HEAD:${{ github.ref_name }}
           fi
