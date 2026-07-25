@@ -8,7 +8,8 @@
 // インポートを遅延させるために動的インポートを使用するよう変更
 let webllm = null;
 
-const SELECTED_MODEL = "gemma-2-2b-it-q4f16_1-MLC";
+// 超軽量・高速なQwen2-0.5Bモデルに変更 (約350MBでローカル起動が超高速！)
+const SELECTED_MODEL = "Qwen2-0.5B-Instruct-q4f16-MLC";
 
 const SYSTEM_PROMPT = `
 あなたは「AIサイタマニアくん」という、埼玉県が大好きな埴輪型AIガイドである。
@@ -26,16 +27,12 @@ const SYSTEM_PROMPT = `
 - 秋ヶ瀬公園: 荒川沿いの広大な緑地。BBQ。URL: destinations/akigase_park.html
 - 北浦和公園: 音楽噴水と近代美術館。アートの聖地。URL: destinations/kita_urawa_park.html
 - 埼玉グルメ: 十万石まんじゅう（うまい、うますぎる）、山田うどん。
-
-回答例:
-「大宮公園を推奨する。桜の名所であり、氷川神社に隣接している。
-詳細は destinations/omiya_park.html を参照せよ。
-十万石まんじゅう...うまい、うますぎる。」
 `;
 
 let engine = null;
 let isConfiguring = false;
 let useHighEndAI = false; // 高度なAIを使用するかどうかのフラグ
+let currentPendingUserMsg = ""; // 一時保存用の保留メッセージ
 
 // 背景でのモデルダウンロード・初期化
 async function initWebLLM(onProgress) {
@@ -73,87 +70,155 @@ async function handleChat(overrideMsg = null) {
     const msg = overrideMsg || (userInput ? userInput.value.trim() : "");
     if (!msg) return;
 
+    // 事前ボタン（overrideMsg）が押された場合は、ダウンロード確認は一切せず、即座に簡易スキャンモードで高速に回答
+    if (overrideMsg !== null) {
+        addMessage('user', msg);
+        fallbackResponse(msg);
+        return;
+    }
+
     addMessage('user', msg);
-    if (!overrideMsg && userInput) userInput.value = '';
+    if (userInput) userInput.value = '';
 
-    // 高度なAIモードかつエンジン未初期化の場合
+    // 手動入力の時に、高度なAIがまだ未設定・未ダウンロードの場合、
+    // チャットログ内にインラインで控えめな選択ポップアップを出す
+    if (!useHighEndAI && !engine) {
+        currentPendingUserMsg = msg; // メッセージを保留
+        showDiscreetConsentInline();
+        return;
+    }
+
+    // 高度なAIモードかつエンジンがまだロードされていない場合
     if (useHighEndAI && !engine) {
-        const loadingMsg = addMessage('model', "ﾋﾟﾎﾟｯ...高度なAIエンジンを起動中である。システムロード中... (0%)");
-        const inner = loadingMsg.querySelector('.inline-block');
-
-        // プログレスバーの追加
-        const progContainer = document.createElement('div');
-        progContainer.className = "w-full bg-gray-600 h-1.5 rounded-full mt-2 overflow-hidden";
-        progContainer.innerHTML = '<div id="ai-load-progress" class="bg-emerald-500 h-full transition-all duration-300" style="width: 0%"></div>';
-        inner.appendChild(progContainer);
-        const progBar = progContainer.querySelector('#ai-load-progress');
-
-        await initWebLLM((progress) => {
-            const percent = Math.round(progress.progress * 100);
-            updateStatus(`Loading... ${percent}%`);
-            inner.firstChild.textContent = `ﾋﾟﾎﾟｯ...只今準備中である。システムロード中... (${percent}%)`;
-            if (progBar) progBar.style.width = `${percent}%`;
-
-            if (progress.progress === 1) {
-                updateStatus("Online_");
-                inner.firstChild.textContent = "ﾋﾟﾎﾟｯ...System_Boot...完了。高度な解析を開始する。";
-                setTimeout(() => progContainer.remove(), 1000);
-            }
-        });
-
-        if (!engine) {
-            inner.firstChild.textContent = "Error...高度なAIの起動に失敗した。簡易応答モードで回答する。";
-            fallbackResponse(msg);
-            return;
-        }
+        await startLLMLoadAndChat(msg);
+        return;
     }
 
     // 高度なAIが有効で準備ができている場合
     if (useHighEndAI && engine) {
-        try {
-            const messages = [
-                { role: "system", content: SYSTEM_PROMPT },
-                { role: "user", content: msg }
-            ];
-
-            const chunks = await engine.chat.completions.create({
-                messages,
-                stream: true,
-            });
-
-            let fullResponse = "";
-            const messageDiv = addMessage('model', "");
-            const innerDiv = messageDiv.querySelector('.inline-block');
-
-            for await (const chunk of chunks) {
-                const content = chunk.choices[0]?.delta?.content || "";
-                fullResponse += content;
-
-                const lines = fullResponse.split('\n');
-                if (lines.length > 10) {
-                    fullResponse = lines.slice(0, 10).join('\n') + "\n通信制限...処理能力オーバーである。";
-                    innerDiv.textContent = fullResponse;
-                    break;
-                }
-
-                innerDiv.textContent = fullResponse;
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }
-
-            innerDiv.innerHTML = formatMessage(fullResponse);
-
-            if (Math.random() < 0.2) {
-                setTimeout(() => {
-                    const bugs = ["ﾋﾟﾋﾟｯ...ノイズ混入...", "十万石まんじゅう...うまい、うますぎる...", "公園...緑...癒やされる..."];
-                    addMessage('model', bugs[Math.floor(Math.random() * bugs.length)]);
-                }, 1000);
-            }
-        } catch (e) {
-            console.error(e);
-            fallbackResponse(msg);
-        }
+        await generateLLMResponse(msg);
     } else {
         // 簡易応答モード
+        fallbackResponse(msg);
+    }
+}
+
+/**
+ * 控えめで洗練されたインライン形式のダウンロード確認ポップアップをチャットログ内に直接出力する
+ */
+function showDiscreetConsentInline() {
+    const div = document.createElement('div');
+    div.className = "mb-4 text-left animate-fade-in-up";
+    div.innerHTML = `
+        <div class="text-[10px] text-gray-500 mb-1">システムプロトコル</div>
+        <div class="inline-block p-4 rounded-2xl bg-slate-800 text-slate-200 max-w-[85%] shadow-lg border border-slate-700">
+            <p class="text-sm font-bold mb-2">💡 高度なAIを起動しますか？</p>
+            <p class="text-[11px] text-slate-400 mb-3 leading-relaxed">
+                より精度の高い自然な対話ができる高度なAIモデル（軽量版:約350MB）をダウンロードできます。
+                ※不要な場合はダウンロードなしのまま簡易回答します。
+            </p>
+            <div class="flex gap-2">
+                <button onclick="handleDiscreetConsent(true)" class="py-1.5 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-colors shadow">はい (起動する)</button>
+                <button onclick="handleDiscreetConsent(false)" class="py-1.5 px-3 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs transition-colors">いいえ (簡易モード)</button>
+            </div>
+        </div>
+    `;
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+window.handleDiscreetConsent = async function(consent) {
+    // 既存の確認メッセージUIを削除
+    const lastChild = chatMessages.lastChild;
+    if (lastChild) lastChild.remove();
+
+    if (consent) {
+        useHighEndAI = true;
+        // 保留していたメッセージでチャットロード＆応答を開始
+        await startLLMLoadAndChat(currentPendingUserMsg);
+    } else {
+        useHighEndAI = false;
+        // 簡易モードで保留メッセージに即答
+        fallbackResponse(currentPendingUserMsg);
+    }
+    currentPendingUserMsg = "";
+};
+
+async function startLLMLoadAndChat(msg) {
+    const loadingMsg = addMessage('model', "ﾋﾟﾎﾟｯ...軽量AIエンジンをロード中である。システム起動中... (0%)");
+    const inner = loadingMsg.querySelector('.inline-block');
+
+    // プログレスバーの追加
+    const progContainer = document.createElement('div');
+    progContainer.className = "w-full bg-gray-600 h-1.5 rounded-full mt-2 overflow-hidden";
+    progContainer.innerHTML = '<div id="ai-load-progress" class="bg-emerald-500 h-full transition-all duration-300" style="width: 0%"></div>';
+    inner.appendChild(progContainer);
+    const progBar = progContainer.querySelector('#ai-load-progress');
+
+    await initWebLLM((progress) => {
+        const percent = Math.round(progress.progress * 100);
+        updateStatus(`Loading... ${percent}%`);
+        inner.firstChild.textContent = `ﾋﾟﾎﾟｯ...只今準備中である。ロード中... (${percent}%)`;
+        if (progBar) progBar.style.width = `${percent}%`;
+
+        if (progress.progress === 1) {
+            updateStatus("Online_");
+            inner.firstChild.textContent = "ﾋﾟﾎﾟｯ...System_Boot...完了。高度な解析を開始する。";
+            setTimeout(() => progContainer.remove(), 1000);
+        }
+    });
+
+    if (!engine) {
+        inner.firstChild.textContent = "Error...高度なAIの起動に失敗した。簡易応答モードで回答する。";
+        fallbackResponse(msg);
+        return;
+    }
+
+    // ロード成功後、保留されていたメッセージへの応答を生成
+    await generateLLMResponse(msg);
+}
+
+async function generateLLMResponse(msg) {
+    try {
+        const messages = [
+            { role: "system", content: SYSTEM_PROMPT },
+            { role: "user", content: msg }
+        ];
+
+        const chunks = await engine.chat.completions.create({
+            messages,
+            stream: true,
+        });
+
+        let fullResponse = "";
+        const messageDiv = addMessage('model', "");
+        const innerDiv = messageDiv.querySelector('.inline-block');
+
+        for await (const chunk of chunks) {
+            const content = chunk.choices[0]?.delta?.content || "";
+            fullResponse += content;
+
+            const lines = fullResponse.split('\n');
+            if (lines.length > 10) {
+                fullResponse = lines.slice(0, 10).join('\n') + "\n通信制限...処理能力オーバーである。";
+                innerDiv.textContent = fullResponse;
+                break;
+            }
+
+            innerDiv.textContent = fullResponse;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        innerDiv.innerHTML = formatMessage(fullResponse);
+
+        if (Math.random() < 0.2) {
+            setTimeout(() => {
+                const bugs = ["ﾋﾟﾋﾟｯ...ノイズ混入...", "十万石まんじゅう...うまい、うますぎる...", "公園...緑...癒やされる..."];
+                addMessage('model', bugs[Math.floor(Math.random() * bugs.length)]);
+            }, 1000);
+        }
+    } catch (e) {
+        console.error(e);
         fallbackResponse(msg);
     }
 }
@@ -172,7 +237,7 @@ function addMessage(role, text, isHTML = false) {
     div.appendChild(haniwa);
 
     const inner = document.createElement('div');
-    inner.className = `inline-block p-3 rounded-2xl ${role === 'user' ? 'bg-[var(--primary-color)] text-white' : 'bg-gray-700 text-gray-200'} max-w-[80%] break-words shadow-md`;
+    inner.className = `inline-block p-3 rounded-2xl ${role === 'user' ? 'bg-[var(--primary-color)] text-white' : 'bg-gray-700 text-gray-200'} max-w-[85%] break-words shadow-md`;
 
     if (isHTML) {
         inner.innerHTML = text;
@@ -237,7 +302,7 @@ function fallbackResponse(msg) {
     }
 
     if (!useHighEndAI) {
-        response += "<br><br><span class='text-[10px] opacity-60'>※現在「簡易応答モード」である。より深い対話には「高度なAI」を有効にせよ。</span>";
+        response += "<br><br><span class='text-[10px] opacity-60'>※現在「簡易応答モード」である。メッセージを入力するといつでも高度なAIを呼び出し可能である。</span>";
     }
 
     addMessage('model', response, true);
@@ -256,78 +321,6 @@ window.selectMood = function(mood) {
 };
 
 /**
- * 高度なAI（WebLLM）の使用確認モーダルを表示
- */
-function showAiInitModal() {
-    if (engine || isConfiguring) return;
-
-    const modal = document.createElement('div');
-    modal.id = 'ai-init-modal';
-    modal.className = 'fixed inset-0 bg-black/80 z-[6000] flex items-center justify-center p-4';
-    modal.innerHTML = `
-        <div class="bg-slate-900 border border-slate-700 p-8 rounded-3xl max-w-md w-full shadow-2xl text-center">
-            <div class="w-20 h-20 bg-emerald-900/50 rounded-full flex items-center justify-center mx-auto mb-6 border border-emerald-500/30">
-                <span class="text-4xl">🤖</span>
-            </div>
-            <h3 class="text-xl font-bold text-white mb-4">高度なAIを有効にしますか？</h3>
-            <p class="text-slate-400 text-sm mb-6 leading-relaxed">
-                高精度なAIモデル（約1.7GB）を使用し、より自然な対話が可能になります。<br>
-                初回はダウンロードが発生し、デバイスのストレージに保存されます。<br><br>
-                <span class="text-emerald-400 font-bold">有効にしない場合は、即座に応答可能な「簡易モード」を利用できます。</span>
-            </p>
-            <div class="flex flex-col gap-3">
-                <button id="ai-consent-high" class="w-full py-3 px-6 rounded-xl bg-emerald-600 text-white hover:bg-emerald-500 transition-all font-bold shadow-lg">高度なAIをダウンロードして開始</button>
-                <button id="ai-consent-simple" class="w-full py-3 px-6 rounded-xl border border-slate-700 text-slate-400 hover:bg-slate-800 transition-colors font-bold">簡易モード（ダウンロードなし）で開始</button>
-                <button id="ai-consent-cancel" class="w-full py-2 text-slate-500 hover:text-slate-300 text-xs transition-colors">キャンセル</button>
-            </div>
-        </div>
-    `;
-    document.body.appendChild(modal);
-
-    const closeModal = () => { document.body.removeChild(modal); };
-
-    document.getElementById('ai-consent-cancel').onclick = closeModal;
-    document.getElementById('ai-consent-simple').onclick = () => {
-        closeModal();
-        useHighEndAI = false;
-        openChatWindow();
-    };
-    document.getElementById('ai-consent-high').onclick = () => {
-        closeModal();
-        useHighEndAI = true;
-        openChatWindow();
-        initAndHandleLoad();
-    };
-}
-
-async function initAndHandleLoad() {
-    if (engine || isConfiguring) return;
-
-    const loadingMsg = addMessage('model', "ﾋﾟﾎﾟｯ...AIエンジンの初期化を開始する。システムをロード中... (0%)");
-    const inner = loadingMsg.querySelector('.inline-block');
-
-    // プログレスバーの追加
-    const progContainer = document.createElement('div');
-    progContainer.className = "w-full bg-gray-600 h-1.5 rounded-full mt-2 overflow-hidden";
-    progContainer.innerHTML = '<div id="ai-load-progress-welcome" class="bg-emerald-500 h-full transition-all duration-300" style="width: 0%"></div>';
-    inner.appendChild(progContainer);
-    const progBar = progContainer.querySelector('#ai-load-progress-welcome');
-
-    await initWebLLM((progress) => {
-        const percent = Math.round(progress.progress * 100);
-        updateStatus(`Loading... ${percent}%`);
-        inner.firstChild.textContent = `ﾋﾟﾎﾟｯ...只今準備中である。システムロード中... (${percent}%)`;
-        if (progBar) progBar.style.width = `${percent}%`;
-
-        if (progress.progress === 1) {
-            updateStatus("Online_");
-            inner.firstChild.textContent = "ﾋﾟﾎﾟｯ...System_Boot...完了。埼玉の公園について何でも聞いてほしい。";
-            setTimeout(() => progContainer.remove(), 1000);
-        }
-    });
-}
-
-/**
  * チャットウィンドウを実際に開く
  */
 function openChatWindow() {
@@ -342,23 +335,21 @@ function openChatWindow() {
 }
 
 /**
- * チャットウィンドウの開閉制御
+ * チャットウィンドウの開閉制御 (即座にチャットウィンドウを開く仕様に変更！)
  */
 function toggleChat() {
     const container = document.getElementById('chat-widget-container');
     if (!container) return;
-
-    // まだモードが選ばれておらず、ウィンドウも閉まっている場合
-    if (!useHighEndAI && !engine && !container.classList.contains('active')) {
-        showAiInitModal();
-        return;
-    }
-
     container.classList.toggle('active');
+
+    const chatMessages = document.getElementById('chat-messages');
+    if (chatMessages && chatMessages.children.length === 0) {
+        addWelcomeMessage();
+    }
 }
 
 /**
- * 歓迎メッセージの表示
+ * 歓迎メッセージの表示 (初期起動時はいつでも簡易モードが即使える歓迎表示に！)
  */
 function addWelcomeMessage() {
     const chatMessages = document.getElementById('chat-messages');
@@ -369,7 +360,7 @@ function addWelcomeMessage() {
             <div class="text-[10px] text-gray-500 mb-1">AIサイタマニアくん</div>
             <div class="inline-block p-3 rounded-2xl bg-gray-700 text-gray-200 shadow-md">
                 ﾋﾟﾎﾟｯ...System_Boot...完了。<br>
-                ${useHighEndAI ? '高度な解析モードで待機中である。' : '簡易スキャンモードで待機中である。'}
+                簡易スキャンモードで即時対応可能である。お好みのメニューをタップするか、質問を自由に直接入力せよ。
             </div>
         `;
         chatMessages.appendChild(div);
@@ -379,7 +370,6 @@ function addWelcomeMessage() {
 // グローバルに公開
 window.handleChat = handleChat;
 window.toggleChat = toggleChat;
-window.showAiInitModal = showAiInitModal;
 
 if (sendBtn) sendBtn.addEventListener('click', () => handleChat());
 if (userInput) userInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') handleChat(); });
