@@ -11,3 +11,6 @@
 127.0.0.1 - - [25/Jul/2026 12:13:49] "GET /destinations/owada_park.html HTTP/1.1" 200 -
 127.0.0.1 - - [25/Jul/2026 12:13:50] code 404, message File not found
 127.0.0.1 - - [25/Jul/2026 12:13:50] "GET /videos/owada_fireworks.mp4 HTTP/1.1" 404 -
+127.0.0.1 - - [25/Jul/2026 12:36:47] "GET /saitama_mini_game.html HTTP/1.1" 200 -
+127.0.0.1 - - [25/Jul/2026 12:36:47] "GET /css/common.css HTTP/1.1" 200 -
+127.0.0.1 - - [25/Jul/2026 12:36:47] "GET /js/common.js HTTP/1.1" 200 -
