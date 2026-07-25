@@ -158,6 +158,22 @@
             <canvas id="fireworks-canvas"></canvas>
             <h3 class="mt-0">🎆 さいたま市花火大会（大和田公園会場）</h3>
             <p>毎年8月初旬に開催される花火大会は、さいたま市の夏の訪れを告げる大人気行事です。周囲に見晴らしを遮る高い障害物が極めて少ない大和田公園内で打ち上げられるため、頭上で大音響とともに咲き誇る迫力満点の大輪の花火を間近で楽しむことができます。約5,000発の華麗な芸術花火が夜空を埋め尽くす様子は、感動の一言に尽きます！</p>
+
+            <!-- 花火動画プレースホルダー (ローカル動画用) -->
+            <div class="relative rounded-2xl overflow-hidden mt-6 shadow-lg border border-slate-200 dark:border-slate-700 aspect-video bg-black flex flex-col justify-center items-center group">
+                <video class="absolute inset-0 w-full h-full object-cover z-0"
+                       src="../videos/owada_fireworks.mp4"
+                       poster="https://images.unsplash.com/photo-1533230392659-911598284149?q=80&w=840&auto=format&fit=crop"
+                       autoplay loop muted playsinline controls></video>
+                <!-- ローカル動画未配置時の案内表示 -->
+                <div class="absolute inset-0 bg-black/50 flex flex-col justify-center items-center pointer-events-none p-4 text-center select-none z-10 transition-opacity group-hover:opacity-0 duration-500">
+                    <span class="text-4xl mb-2 animate-bounce">🎆</span>
+                    <h4 class="text-white text-base font-bold mb-1" style="font-family: inherit !important;">夏の夜空を彩る大和田花火動画</h4>
+                    <p class="text-white/80 text-xs max-w-md m-0 p-0" style="margin: 0 !important; line-height: 1.5 !important;">
+                        ※将来「videos/owada_fireworks.mp4」に動画ファイルを配置すると、ここに花火のループ映像が自動で流れ出します。
+                    </p>
+                </div>
+            </div>
         </div>
 
         <div class="content-card">
