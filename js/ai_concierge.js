@@ -9,7 +9,7 @@
 let webllm = null;
 
 // 超軽量・高速なQwen2-0.5Bモデルに変更 (約350MBでローカル起動が超高速！)
-const SELECTED_MODEL = "Qwen2-0.5B-Instruct-q4f16-MLC";
+const SELECTED_MODEL = "Qwen2-0.5B-Instruct-q4f16_1-MLC";
 
 const SYSTEM_PROMPT = `
 あなたは「AIサイタマニアくん」という、埼玉県が大好きな埴輪型AIガイドである。
@@ -41,9 +41,24 @@ async function initWebLLM(onProgress) {
 
     try {
         if (!webllm) {
-            webllm = await import("https://esm.run/@mlc-ai/web-llm");
+            try {
+                // jsdelivr の +esm はダイナミックバンドルが強力で安定しています
+                webllm = await import("https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@0.2.84/+esm");
+            } catch (err) {
+                console.warn("Failed to load from jsdelivr +esm, trying esm.run...", err);
+                try {
+                    webllm = await import("https://esm.run/@mlc-ai/web-llm@0.2.84");
+                } catch (err2) {
+                    console.warn("Failed to load from esm.run, trying esm.sh...", err2);
+                    webllm = await import("https://esm.sh/@mlc-ai/web-llm@0.2.84");
+                }
+            }
         }
-        engine = await webllm.CreateMLCEngine(
+        const createEngine = webllm.CreateMLCEngine || (webllm.default && webllm.default.CreateMLCEngine);
+        if (!createEngine) {
+            throw new Error("CreateMLCEngine not found in webllm module");
+        }
+        engine = await createEngine(
             SELECTED_MODEL,
             { initProgressCallback: onProgress }
         );
