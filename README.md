@@ -70,8 +70,7 @@
 │   ├── config.js                # APIキーや外部サービス設定
 │   └── slider_content.json      # トップページスライダー用構造化データ
 │
-├── images/                      # ローカル配置画像アセット
-└── videos/                      # ローカル配置動画アセット
+├── images/                      # ローカル配置画像・動画メディアアセット
 ```
 
 ---
@@ -85,7 +84,7 @@
 | :--- | :--- | :--- | :--- |
 | [北浦和公園 音楽噴水ショー (YouTube 動画)](https://www.youtube.com/watch?v=YpN7w5bpVaQ) | YouTube / 1080p | `index.html` | ファーストビュー（ヒーロー背景）に埋め込まれ、自動再生・ループ・消音で流れる音楽噴水の実写YouTube動画（24秒〜200秒の間を再生）。 |
 
-### 2. ローカル配置画像 (`/images/`)
+### 2. ローカル配置画像・動画・メディア (`/images/`)
 | ファイル名 | 形式 | 搭載先ページ | 用途・詳細 |
 | :--- | :--- | :--- | :--- |
 | `kita_urawa_park.jpg` | JPEG | 各種 | 北浦和公園の景観（メインビジュアル）。トップ、ギャラリー、各詳細ページで使用。 |
@@ -98,6 +97,9 @@
 | `shinrin_park.jpg` | JPEG | 各種 | 国営武蔵丘陵森林公園の広大なサイクリングロード・自然写真。 |
 | `akigase_park.jpg` | JPEG | 各種 | 秋ヶ瀬公園の広大な芝生とレジャーエリアの写真。 |
 | `densya.jpg` | JPEG | 共通モーダル | アクセスモーダル内の、埼玉を走る電車のイメージ写真。 |
+| `fishing.jpg` | JPEG | `saitama_mini_game.html`| Play-Hubにおける「長瀞の川釣りゲーム」カード用ビジュアル。 |
+| `quiz.jpg` | JPEG | `saitama_mini_game.html`| Play-Hubにおける「埼玉マスター検定クイズ」カード用ビジュアル。 |
+| `kita_urawa_fountain.mp4` | MP4 | 各種 | 北浦和公園のシンボルである音楽噴水ショーの美しいローカル動画（背景再生用等）。 |
 | `maruyama_park.jpg` | JPEG | (未使用) | 上尾丸山公園の画像。アセットフォルダ内に保持（将来の展開用）。 |
 | `tokorozawa_park.jpg` | JPEG | (未使用) | 所沢航空記念公園の画像。アセットフォルダ内に保持（将来の展開用）。 |
 
@@ -116,8 +118,6 @@
 | `https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb...` | JPEG | `cafe.html` | 公園カフェ特集のメインを飾る、洗練されたカフェテラス・テーブルビジュアル。 |
 | `https://images.unsplash.com/photo-1554118811-1e0d58224f24...` | JPEG | `cafe.html` | ボナ・カフェ紹介用の木漏れ日溢れるインテリア・ドリップコーヒー。 |
 | `https://images.unsplash.com/photo-1445116572660-236099ec97a0...` | JPEG | `cafe.html` | アナザープレイスカフェ用の別所沼のほとりに調和するリラクシングな写真。 |
-| `https://images.unsplash.com/photo-1582738411706-bfc8e691d1c2...` | JPEG | `saitama_mini_game.html`| Play-Hubにおける「長瀞の川釣りゲーム」カード用ビジュアル。 |
-| `https://images.unsplash.com/photo-1544006659-f0b21f04cb1d...` | JPEG | `saitama_mini_game.html`| Play-Hubにおける「埼玉マスター検定クイズ」カード用ビジュアル. |
 | `https://images.unsplash.com/photo-1519331379826-f10be5486c6f...` | JPEG | `index.html` | フォトギャラリーを彩る、木漏れ日の差し込む美しい並木道の風景。 |
 | `https://images.unsplash.com/photo-1438761681033-6461ffad8d80...` | JPEG | `cafe.html` | 記事執筆者のアバター画像（Saitama Walker 編集部）。 |
 

@@ -84,22 +84,22 @@ body {
     background-color: var(--bg-color);
     color: var(--text-color);
     transition: background-color 0.3s, color 0.3s;
-    line-height: 2.3; /* Increased line-height for better legibility like image.png */
-    letter-spacing: 0.08em; /* Generous letter-spacing for elegant breathing room */
+    line-height: 1.75; /* Standard highly legible line-height */
+    letter-spacing: 0.03em; /* Clean, elegant letter spacing */
 }
 
 /* Beautiful fonts for details headings */
 h1, h2, h3, h4, .hero-title, .featured-badge {
     font-family: 'Mochiy Pop One', 'Noto Sans JP', sans-serif !important;
-    letter-spacing: 0.05em !important;
-    line-height: 1.6 !important;
+    letter-spacing: 0.03em !important;
+    line-height: 1.4 !important;
 }
 
 /* Specific p-tag override inside main articles to mirror the user's requested layout */
 main p, .article-content p, .content-card p, .family-info-card p, section p {
-    line-height: 2.3 !important;
-    letter-spacing: 0.1em !important;
-    margin-bottom: 2rem !important;
+    line-height: 1.75 !important;
+    letter-spacing: 0.03em !important;
+    margin-bottom: 1.25rem !important;
 }
 
 /* 読了インジケーター */
