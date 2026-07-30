@@ -1022,7 +1022,10 @@ document.addEventListener('DOMContentLoaded', () => {
     initWeather();
 
     window.openWeatherModal = function() {
-        if (!weatherData) return;
+        if (!weatherData) {
+            alert("天気データを受信中、または一時的に取得できませんでした。しばらく経ってから再度お試しください。");
+            return;
+        }
         const modal = document.getElementById('info-modal');
         const body = document.getElementById('modal-body');
         if (!modal || !body) return;
