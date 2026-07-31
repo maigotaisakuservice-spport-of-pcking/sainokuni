@@ -154,11 +154,6 @@ function readPageText() {
         return;
     }
 
-    // 読み上げ開始時にヒーロー背景動画を強制ミュートする
-    if (typeof window.muteHeroVideo === 'function') {
-        window.muteHeroVideo();
-    }
-
     const mainEl = document.querySelector('main') || document.body;
     const clone = mainEl.cloneNode(true);
     const excludes = 'script, style, #menu-content, header, footer, .theme-toggle-btn, button, #accessibility-panel, .no-read';
