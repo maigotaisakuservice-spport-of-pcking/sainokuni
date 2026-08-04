@@ -230,6 +230,13 @@
         }
         initBig5();
 
+        // Overpass API のミラーエンドポイントリスト（障害対策の冗長化）
+        const overpassEndpoints = [
+            'https://overpass-api.de/api/interpreter',
+            'https://overpass.kumi.systems/api/interpreter',
+            'https://overpass.openstreetmap.ru/api/interpreter'
+        ];
+
         async function fetchOSMData(type, center, radius = 500, keyword = '') {
             const lat = center.lat;
             const lon = center.lng;
@@ -237,14 +244,15 @@
             let emoji = "📍";
             let color = "#333";
 
+            // クエリをnodeだけでなくway（エリア）やrelationにも拡張して取得漏れを撲滅
             const categories = {
-                'parks': { q: 'node["leisure"="park"](around:RADIUS,LAT,LON);way["leisure"="park"](around:RADIUS,LAT,LON);', e: '🌳', c: '#2e7d32' },
-                'stations': { q: 'node["railway"="station"](around:RADIUS,LAT,LON);', e: '🚉', c: '#1565c0' },
-                'toilets': { q: 'node["amenity"="toilet"](around:RADIUS,LAT,LON);', e: '🚻', c: '#f57c00' },
-                'shops': { q: 'node["shop"~"convenience"](around:RADIUS,LAT,LON);', e: '🏪', c: '#43a047' },
+                'parks': { q: 'node["leisure"="park"](around:RADIUS,LAT,LON);way["leisure"="park"](around:RADIUS,LAT,LON);relation["leisure"="park"](around:RADIUS,LAT,LON);', e: '🌳', c: '#2e7d32' },
+                'stations': { q: 'node["railway"="station"](around:RADIUS,LAT,LON);way["railway"="station"](around:RADIUS,LAT,LON);', e: '🚉', c: '#1565c0' },
+                'toilets': { q: 'node["amenity"="toilet"](around:RADIUS,LAT,LON);way["amenity"="toilet"](around:RADIUS,LAT,LON);relation["amenity"="toilet"](around:RADIUS,LAT,LON);', e: '🚻', c: '#f57c00' },
+                'shops': { q: 'node["shop"~"convenience"](around:RADIUS,LAT,LON);way["shop"~"convenience"](around:RADIUS,LAT,LON);', e: '🏪', c: '#43a047' },
                 'parking': { q: 'node["amenity"="parking"](around:RADIUS,LAT,LON);way["amenity"="parking"](around:RADIUS,LAT,LON);', e: '🅿️', c: '#546e7a' },
-                'cafe': { q: 'node["amenity"="cafe"](around:RADIUS,LAT,LON);', e: '☕', c: '#6d4c41' },
-                'vending': { q: 'node["amenity"="vending_machine"](around:RADIUS,LAT,LON);', e: '🥤', c: '#1e88e5' }
+                'cafe': { q: 'node["amenity"="cafe"](around:RADIUS,LAT,LON);way["amenity"="cafe"](around:RADIUS,LAT,LON);', e: '☕', c: '#6d4c41' },
+                'vending': { q: 'node["amenity"="vending_machine"](around:RADIUS,LAT,LON);way["amenity"="vending_machine"](around:RADIUS,LAT,LON);', e: '🥤', c: '#1e88e5' }
             };
 
             if (type === 'all') {
@@ -257,13 +265,33 @@
 
             query = query.replace(/RADIUS/g, radius).replace(/LAT/g, lat).replace(/LON/g, lon);
 
-            // Overpass API URL
-            const url = `https://overpass-api.de/api/interpreter?data=[out:json];(${query});out center;`;
-
             document.getElementById('loading-overlay').classList.remove('hidden');
-            try {
-                const res = await fetch(url);
-                const data = await res.json();
+
+            let data = null;
+            let lastError = null;
+
+            // エンドポイントを巡回してフェッチ（自動リトライ＆フォールバック）
+            for (const endpoint of overpassEndpoints) {
+                try {
+                    const url = `${endpoint}?data=[out:json];(${query});out center;`;
+                    const res = await fetch(url, { signal: AbortSignal.timeout ? AbortSignal.timeout(8000) : null });
+                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                    data = await res.json();
+                    if (data && data.elements) {
+                        break; // 成功したらループを抜ける
+                    }
+                } catch (err) {
+                    console.warn(`Endpoint ${endpoint} failed:`, err);
+                    lastError = err;
+                }
+            }
+
+            if (!data) {
+                console.error("すべてのOverpassエンドポイントで取得失敗:", lastError);
+                document.getElementById('loading-overlay').classList.add('hidden');
+                alert("周辺施設の取得に失敗しました。時間をおいてもう一度お試しください。");
+                return;
+            }
 
                 markers.clearLayers();
                 foundFacilities = [];
