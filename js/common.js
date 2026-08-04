@@ -1,4 +1,18 @@
 
+/**
+ * ==========================================
+ * SAITAMA PARKS - サイト共通スクリプト (js/common.js)
+ * ==========================================
+ * [役割]
+ * 音声読み上げ(TTS)、アクセシビリティコントロール(Saicolorテーマ・ダークモード切替)、
+ * ランダム遷移リンク、共通モーダル(約款、アクセス、著作権等)、スクロール連動などの
+ * ポータル全体にわたる共通フロントエンドインタラクションを統合管理します。
+ *
+ * [外部リソース/CDN名]
+ * - Google Translate Widget (translate.google.com)
+ * - Tailwind CSS (cdn.tailwindcss.com) (共通ダークモード連携用)
+ */
+
 // Tailwind ダークモード設定 (セレクタ方式)
 if (window.tailwind) {
     tailwind.config = {
@@ -204,7 +218,7 @@ const PARK_DATA = [
     { name: "大宮公園", link: "omiya_park.html", img: "omiya_park.jpg" },
     { name: "北浦和公園", link: "kita_urawa_park.html", img: "kita_urawa_park.jpg" },
     { name: "森林公園", link: "shinrin_park.html", img: "shinrin_park.jpg" },
-    { name: "大和田公園", link: "owada_park.html", img: "https://images.unsplash.com/photo-1533230392659-911598284149?q=80&w=640&auto=format&fit=crop", isFeatured: true },
+    { name: "大和田公園", link: "owada_park.html", img: "owada_park.jpg", isFeatured: true },
     { name: "秋ヶ瀬公園", link: "akigase_park.html", img: "akigase_park.jpg" }
 ];
 
@@ -406,9 +420,23 @@ const modalContents = {
         </div>
     `,
     copyright: `
-        <h2 class="text-2xl font-bold mb-4">著作権・免責事項</h2>
-        <p class="mb-4">© 2026 埼玉公園ポータルプロジェクト. All Rights Reserved.</p>
-        <p class="text-sm">当サイトの情報の正確性には万全を期しておりますが、利用者が当サイトの情報を用いて行う一切の行為について、責任を負うものではありません。</p>
+        <h2 class="text-2xl font-bold mb-4">著作権および免責事項について</h2>
+        <div class="space-y-4 text-sm leading-relaxed max-h-[60vh] overflow-y-auto pr-2">
+            <p class="font-bold text-base border-b-2 border-[var(--primary-color)] pb-1 mb-2">1. 各画像およびメディア素材の著作権帰属</p>
+            <p>当ポータルサイト「SAITAMA PARKS」に掲載されているすべての画像、写真、動画、およびその他一切のメディア素材の著作権は、それぞれの権利を有する「各画像の著作権者（撮影者、提供元組織、またはUnsplash等のライセンス取得元）」に帰属します。</p>
+            <div class="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-500 p-3 rounded-r-xl font-bold text-xs my-3 text-[var(--text-color)]">
+                ⚠️ 注意事項：各画像の著作権はそれぞれの画像の著作権者に帰属します。無断での転載、複製、二次加工、再配布等の行為は法律により固く禁止されています。
+            </div>
+
+            <p class="font-bold text-base border-b-2 border-[var(--primary-color)] pb-1 mb-2 mt-4">2. 本サイトのコンテンツの著作権</p>
+            <p>本サイト内のテキスト、ロゴ、レイアウトデザイン、プログラムソースコード（Canvasアニメーション、共通共通スクリプト等）の著作権は、当サイト運営および開発プロジェクトに帰属、またはライセンスに基づいて使用されています。これらについても無断使用はお控えください。</p>
+
+            <p class="font-bold text-base border-b-2 border-[var(--primary-color)] pb-1 mb-2 mt-4">3. 免責事項</p>
+            <p>当サイトの情報の正確性・安全性については細心の注意を払っておりますが、その内容を完全に保証するものではありません。利用者が当ポータルサイトの情報を用いて行う一切の行為、およびそれによって生じるいかなる損害・トラブルについて、当プロジェクトおよび運営組織は一切の責任を負いません。現地の案内や各公式ウェブサイトの最新情報を必ず合わせてご確認ください。</p>
+
+            <hr class="border-gray-200 dark:border-gray-700 my-4">
+            <p class="text-xs text-center opacity-75">© 2026 Saitama Parks Promotion Association. All Rights Reserved.</p>
+        </div>
     `,
     legal: `
         <h2 class="text-2xl font-bold mb-4">利用規約 (ToS) / EULA</h2>

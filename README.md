@@ -91,7 +91,6 @@
 | `kita_urawa_fountain.jpg` | JPEG | `gallery.html` | 北浦和公園音楽噴水の静止画。 |
 | `kita_urawa_path.jpg` | JPEG | `gallery.html` | 北浦和公園の緑に囲まれた散策路の風景。 |
 | `kita_urawa_sculpture_1.jpg`| JPEG | `gallery.html` | 園内に展示されている野外彫刻アート作品その1。 |
-| `kita_urawa_sculpture_2.jpg`| JPEG | `gallery.html` | 園内に展示されている野外彫刻アート作品その2。 |
 | `momas_placeholder.jpg` | JPEG | `gallery.html` | 園内にある「埼玉県立近代美術館 (MOMAS)」の外観写真。 |
 | `omiya_park.jpg` | JPEG | 各種 | 歴史ある大宮公園のメイン景観写真。 |
 | `shinrin_park.jpg` | JPEG | 各種 | 国営武蔵丘陵森林公園の広大なサイクリングロード・自然写真。 |
@@ -100,8 +99,6 @@
 | `fishing.jpg` | JPEG | `saitama_mini_game.html`| Play-Hubにおける「長瀞の川釣りゲーム」カード用ビジュアル。 |
 | `quiz.jpg` | JPEG | `saitama_mini_game.html`| Play-Hubにおける「埼玉マスター検定クイズ」カード用ビジュアル。 |
 | `kita_urawa_fountain.mp4` | MP4 | 各種 | 北浦和公園のシンボルである音楽噴水ショーの美しいローカル動画（背景再生用等）。 |
-| `maruyama_park.jpg` | JPEG | (未使用) | 上尾丸山公園の画像。アセットフォルダ内に保持（将来の展開用）。 |
-| `tokorozawa_park.jpg` | JPEG | (未使用) | 所沢航空記念公園の画像。アセットフォルダ内に保持（将来の展開用）。 |
 
 ### 3. 外部読み込み Web 画像アセット (Unsplash 等)
 *※CSSの表現力およびビジュアル補強のため、ネットワーク経由で動的ロードする外部ストックフォトです。*

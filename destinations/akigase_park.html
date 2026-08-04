@@ -3,13 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 役割: 秋ヶ瀬公園（広大な緑地・BBQエリア）の詳細情報を紹介するスポットページ -->
     <title>秋ヶ瀬公園 | 埼玉県公園ガイド 2026</title>
+    <!-- Tailwind CSS: モダンスタイリングとテーマ切り替え制御をサポート -->
     <script defer src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             darkMode: "selector"
         }
     </script>
+    <!-- Google Fonts: 豊富なウエイトと言和風の装飾用フォントを含むCDN -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Mochiy+Pop+One&family=DotGothic16&display=swap" rel="stylesheet">
@@ -168,7 +171,7 @@
             </a>
             <a href="owada_park.html" class="recommend-card relative">
                 <span class="absolute top-2 right-2 bg-red-600 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full z-10 animate-pulse">イチオシ</span>
-                <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1533230392659-911598284149?q=80&w=640&auto=format&fit=crop" alt="大和田公園">
+                <img loading="lazy" decoding="async" src="../images/owada_park.jpg" alt="大和田公園">
                 <p>大和田公園</p>
             </a>
             <a href="shinrin_park.html" class="recommend-card">
@@ -184,9 +187,10 @@
         <div class="footer-logo">SAITAMA PARKS</div>
         <hr>
         <p class="text-sm opacity-80">© 2026 埼玉県公園ガイドポータル - 自然と共に生きる。</p>
-        <div class="footer-links mt-8 flex justify-center gap-12 text-sm flex-wrap">
+        <div class="footer-links mt-8 flex justify-center gap-8 text-sm flex-wrap">
             <a onclick="openModal('about')" class="cursor-pointer">サイトについて</a>
             <a onclick="openModal('access')" class="cursor-pointer">アクセス</a>
+            <a onclick="openModal('legal')" class="cursor-pointer">利用規約</a>
             <a onclick="openModal('copyright')" class="cursor-pointer">著作権</a>
         </div>
     </div>

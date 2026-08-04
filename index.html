@@ -303,7 +303,7 @@
         </a>
         <a href="destinations/owada_park.html" class="article-card">
             <div class="relative">
-                <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1533230392659-911598284149?q=80&w=640&auto=format&fit=crop" alt="大和田公園" class="w-full h-48 object-cover" loading="lazy" decoding="async">
+                <img loading="lazy" decoding="async" src="images/owada_park.jpg" alt="大和田公園" class="w-full h-48 object-cover">
                 <div class="absolute top-4 left-4 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded-full animate-pulse">イチオシ！</div>
             </div>
             <div class="p-6">
@@ -347,7 +347,7 @@
         <div class="gallery-item"><img loading="lazy" decoding="async" src="images/kita_urawa_park.jpg" alt="北浦和公園" loading="lazy" decoding="async"></div>
         <div class="gallery-item"><img loading="lazy" decoding="async" src="images/omiya_park.jpg" alt="大宮公園" loading="lazy" decoding="async"></div>
         <div class="gallery-item relative">
-            <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1533230392659-911598284149?q=80&w=640&auto=format&fit=crop" alt="大和田公園" loading="lazy" decoding="async">
+            <img loading="lazy" decoding="async" src="images/owada_park.jpg" alt="大和田公園">
             <div class="absolute top-2 right-2 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded-full animate-pulse">イチオシ！</div>
         </div>
         <div class="gallery-item"><img loading="lazy" decoding="async" src="images/shinrin_park.jpg" alt="森林公園" loading="lazy" decoding="async"></div>
@@ -863,7 +863,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initMiniMap();
 
-    const nextFestival = new Date('2026-11-01');
+    // Safariでも安全に解釈できるように日付文字列のフォーマットを変換
+    const nextFestival = new Date('2026/11/01');
     const today = new Date();
     const diff = Math.ceil((nextFestival - today) / (1000 * 60 * 60 * 24));
     const festivalEl = document.getElementById('days-to-festival');
@@ -898,36 +899,58 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // --- 2. ネットワーク取得 (キャッシュ無効または期限切れの場合) ---
-        try {
-            const { CONFIG } = await import('./js/config.js');
-            const apiUrl = `https://api.weatherapi.com/v1/forecast.json?key=${CONFIG.WEATHER_API_KEY}&q=Saitama&days=3&lang=ja`;
+        // 取得失敗時は最大3回の再試行(リトライ)処理を行います
+        let success = false;
+        let lastError = null;
+        const maxRetries = 3;
 
-            let res;
-            // CORS回避のため、常にプロキシ（AllOrigins）を使用するよう変更
-            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`;
-
+        for (let attempt = 1; attempt <= maxRetries + 1; attempt++) {
             try {
-                const proxyRes = await fetch(proxyUrl);
-                if (!proxyRes.ok) throw new Error('Proxy failed');
-                const proxyData = await proxyRes.json();
-                weatherData = JSON.parse(proxyData.contents);
-            } catch (e) {
-                console.warn('Primary proxy failed, trying fallback proxy...');
-                res = await fetch(`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(apiUrl)}`);
-                if (!res.ok) throw new Error('Fallback proxy failed');
-                weatherData = await res.json();
-            }
+                const { CONFIG } = await import('./js/config.js');
+                const apiUrl = `https://api.weatherapi.com/v1/forecast.json?key=${CONFIG.WEATHER_API_KEY}&q=Saitama&days=3&lang=ja`;
 
+                let fetchedData = null;
+                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`;
+
+                try {
+                    const proxyRes = await fetch(proxyUrl);
+                    if (!proxyRes.ok) throw new Error('Primary proxy failed');
+                    const proxyData = await proxyRes.json();
+                    fetchedData = JSON.parse(proxyData.contents);
+                } catch (e) {
+                    console.warn(`Primary proxy failed (attempt ${attempt}), trying fallback...`, e);
+                    const fallbackRes = await fetch(`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(apiUrl)}`);
+                    if (!fallbackRes.ok) throw new Error('Fallback proxy failed');
+                    fetchedData = await fallbackRes.json();
+                }
+
+                if (fetchedData && fetchedData.forecast && fetchedData.forecast.forecastday) {
+                    weatherData = fetchedData;
+                    success = true;
+                    break;
+                } else {
+                    throw new Error("Invalid weather data format received");
+                }
+            } catch (err) {
+                lastError = err;
+                console.warn(`Weather fetch attempt ${attempt} failed.`, err);
+                if (attempt <= maxRetries) {
+                    // 再試行の前に1.5秒待機
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+                }
+            }
+        }
+
+        if (success && weatherData) {
             // キャッシュに保存
             const cacheToStore = {
                 timestamp: Date.now(),
                 data: weatherData
             };
             localStorage.setItem(cacheKey, JSON.stringify(cacheToStore));
-
             displayWeatherData(weatherData);
-        } catch (e) {
-            console.error('Weather fetch error:', e);
+        } else {
+            console.error('Weather fetch failed completely after retries:', lastError);
             const weatherInfo = document.getElementById('weather-info');
             if (weatherInfo) {
                 weatherInfo.innerHTML = `
@@ -1034,10 +1057,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const now = new Date();
         let hourlyHtml = '';
         const allHours = [...weatherData.forecast.forecastday[0].hour, ...weatherData.forecast.forecastday[1].hour];
-        const futureHours = allHours.filter(h => new Date(h.time) >= now).slice(0, 24);
+        // Safari環境対応のため、ハイフンをスラッシュに置換して日付変換します
+        const futureHours = allHours.filter(h => new Date(h.time.replace(/-/g, '/')) >= now).slice(0, 24);
 
         futureHours.forEach(h => {
-            const time = new Date(h.time).getHours();
+            const time = new Date(h.time.replace(/-/g, '/')).getHours();
             hourlyHtml += `
                 <div class="flex-shrink-0 text-center p-2 bg-slate-50 dark:bg-slate-800 rounded-xl min-w-[80px]">
                     <div class="text-[10px] font-bold">${time}時</div>
@@ -1054,7 +1078,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // 3日間予報の構築
         let forecastHtml = '';
         weatherData.forecast.forecastday.forEach(d => {
-            const date = new Date(d.date);
+            const date = new Date(d.date.replace(/-/g, '/'));
             const dateStr = `${date.getMonth() + 1}/${date.getDate()}`;
             forecastHtml += `
                 <div class="flex items-center justify-between p-3 border-b border-gray-100 dark:border-gray-700 last:border-0">
