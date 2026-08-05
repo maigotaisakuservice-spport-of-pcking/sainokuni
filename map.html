@@ -7,7 +7,7 @@
     <title>さいたま周辺施設マップ | 2026年版</title>
 
     <!-- Tailwind CSS: ユーティリティファーストのスタイリングに使用 -->
-    <script defer src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             darkMode: "selector"
@@ -267,31 +267,32 @@
 
             document.getElementById('loading-overlay').classList.remove('hidden');
 
-            let data = null;
-            let lastError = null;
+            try {
+                let data = null;
+                let lastError = null;
 
-            // エンドポイントを巡回してフェッチ（自動リトライ＆フォールバック）
-            for (const endpoint of overpassEndpoints) {
-                try {
-                    const url = `${endpoint}?data=[out:json];(${query});out center;`;
-                    const res = await fetch(url, { signal: AbortSignal.timeout ? AbortSignal.timeout(8000) : null });
-                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                    data = await res.json();
-                    if (data && data.elements) {
-                        break; // 成功したらループを抜ける
+                // エンドポイントを巡回してフェッチ（自動リトライ＆フォールバック）
+                for (const endpoint of overpassEndpoints) {
+                    try {
+                        const url = `${endpoint}?data=[out:json];(${query});out center;`;
+                        const res = await fetch(url, { signal: AbortSignal.timeout ? AbortSignal.timeout(8000) : null });
+                        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                        data = await res.json();
+                        if (data && data.elements) {
+                            break; // 成功したらループを抜ける
+                        }
+                    } catch (err) {
+                        console.warn(`Endpoint ${endpoint} failed:`, err);
+                        lastError = err;
                     }
-                } catch (err) {
-                    console.warn(`Endpoint ${endpoint} failed:`, err);
-                    lastError = err;
                 }
-            }
 
-            if (!data) {
-                console.error("すべてのOverpassエンドポイントで取得失敗:", lastError);
-                document.getElementById('loading-overlay').classList.add('hidden');
-                alert("周辺施設の取得に失敗しました。時間をおいてもう一度お試しください。");
-                return;
-            }
+                if (!data) {
+                    console.error("すべてのOverpassエンドポイントで取得失敗:", lastError);
+                    document.getElementById('loading-overlay').classList.add('hidden');
+                    alert("周辺施設の取得に失敗しました。時間をおいてもう一度お試しください。");
+                    return;
+                }
 
                 markers.clearLayers();
                 foundFacilities = [];
