@@ -606,9 +606,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function initMiniMap() {
+        console.log("initMiniMap is called. window.L defined:", typeof window.L !== 'undefined');
         const mapEl = document.getElementById('home-mini-map');
-        if (!mapEl || !window.L) return;
+        if (!mapEl || !window.L) {
+            console.log("initMiniMap exited early! mapEl exists:", !!mapEl, "window.L exists:", typeof window.L !== 'undefined');
+            return;
+        }
 
+        console.log("initMiniMap initializing Leaflet...");
         // プレビュー用にドラッグ・ズームを有効にし、より詳細に調べられるようにします
         miniMap = L.map(mapEl, {
             zoomControl: true,
@@ -739,25 +744,56 @@ document.addEventListener('DOMContentLoaded', () => {
         centerMarker.bindPopup(`<b>${centerName}</b>`).openPopup();
 
         // Overpass API による周辺検索（公衆トイレ、駅、カフェ、近接の別の公園）
-        // 半径800mの円形検索
+        // 半径800mの円形検索。wayも含めることでエリア登録の施設も網羅
         const radius = 800;
         const query = `
             (
               node["amenity"="toilet"](around:${radius},${lat},${lon});
+              way["amenity"="toilet"](around:${radius},${lat},${lon});
               node["railway"="station"](around:${radius},${lat},${lon});
+              way["railway"="station"](around:${radius},${lat},${lon});
               node["amenity"="cafe"](around:${radius},${lat},${lon});
+              way["amenity"="cafe"](around:${radius},${lat},${lon});
               node["leisure"="park"](around:${radius},${lat},${lon});
+              way["leisure"="park"](around:${radius},${lat},${lon});
             );
         `;
-        const url = `https://overpass-api.de/api/interpreter?data=[out:json];${query}out center;`;
+
+        // 障害対策の冗長化エンドポイントリスト
+        const overpassEndpoints = [
+            'https://overpass-api.de/api/interpreter',
+            'https://overpass.kumi.systems/api/interpreter',
+            'https://overpass.openstreetmap.ru/api/interpreter'
+        ];
+
+        let data = null;
+        let lastError = null;
+
+        // エンドポイントを巡回してフェッチ（自動リトライ＆フォールバック）
+        for (const endpoint of overpassEndpoints) {
+            try {
+                const url = `${endpoint}?data=[out:json];${query}out center;`;
+                const res = await fetch(url, { signal: AbortSignal.timeout ? AbortSignal.timeout(8000) : null });
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                data = await res.json();
+                if (data && data.elements) {
+                    break; // 成功
+                }
+            } catch (err) {
+                console.warn(`Endpoint ${endpoint} failed:`, err);
+                lastError = err;
+            }
+        }
+
+        if (!data) {
+            console.error("すべてのOverpassエンドポイントでプレビュー取得失敗:", lastError);
+            if (listContainer) {
+                listContainer.innerHTML = `<div class="text-center py-12 text-sm text-red-500">周辺情報の取得に失敗しました。時間をおいて再試行してください。</div>`;
+            }
+            return;
+        }
 
         try {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 8000);
-            const res = await fetch(url, { signal: controller.signal });
-            clearTimeout(timeoutId);
-            const data = await res.json();
-
             const listItems = [];
 
             data.elements.forEach(el => {
@@ -861,7 +897,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    initMiniMap();
+    // Leafletなどの遅延読み込み（defer）が確実に完了してからミニマップを初期化
+    window.addEventListener('DOMContentLoaded', () => {
+        initMiniMap();
+    });
 
     // Safariでも安全に解釈できるように日付文字列のフォーマットを変換
     const nextFestival = new Date('2026/11/01');
