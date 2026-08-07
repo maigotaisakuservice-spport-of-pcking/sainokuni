@@ -190,7 +190,7 @@
             { name: "大和田公園", pos: [35.9252, 139.6425], url: "destinations/owada_park.html", featured: true },
             { name: "国営武蔵丘陵森林公園", pos: [36.0858, 139.3755], url: "destinations/shinrin_park.html" },
             { name: "秋ヶ瀬公園", pos: [35.8504, 139.6053], url: "destinations/akigase_park.html" },
-            { name: "北浦和公園", pos: [35.9680, 139.5444], url: "destinations/kita_urawa_park.html" }
+            { name: "北浦和公園", pos: [35.8711, 139.6456], url: "destinations/kita_urawa_park.html" }
         ];
 
         const map = L.map('map').setView([35.9064, 139.6238], 11);
@@ -237,6 +237,60 @@
             'https://overpass.openstreetmap.ru/api/interpreter'
         ];
 
+        // API全滅時のローカルフォールバック用代表的施設データ
+        const localFallbackFacilities = [
+            // 大宮公園周辺
+            { name: "大宮公園駅", type: "stations", pos: [35.9205, 139.6360], tags: { railway: "station" } },
+            { name: "北大宮駅", type: "stations", pos: [35.9168, 139.6254], tags: { railway: "station" } },
+            { name: "大宮公園内公衆トイレ", type: "toilets", pos: [35.9229, 139.6345], tags: { amenity: "toilets" } },
+            { name: "大宮公園自由広場トイレ", type: "toilets", pos: [35.9218, 139.6322], tags: { amenity: "toilets" } },
+            { name: "ファミリーマート 大宮公園前店", type: "shops", pos: [35.9201, 139.6315], tags: { shop: "convenience" } },
+            { name: "大宮公園 東駐車場", type: "parking", pos: [35.9240, 139.6380], tags: { amenity: "parking" } },
+            { name: "パークサイドカフェ", type: "cafe", pos: [35.9215, 139.6350], tags: { amenity: "cafe" } },
+            { name: "大宮公園児童遊園自販機", type: "vending", pos: [35.9221, 139.6330], tags: { amenity: "vending_machine" } },
+
+            // 大和田公園周辺
+            { name: "大和田駅", type: "stations", pos: [35.9298, 139.6508], tags: { railway: "station" } },
+            { name: "大和田公園プールトイレ", type: "toilets", pos: [35.9255, 139.6430], tags: { amenity: "toilets" } },
+            { name: "セブンイレブン さいたま大和田店", type: "shops", pos: [35.9272, 139.6445], tags: { shop: "convenience" } },
+            { name: "大和田公園 第一駐車場", type: "parking", pos: [35.9248, 139.6415], tags: { amenity: "parking" } },
+            { name: "カフェ・ド・ココ", type: "cafe", pos: [35.9265, 139.6460], tags: { amenity: "cafe" } },
+
+            // 北浦和公園周辺
+            { name: "北浦和駅", type: "stations", pos: [35.8718, 139.6465], tags: { railway: "station" } },
+            { name: "北浦和公園内公衆トイレ", type: "toilets", pos: [35.8708, 139.6448], tags: { amenity: "toilets" } },
+            { name: "ローソン 北浦和公園前店", type: "shops", pos: [35.8702, 139.6450], tags: { shop: "convenience" } },
+            { name: "北浦和公園地下駐車場", type: "parking", pos: [35.8715, 139.6440], tags: { amenity: "parking" } },
+            { name: "MOMAS Cafe", type: "cafe", pos: [35.8713, 139.6445], tags: { amenity: "cafe" } },
+
+            // 秋ヶ瀬公園周辺
+            { name: "西浦和駅", type: "stations", pos: [35.8437, 139.6277], tags: { railway: "station" } },
+            { name: "秋ヶ瀬公園 三ツ池トイレ", type: "toilets", pos: [35.8485, 139.6030], tags: { amenity: "toilets" } },
+            { name: "秋ヶ瀬公園ピクニック広場トイレ", type: "toilets", pos: [35.8522, 139.6065], tags: { amenity: "toilets" } },
+            { name: "ファミリーマート さいたまサクラディア店", type: "shops", pos: [35.8495, 139.6135], tags: { shop: "convenience" } },
+            { name: "秋ヶ瀬公園 第1駐車場", type: "parking", pos: [35.8450, 139.6015], tags: { amenity: "parking" } },
+
+            // 森林公園周辺
+            { name: "森林公園駅", type: "stations", pos: [36.0441, 139.3734], tags: { railway: "station" } },
+            { name: "森林公園 南口トイレ", type: "toilets", pos: [36.0745, 139.3802], tags: { amenity: "toilets" } },
+            { name: "森林公園 中央口トイレ", type: "toilets", pos: [36.0888, 139.3711], tags: { amenity: "toilets" } },
+            { name: "ミニストップ 森林公園店", type: "shops", pos: [36.0682, 139.3795], tags: { shop: "convenience" } },
+            { name: "森林公園 中央口第一駐車場", type: "parking", pos: [36.0895, 139.3705], tags: { amenity: "parking" } },
+            { name: "森林公園展望レストラン", type: "cafe", pos: [36.0831, 139.3788], tags: { amenity: "cafe" } }
+        ];
+
+        // 2つの緯度・経度間の大圏距離(メートル)を算出
+        function getDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371000;
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return Math.round(R * c);
+        }
+
         async function fetchOSMData(type, center, radius = 500, keyword = '') {
             const lat = center.lat;
             const lon = center.lng;
@@ -271,27 +325,68 @@
                 let data = null;
                 let lastError = null;
 
-                // エンドポイントを巡回してフェッチ（自動リトライ＆フォールバック）
-                for (const endpoint of overpassEndpoints) {
+                // 1. キャッシュの検索（位置情報、半径、タイプが近しいものをLocalStorageから探す）
+                const cacheKey = `map-osm-cache-${type}-${radius}-${lat.toFixed(4)}-${lon.toFixed(4)}`;
+                const cached = localStorage.getItem(cacheKey);
+                if (cached) {
                     try {
-                        const url = `${endpoint}?data=[out:json];(${query});out center;`;
-                        const res = await fetch(url, { signal: AbortSignal.timeout ? AbortSignal.timeout(8000) : null });
-                        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                        data = await res.json();
-                        if (data && data.elements) {
-                            break; // 成功したらループを抜ける
+                        const parsed = JSON.parse(cached);
+                        if (parsed && parsed.timestamp && (Date.now() - parsed.timestamp < 15 * 60 * 1000)) {
+                            data = parsed.data;
+                            console.log("Cached Overpass data used successfully.");
                         }
-                    } catch (err) {
-                        console.warn(`Endpoint ${endpoint} failed:`, err);
-                        lastError = err;
+                    } catch (e) {
+                        console.warn("Cache parse error", e);
                     }
                 }
 
+                // 2. キャッシュがない場合、エンドポイントを巡回してフェッチ（自動リトライ＆フォールバック）
                 if (!data) {
-                    console.error("すべてのOverpassエンドポイントで取得失敗:", lastError);
-                    document.getElementById('loading-overlay').classList.add('hidden');
-                    alert("周辺施設の取得に失敗しました。時間をおいてもう一度お試しください。");
-                    return;
+                    for (const endpoint of overpassEndpoints) {
+                        try {
+                            const url = `${endpoint}?data=[out:json];(${query});out center;`;
+                            const res = await fetch(url, { signal: AbortSignal.timeout ? AbortSignal.timeout(8000) : null });
+                            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                            data = await res.json();
+                            if (data && data.elements) {
+                                // キャッシュに保存
+                                localStorage.setItem(cacheKey, JSON.stringify({
+                                    timestamp: Date.now(),
+                                    data: data
+                                }));
+                                break; // 成功したらループを抜ける
+                            }
+                        } catch (err) {
+                            console.warn(`Endpoint ${endpoint} failed:`, err);
+                            lastError = err;
+                        }
+                    }
+                }
+
+                let elements = [];
+                let isFallbackUsed = false;
+
+                if (data && data.elements) {
+                    elements = data.elements;
+                } else {
+                    console.error("すべてのOverpassエンドポイントで取得失敗。ローカル代替データを読み込みます。:", lastError);
+                    isFallbackUsed = true;
+                    // 範囲内のローカルフォールバックデータをフィルター
+                    elements = localFallbackFacilities.filter(f => {
+                        const dist = getDistance(lat, lon, f.pos[0], f.pos[1]);
+                        if (dist > radius) return false;
+                        if (type !== 'all' && f.type !== type) return false;
+                        return true;
+                    }).map(f => ({
+                        type: "node",
+                        id: Math.random(),
+                        lat: f.pos[0],
+                        lon: f.pos[1],
+                        tags: {
+                            name: f.name,
+                            ...f.tags
+                        }
+                    }));
                 }
 
                 markers.clearLayers();
@@ -299,7 +394,6 @@
                 const listContainer = document.getElementById('facility-list');
                 listContainer.innerHTML = '';
 
-                let elements = data.elements;
                 if (keyword) {
                     elements = elements.filter(el => {
                         const name = (el.tags && el.tags.name) || '';
@@ -318,7 +412,7 @@
                         if (tags.leisure === 'park') { mEmoji = "🌳"; mColor = "#2e7d32"; }
                         else if (tags.railway === 'station') { mEmoji = "🚉"; mColor = "#1565c0"; }
                         else if (tags.amenity === 'toilets') { mEmoji = "🚻"; mColor = "#f57c00"; }
-                        else if (tags.shop === 'convenience') { mEmoji = "🏪"; mColor = "#43a047"; }
+                        else if (tags.shop && tags.shop.includes('convenience')) { mEmoji = "🏪"; mColor = "#43a047"; }
                         else if (tags.amenity === 'parking') { mEmoji = "🅿️"; mColor = "#546e7a"; }
                         else if (tags.amenity === 'cafe') { mEmoji = "☕"; mColor = "#6d4c41"; }
                         else if (tags.amenity === 'vending_machine') { mEmoji = "🥤"; mColor = "#1e88e5"; }

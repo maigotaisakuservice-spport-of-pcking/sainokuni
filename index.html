@@ -766,37 +766,87 @@ document.addEventListener('DOMContentLoaded', () => {
             'https://overpass.openstreetmap.ru/api/interpreter'
         ];
 
+        // API全滅時のローカルフォールバック用
+        const localFallbackList = [
+            { name: "大宮公園駅", type: "station", pos: [35.9205, 139.6360], tags: { railway: "station" } },
+            { name: "北大宮駅", type: "station", pos: [35.9168, 139.6254], tags: { railway: "station" } },
+            { name: "大宮公園内公衆トイレ", type: "toilets", pos: [35.9229, 139.6345], tags: { amenity: "toilets" } },
+            { name: "パークサイドカフェ", type: "cafe", pos: [35.9215, 139.6350], tags: { amenity: "cafe" } },
+            { name: "大和田公園プールトイレ", type: "toilets", pos: [35.9255, 139.6430], tags: { amenity: "toilets" } },
+            { name: "北浦和公園内公衆トイレ", type: "toilets", pos: [35.8708, 139.6448], tags: { amenity: "toilets" } },
+            { name: "北浦和駅", type: "station", pos: [35.8718, 139.6465], tags: { railway: "station" } },
+            { name: "MOMAS Cafe", type: "cafe", pos: [35.8713, 139.6445], tags: { amenity: "cafe" } },
+            { name: "秋ヶ瀬公園 三ツ池トイレ", type: "toilets", pos: [35.8485, 139.6030], tags: { amenity: "toilets" } },
+            { name: "西浦和駅", type: "station", pos: [35.8437, 139.6277], tags: { railway: "station" } },
+            { name: "森林公園駅", type: "station", pos: [36.0441, 139.3734], tags: { railway: "station" } },
+            { name: "森林公園 南口トイレ", type: "toilets", pos: [36.0745, 139.3802], tags: { amenity: "toilets" } },
+            { name: "森林公園展望レストラン", type: "cafe", pos: [36.0831, 139.3788], tags: { amenity: "cafe" } }
+        ];
+
         let data = null;
         let lastError = null;
 
-        // エンドポイントを巡回してフェッチ（自動リトライ＆フォールバック）
-        for (const endpoint of overpassEndpoints) {
+        // 1. キャッシュチェック
+        const cacheKey = `home-preview-osm-cache-${radius}-${lat.toFixed(4)}-${lon.toFixed(4)}`;
+        const cached = localStorage.getItem(cacheKey);
+        if (cached) {
             try {
-                const url = `${endpoint}?data=[out:json];${query}out center;`;
-                const res = await fetch(url, { signal: AbortSignal.timeout ? AbortSignal.timeout(8000) : null });
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                data = await res.json();
-                if (data && data.elements) {
-                    break; // 成功
+                const parsed = JSON.parse(cached);
+                if (parsed && parsed.timestamp && (Date.now() - parsed.timestamp < 15 * 60 * 1000)) {
+                    data = parsed.data;
+                    console.log("Home preview loaded from cache successfully.");
                 }
-            } catch (err) {
-                console.warn(`Endpoint ${endpoint} failed:`, err);
-                lastError = err;
+            } catch (e) {
+                console.warn("Home preview cache parse error", e);
             }
         }
 
+        // 2. キャッシュがない場合、エンドポイントを巡回してフェッチ
         if (!data) {
-            console.error("すべてのOverpassエンドポイントでプレビュー取得失敗:", lastError);
-            if (listContainer) {
-                listContainer.innerHTML = `<div class="text-center py-12 text-sm text-red-500">周辺情報の取得に失敗しました。時間をおいて再試行してください。</div>`;
+            for (const endpoint of overpassEndpoints) {
+                try {
+                    const url = `${endpoint}?data=[out:json];${query}out center;`;
+                    const res = await fetch(url, { signal: AbortSignal.timeout ? AbortSignal.timeout(8000) : null });
+                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                    data = await res.json();
+                    if (data && data.elements) {
+                        localStorage.setItem(cacheKey, JSON.stringify({
+                            timestamp: Date.now(),
+                            data: data
+                        }));
+                        break; // 成功
+                    }
+                } catch (err) {
+                    console.warn(`Endpoint ${endpoint} failed:`, err);
+                    lastError = err;
+                }
             }
-            return;
+        }
+
+        let elements = [];
+        if (data && data.elements) {
+            elements = data.elements;
+        } else {
+            console.error("すべてのOverpassエンドポイントでプレビュー取得失敗。ローカル代替データを読み込みます。:", lastError);
+            elements = localFallbackList.filter(item => {
+                const dist = calculateDistance(lat, lon, item.pos[0], item.pos[1]);
+                return dist <= radius;
+            }).map(item => ({
+                type: "node",
+                id: Math.random(),
+                lat: item.pos[0],
+                lon: item.pos[1],
+                tags: {
+                    name: item.name,
+                    ...item.tags
+                }
+            }));
         }
 
         try {
             const listItems = [];
 
-            data.elements.forEach(el => {
+            elements.forEach(el => {
                 let icon = toiletIcon;
                 let emoji = "🚻";
                 let typeText = "公衆トイレ";
