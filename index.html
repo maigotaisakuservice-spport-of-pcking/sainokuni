@@ -748,8 +748,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const radius = 800;
         const query = `
             (
-              node["amenity"="toilet"](around:${radius},${lat},${lon});
-              way["amenity"="toilet"](around:${radius},${lat},${lon});
+              node["amenity"="toilets"](around:${radius},${lat},${lon});
+              way["amenity"="toilets"](around:${radius},${lat},${lon});
               node["railway"="station"](around:${radius},${lat},${lon});
               way["railway"="station"](around:${radius},${lat},${lon});
               node["amenity"="cafe"](around:${radius},${lat},${lon});
