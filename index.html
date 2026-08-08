@@ -768,16 +768,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // API全滅時のローカルフォールバック用
         const localFallbackList = [
+            // 大宮公園周辺
             { name: "大宮公園駅", type: "station", pos: [35.9205, 139.6360], tags: { railway: "station" } },
             { name: "北大宮駅", type: "station", pos: [35.9168, 139.6254], tags: { railway: "station" } },
             { name: "大宮公園内公衆トイレ", type: "toilets", pos: [35.9229, 139.6345], tags: { amenity: "toilets" } },
             { name: "パークサイドカフェ", type: "cafe", pos: [35.9215, 139.6350], tags: { amenity: "cafe" } },
+            // 大和田公園周辺
             { name: "大和田公園プールトイレ", type: "toilets", pos: [35.9255, 139.6430], tags: { amenity: "toilets" } },
+            { name: "大和田駅", type: "station", pos: [35.9298, 139.6508], tags: { railway: "station" } },
+            { name: "カフェ・ド・ココ", type: "cafe", pos: [35.9265, 139.6460], tags: { amenity: "cafe" } },
+            // 北浦和公園周辺
             { name: "北浦和公園内公衆トイレ", type: "toilets", pos: [35.8708, 139.6448], tags: { amenity: "toilets" } },
             { name: "北浦和駅", type: "station", pos: [35.8718, 139.6465], tags: { railway: "station" } },
             { name: "MOMAS Cafe", type: "cafe", pos: [35.8713, 139.6445], tags: { amenity: "cafe" } },
+            // 秋ヶ瀬公園周辺
             { name: "秋ヶ瀬公園 三ツ池トイレ", type: "toilets", pos: [35.8485, 139.6030], tags: { amenity: "toilets" } },
+            { name: "秋ヶ瀬公園ピクニック広場トイレ", type: "toilets", pos: [35.8522, 139.6065], tags: { amenity: "toilets" } },
+            { name: "秋ヶ瀬公園 レストハウス/売店", type: "cafe", pos: [35.8500, 139.6060], tags: { amenity: "cafe" } },
             { name: "西浦和駅", type: "station", pos: [35.8437, 139.6277], tags: { railway: "station" } },
+            // 森林公園周辺
+            { name: "森林公園 ぽんぽこマウンテントイレ", type: "toilets", pos: [36.0862, 139.3760], tags: { amenity: "toilets" } },
+            { name: "森林公園 ぽんぽこ売店", type: "cafe", pos: [36.0855, 139.3750], tags: { amenity: "cafe" } },
+            { name: "森林公園 西口トイレ", type: "toilets", pos: [36.0850, 139.3730], tags: { amenity: "toilets" } },
             { name: "森林公園駅", type: "station", pos: [36.0441, 139.3734], tags: { railway: "station" } },
             { name: "森林公園 南口トイレ", type: "toilets", pos: [36.0745, 139.3802], tags: { amenity: "toilets" } },
             { name: "森林公園展望レストラン", type: "cafe", pos: [36.0831, 139.3788], tags: { amenity: "cafe" } }
@@ -988,29 +1000,44 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // --- 2. ネットワーク取得 (キャッシュ無効または期限切れの場合) ---
-        // 取得失敗時は最大3回の再試行(リトライ)処理を行います
+        // 動的インポートの失敗（ローカルファイル環境など）を一度だけ処理し、再試行ループ内での重複エラー・遅延を回避
+        let apiKey = '45c9c252b90b42c0972105021261702'; // 標準のデフォルト埋め込みAPIキー
+        try {
+            const { CONFIG } = await import('./js/config.js');
+            if (CONFIG && CONFIG.WEATHER_API_KEY) {
+                apiKey = CONFIG.WEATHER_API_KEY;
+            }
+        } catch (e) {
+            console.warn('Failed to dynamically import js/config.js. Falling back immediately to default embedded API key:', e);
+        }
+
         let success = false;
         let lastError = null;
         const maxRetries = 3;
 
         for (let attempt = 1; attempt <= maxRetries + 1; attempt++) {
             try {
-                const { CONFIG } = await import('./js/config.js');
-                const apiUrl = `https://api.weatherapi.com/v1/forecast.json?key=${CONFIG.WEATHER_API_KEY}&q=Saitama&days=3&lang=ja`;
-
+                const apiUrl = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=Saitama&days=3&lang=ja`;
                 let fetchedData = null;
                 const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`;
 
                 try {
                     const proxyRes = await fetch(proxyUrl);
-                    if (!proxyRes.ok) throw new Error('Primary proxy failed');
+                    if (!proxyRes.ok) throw new Error('Primary proxy (allorigins) failed');
                     const proxyData = await proxyRes.json();
                     fetchedData = JSON.parse(proxyData.contents);
                 } catch (e) {
-                    console.warn(`Primary proxy failed (attempt ${attempt}), trying fallback...`, e);
-                    const fallbackRes = await fetch(`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(apiUrl)}`);
-                    if (!fallbackRes.ok) throw new Error('Fallback proxy failed');
-                    fetchedData = await fallbackRes.json();
+                    console.warn(`Primary proxy failed (attempt ${attempt}), trying secondary proxy...`, e);
+                    try {
+                        const fallbackRes = await fetch(`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(apiUrl)}`);
+                        if (!fallbackRes.ok) throw new Error('Secondary proxy (codetabs) failed');
+                        fetchedData = await fallbackRes.json();
+                    } catch (e2) {
+                        console.warn(`Secondary proxy failed, trying direct fetch...`, e2);
+                        const directRes = await fetch(apiUrl);
+                        if (!directRes.ok) throw new Error('Direct fetch failed');
+                        fetchedData = await directRes.json();
+                    }
                 }
 
                 if (fetchedData && fetchedData.forecast && fetchedData.forecast.forecastday) {
@@ -1022,7 +1049,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             } catch (err) {
                 lastError = err;
-                console.warn(`Weather fetch attempt ${attempt} failed.`, err);
+                console.warn(`Weather fetch attempt ${attempt} failed:`, err);
                 if (attempt <= maxRetries) {
                     // 再試行の前に1.5秒待機
                     await new Promise(resolve => setTimeout(resolve, 1500));

@@ -193,7 +193,34 @@
             { name: "北浦和公園", pos: [35.8711, 139.6456], url: "destinations/kita_urawa_park.html" }
         ];
 
-        const map = L.map('map').setView([35.9064, 139.6238], 11);
+        // URLパラメータの解析 (lat, lon, name) による直接ターゲット設定
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlLat = parseFloat(urlParams.get('lat'));
+        const urlLon = parseFloat(urlParams.get('lon'));
+        const urlName = urlParams.get('name');
+
+        let initialCenter = [35.9064, 139.6238];
+        let initialZoom = 11;
+
+        if (!isNaN(urlLat) && !isNaN(urlLon)) {
+            initialCenter = [urlLat, urlLon];
+            initialZoom = 16; // 特定アメニティをピンポイント表示するためズームイン
+
+            // URLターゲットパラメータがある場合は、アメニティ探索半径を自動的に100mに設定
+            const radiusSelect = document.getElementById('radius-select');
+            if (radiusSelect) {
+                radiusSelect.value = "100";
+            }
+        }
+
+        if (urlName) {
+            const keywordInput = document.getElementById('keyword-input');
+            if (keywordInput) {
+                keywordInput.value = urlName;
+            }
+        }
+
+        const map = L.map('map').setView(initialCenter, initialZoom);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -239,6 +266,13 @@
 
         // API全滅時のローカルフォールバック用代表的施設データ
         const localFallbackFacilities = [
+            // 埼玉5大公園
+            { name: "大宮公園", type: "parks", pos: [35.9224, 139.6338], tags: { leisure: "park", wheelchair: "yes" } },
+            { name: "大和田公園", type: "parks", pos: [35.9252, 139.6425], tags: { leisure: "park", wheelchair: "yes" } },
+            { name: "北浦和公園", type: "parks", pos: [35.8711, 139.6456], tags: { leisure: "park", wheelchair: "yes" } },
+            { name: "秋ヶ瀬公園", type: "parks", pos: [35.8504, 139.6053], tags: { leisure: "park", wheelchair: "yes" } },
+            { name: "国営武蔵丘陵森林公園", type: "parks", pos: [36.0858, 139.3755], tags: { leisure: "park", wheelchair: "yes" } },
+
             // 大宮公園周辺
             { name: "大宮公園駅", type: "stations", pos: [35.9205, 139.6360], tags: { railway: "station" } },
             { name: "北大宮駅", type: "stations", pos: [35.9168, 139.6254], tags: { railway: "station" } },
@@ -267,11 +301,19 @@
             { name: "西浦和駅", type: "stations", pos: [35.8437, 139.6277], tags: { railway: "station" } },
             { name: "秋ヶ瀬公園 三ツ池トイレ", type: "toilets", pos: [35.8485, 139.6030], tags: { amenity: "toilets" } },
             { name: "秋ヶ瀬公園ピクニック広場トイレ", type: "toilets", pos: [35.8522, 139.6065], tags: { amenity: "toilets" } },
+            { name: "秋ヶ瀬公園ピクニック広場駐車場", type: "parking", pos: [35.8515, 139.6058], tags: { amenity: "parking" } },
             { name: "ファミリーマート さいたまサクラディア店", type: "shops", pos: [35.8495, 139.6135], tags: { shop: "convenience" } },
+            { name: "秋ヶ瀬公園 レストハウス/売店", type: "cafe", pos: [35.8500, 139.6060], tags: { amenity: "cafe" } },
             { name: "秋ヶ瀬公園 第1駐車場", type: "parking", pos: [35.8450, 139.6015], tags: { amenity: "parking" } },
 
             // 森林公園周辺
             { name: "森林公園駅", type: "stations", pos: [36.0441, 139.3734], tags: { railway: "station" } },
+            { name: "森林公園 ぽんぽこマウンテントイレ", type: "toilets", pos: [36.0862, 139.3760], tags: { amenity: "toilets" } },
+            { name: "森林公園 ぽんぽこ売店", type: "cafe", pos: [36.0855, 139.3750], tags: { amenity: "cafe" } },
+            { name: "森林公園 西口トイレ", type: "toilets", pos: [36.0850, 139.3730], tags: { amenity: "toilets" } },
+            { name: "森林公園 彫刻広場トイレ", type: "toilets", pos: [36.0870, 139.3780], tags: { amenity: "toilets" } },
+            { name: "森林公園 西口駐車場", type: "parking", pos: [36.0845, 139.3725], tags: { amenity: "parking" } },
+            { name: "ファミリーマート 滑川森林公園店", type: "shops", pos: [36.0840, 139.3720], tags: { shop: "convenience" } },
             { name: "森林公園 南口トイレ", type: "toilets", pos: [36.0745, 139.3802], tags: { amenity: "toilets" } },
             { name: "森林公園 中央口トイレ", type: "toilets", pos: [36.0888, 139.3711], tags: { amenity: "toilets" } },
             { name: "ミニストップ 森林公園店", type: "shops", pos: [36.0682, 139.3795], tags: { shop: "convenience" } },
@@ -298,15 +340,15 @@
             let emoji = "📍";
             let color = "#333";
 
-            // クエリをnodeだけでなくway（エリア）やrelationにも拡張して取得漏れを撲滅
+            // Overpass QL標準の「nwr（nodes, ways, relations）」短縮セレクタを使用し、クエリ効率と正確性を最大化
             const categories = {
-                'parks': { q: 'node["leisure"="park"](around:RADIUS,LAT,LON);way["leisure"="park"](around:RADIUS,LAT,LON);relation["leisure"="park"](around:RADIUS,LAT,LON);', e: '🌳', c: '#2e7d32' },
-                'stations': { q: 'node["railway"="station"](around:RADIUS,LAT,LON);way["railway"="station"](around:RADIUS,LAT,LON);', e: '🚉', c: '#1565c0' },
-                'toilets': { q: 'node["amenity"="toilets"](around:RADIUS,LAT,LON);way["amenity"="toilets"](around:RADIUS,LAT,LON);relation["amenity"="toilets"](around:RADIUS,LAT,LON);', e: '🚻', c: '#f57c00' },
-                'shops': { q: 'node["shop"~"convenience"](around:RADIUS,LAT,LON);way["shop"~"convenience"](around:RADIUS,LAT,LON);', e: '🏪', c: '#43a047' },
-                'parking': { q: 'node["amenity"="parking"](around:RADIUS,LAT,LON);way["amenity"="parking"](around:RADIUS,LAT,LON);', e: '🅿️', c: '#546e7a' },
-                'cafe': { q: 'node["amenity"="cafe"](around:RADIUS,LAT,LON);way["amenity"="cafe"](around:RADIUS,LAT,LON);', e: '☕', c: '#6d4c41' },
-                'vending': { q: 'node["amenity"="vending_machine"](around:RADIUS,LAT,LON);way["amenity"="vending_machine"](around:RADIUS,LAT,LON);', e: '🥤', c: '#1e88e5' }
+                'parks': { q: 'nwr["leisure"="park"](around:RADIUS,LAT,LON);', e: '🌳', c: '#2e7d32' },
+                'stations': { q: 'nwr["railway"="station"](around:RADIUS,LAT,LON);', e: '🚉', c: '#1565c0' },
+                'toilets': { q: 'nwr["amenity"="toilets"](around:RADIUS,LAT,LON);', e: '🚻', c: '#f57c00' },
+                'shops': { q: 'nwr["shop"="convenience"](around:RADIUS,LAT,LON);', e: '🏪', c: '#43a047' },
+                'parking': { q: 'nwr["amenity"="parking"](around:RADIUS,LAT,LON);', e: '🅿️', c: '#546e7a' },
+                'cafe': { q: 'nwr["amenity"="cafe"](around:RADIUS,LAT,LON);', e: '☕', c: '#6d4c41' },
+                'vending': { q: 'nwr["amenity"="vending_machine"](around:RADIUS,LAT,LON);', e: '🥤', c: '#1e88e5' }
             };
 
             if (type === 'all') {
