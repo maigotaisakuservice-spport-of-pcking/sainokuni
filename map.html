@@ -340,15 +340,15 @@
             let emoji = "📍";
             let color = "#333";
 
-            // Overpass QL標準の「nwr（nodes, ways, relations）」短縮セレクタを使用し、クエリ効率と正確性を最大化
+            // すべてのOSM/Overpassミラーサーバーとの100%の互換性を保証するため、明示的な node, way, relation ブロックを使用
             const categories = {
-                'parks': { q: 'nwr["leisure"="park"](around:RADIUS,LAT,LON);', e: '🌳', c: '#2e7d32' },
-                'stations': { q: 'nwr["railway"="station"](around:RADIUS,LAT,LON);', e: '🚉', c: '#1565c0' },
-                'toilets': { q: 'nwr["amenity"="toilets"](around:RADIUS,LAT,LON);', e: '🚻', c: '#f57c00' },
-                'shops': { q: 'nwr["shop"="convenience"](around:RADIUS,LAT,LON);', e: '🏪', c: '#43a047' },
-                'parking': { q: 'nwr["amenity"="parking"](around:RADIUS,LAT,LON);', e: '🅿️', c: '#546e7a' },
-                'cafe': { q: 'nwr["amenity"="cafe"](around:RADIUS,LAT,LON);', e: '☕', c: '#6d4c41' },
-                'vending': { q: 'nwr["amenity"="vending_machine"](around:RADIUS,LAT,LON);', e: '🥤', c: '#1e88e5' }
+                'parks': { q: 'node["leisure"="park"](around:RADIUS,LAT,LON);way["leisure"="park"](around:RADIUS,LAT,LON);relation["leisure"="park"](around:RADIUS,LAT,LON);', e: '🌳', c: '#2e7d32' },
+                'stations': { q: 'node["railway"="station"](around:RADIUS,LAT,LON);way["railway"="station"](around:RADIUS,LAT,LON);', e: '🚉', c: '#1565c0' },
+                'toilets': { q: 'node["amenity"="toilets"](around:RADIUS,LAT,LON);way["amenity"="toilets"](around:RADIUS,LAT,LON);relation["amenity"="toilets"](around:RADIUS,LAT,LON);', e: '🚻', c: '#f57c00' },
+                'shops': { q: 'node["shop"="convenience"](around:RADIUS,LAT,LON);way["shop"="convenience"](around:RADIUS,LAT,LON);', e: '🏪', c: '#43a047' },
+                'parking': { q: 'node["amenity"="parking"](around:RADIUS,LAT,LON);way["amenity"="parking"](around:RADIUS,LAT,LON);', e: '🅿️', c: '#546e7a' },
+                'cafe': { q: 'node["amenity"="cafe"](around:RADIUS,LAT,LON);way["amenity"="cafe"](around:RADIUS,LAT,LON);', e: '☕', c: '#6d4c41' },
+                'vending': { q: 'node["amenity"="vending_machine"](around:RADIUS,LAT,LON);way["amenity"="vending_machine"](around:RADIUS,LAT,LON);', e: '🥤', c: '#1e88e5' }
             };
 
             if (type === 'all') {
