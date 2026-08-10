@@ -815,17 +815,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 2. キャッシュがない場合、エンドポイントを巡回してフェッチ
         // 406 Not Acceptable (WAFブロック) 回避のため、GETの代わりにURLエンコードしたPOSTリクエストを使用
+        // 高負荷によるタイムアウトを抑止するため、クエリ本体に [timeout:30]; を指定し、フロントエンドのタイムアウトを35秒に引き上げ
         if (!data) {
             for (const endpoint of overpassEndpoints) {
                 try {
-                    const postBody = `data=${encodeURIComponent('[out:json];' + query + 'out center;')}`;
+                    const postBody = `data=${encodeURIComponent('[out:json][timeout:30];' + query + 'out center;')}`;
                     const res = await fetch(endpoint, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded'
                         },
                         body: postBody,
-                        signal: AbortSignal.timeout ? AbortSignal.timeout(8000) : null
+                        signal: AbortSignal.timeout ? AbortSignal.timeout(35000) : null
                     });
                     if (!res.ok) throw new Error(`HTTP ${res.status}`);
                     data = await res.json();

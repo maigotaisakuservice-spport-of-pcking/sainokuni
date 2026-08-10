@@ -341,11 +341,12 @@
             let color = "#333";
 
             // すべてのOSM/Overpassミラーサーバーとの100%の互換性を保証するため、明示的な node, way, relation ブロックを使用
+            // また、表記ゆれ（toilet/toiletsなど）を網羅するため正規表現パターンを採用し、コンビニも元来の shop~"convenience" に統一
             const categories = {
                 'parks': { q: 'node["leisure"="park"](around:RADIUS,LAT,LON);way["leisure"="park"](around:RADIUS,LAT,LON);relation["leisure"="park"](around:RADIUS,LAT,LON);', e: '🌳', c: '#2e7d32' },
                 'stations': { q: 'node["railway"="station"](around:RADIUS,LAT,LON);way["railway"="station"](around:RADIUS,LAT,LON);', e: '🚉', c: '#1565c0' },
-                'toilets': { q: 'node["amenity"="toilets"](around:RADIUS,LAT,LON);way["amenity"="toilets"](around:RADIUS,LAT,LON);relation["amenity"="toilets"](around:RADIUS,LAT,LON);', e: '🚻', c: '#f57c00' },
-                'shops': { q: 'node["shop"="convenience"](around:RADIUS,LAT,LON);way["shop"="convenience"](around:RADIUS,LAT,LON);', e: '🏪', c: '#43a047' },
+                'toilets': { q: 'node["amenity"~"^toilets?$"](around:RADIUS,LAT,LON);way["amenity"~"^toilets?$"](around:RADIUS,LAT,LON);relation["amenity"~"^toilets?$"](around:RADIUS,LAT,LON);', e: '🚻', c: '#f57c00' },
+                'shops': { q: 'node["shop"~"convenience"](around:RADIUS,LAT,LON);way["shop"~"convenience"](around:RADIUS,LAT,LON);', e: '🏪', c: '#43a047' },
                 'parking': { q: 'node["amenity"="parking"](around:RADIUS,LAT,LON);way["amenity"="parking"](around:RADIUS,LAT,LON);', e: '🅿️', c: '#546e7a' },
                 'cafe': { q: 'node["amenity"="cafe"](around:RADIUS,LAT,LON);way["amenity"="cafe"](around:RADIUS,LAT,LON);', e: '☕', c: '#6d4c41' },
                 'vending': { q: 'node["amenity"="vending_machine"](around:RADIUS,LAT,LON);way["amenity"="vending_machine"](around:RADIUS,LAT,LON);', e: '🥤', c: '#1e88e5' }
@@ -384,17 +385,18 @@
 
                 // 2. キャッシュがない場合、エンドポイントを巡回してフェッチ（自動リトライ＆フォールバック）
                 // 406 Not Acceptable (WAFブロック) 回避のため、GETの代わりにURLエンコードしたPOSTリクエストを使用
+                // また、高負荷時のタイムアウトを避けるため、クエリに [timeout:30]; を指定し、クライアント側のタイムアウトを35秒に引き上げ
                 if (!data) {
                     for (const endpoint of overpassEndpoints) {
                         try {
-                            const postBody = `data=${encodeURIComponent('[out:json];(' + query + ');out center;')}`;
+                            const postBody = `data=${encodeURIComponent('[out:json][timeout:30];(' + query + ');out center;')}`;
                             const res = await fetch(endpoint, {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/x-www-form-urlencoded'
                                 },
                                 body: postBody,
-                                signal: AbortSignal.timeout ? AbortSignal.timeout(8000) : null
+                                signal: AbortSignal.timeout ? AbortSignal.timeout(35000) : null
                             });
                             if (!res.ok) throw new Error(`HTTP ${res.status}`);
                             data = await res.json();
