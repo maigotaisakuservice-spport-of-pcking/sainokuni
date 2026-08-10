@@ -1033,7 +1033,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     const proxyRes = await fetch(proxyUrl);
                     if (!proxyRes.ok) throw new Error('Primary proxy (allorigins) failed');
                     const proxyData = await proxyRes.json();
-                    fetchedData = JSON.parse(proxyData.contents);
+                    if (proxyData && proxyData.contents) {
+                        fetchedData = JSON.parse(proxyData.contents);
+                    } else {
+                        throw new Error('Allorigins returned empty contents');
+                    }
                 } catch (e) {
                     console.warn(`Primary proxy failed (attempt ${attempt}), trying secondary proxy...`, e);
                     try {
@@ -1041,10 +1045,21 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (!fallbackRes.ok) throw new Error('Secondary proxy (codetabs) failed');
                         fetchedData = await fallbackRes.json();
                     } catch (e2) {
-                        console.warn(`Secondary proxy failed, trying direct fetch...`, e2);
-                        const directRes = await fetch(apiUrl);
-                        if (!directRes.ok) throw new Error('Direct fetch failed');
-                        fetchedData = await directRes.json();
+                        console.warn(`Secondary proxy failed (attempt ${attempt}), trying third proxy (thingproxy)...`, e2);
+                        try {
+                            const thirdRes = await fetch(`https://thingproxy.freeboard.io/fetch/${encodeURIComponent(apiUrl)}`);
+                            if (!thirdRes.ok) throw new Error('Third proxy failed');
+                            fetchedData = await thirdRes.json();
+                        } catch (e3) {
+                            console.warn(`Third proxy failed, trying direct fetch...`, e3);
+                            try {
+                                const directRes = await fetch(apiUrl);
+                                if (!directRes.ok) throw new Error('Direct fetch failed');
+                                fetchedData = await directRes.json();
+                            } catch (e4) {
+                                console.warn(`Direct fetch failed:`, e4);
+                            }
+                        }
                     }
                 }
 
