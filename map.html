@@ -264,7 +264,7 @@
             'https://overpass.openstreetmap.ru/api/interpreter'
         ];
 
-        // API全滅時のローカルフォールバック用代表的施設データ
+        // API全滅時のローカルフォールバック用代表적施設データ
         const localFallbackFacilities = [
             // 埼玉5大公園
             { name: "大宮公園", type: "parks", pos: [35.9224, 139.6338], tags: { leisure: "park", wheelchair: "yes" } },
@@ -333,187 +333,225 @@
             return Math.round(R * c);
         }
 
+        let lastFetchedCenter = null;
+        let lastFetchedRadius = null;
+        let activeAbortController = null;
+
         async function fetchOSMData(type, center, radius = 500, keyword = '') {
             const lat = center.lat;
             const lon = center.lng;
-            let query = "";
-            let emoji = "📍";
-            let color = "#333";
 
-            // すべてのOSM/Overpassミラーサーバーとの100%の互換性を保証するため、明示的な node, way, relation ブロックを使用
-            // また、表記ゆれ（toilet/toiletsなど）を網羅するため正規表現パターンを採用し、コンビニも元来の shop~"convenience" に統一
+            // すべてのOSM/Overpassミラーサーバーとの100%の互換性と最大の検索速度を両立するため、明示的な node, way, relation インデックス付き完全一致クエリを使用
             const categories = {
                 'parks': { q: 'node["leisure"="park"](around:RADIUS,LAT,LON);way["leisure"="park"](around:RADIUS,LAT,LON);relation["leisure"="park"](around:RADIUS,LAT,LON);', e: '🌳', c: '#2e7d32' },
                 'stations': { q: 'node["railway"="station"](around:RADIUS,LAT,LON);way["railway"="station"](around:RADIUS,LAT,LON);', e: '🚉', c: '#1565c0' },
-                'toilets': { q: 'node["amenity"~"^toilets?$"](around:RADIUS,LAT,LON);way["amenity"~"^toilets?$"](around:RADIUS,LAT,LON);relation["amenity"~"^toilets?$"](around:RADIUS,LAT,LON);', e: '🚻', c: '#f57c00' },
-                'shops': { q: 'node["shop"~"convenience"](around:RADIUS,LAT,LON);way["shop"~"convenience"](around:RADIUS,LAT,LON);', e: '🏪', c: '#43a047' },
+                'toilets': { q: 'node["amenity"="toilets"](around:RADIUS,LAT,LON);way["amenity"="toilets"](around:RADIUS,LAT,LON);relation["amenity"="toilets"](around:RADIUS,LAT,LON);', e: '🚻', c: '#f57c00' },
+                'shops': { q: 'node["shop"="convenience"](around:RADIUS,LAT,LON);way["shop"="convenience"](around:RADIUS,LAT,LON);', e: '🏪', c: '#43a047' },
                 'parking': { q: 'node["amenity"="parking"](around:RADIUS,LAT,LON);way["amenity"="parking"](around:RADIUS,LAT,LON);', e: '🅿️', c: '#546e7a' },
                 'cafe': { q: 'node["amenity"="cafe"](around:RADIUS,LAT,LON);way["amenity"="cafe"](around:RADIUS,LAT,LON);', e: '☕', c: '#6d4c41' },
                 'vending': { q: 'node["amenity"="vending_machine"](around:RADIUS,LAT,LON);way["amenity"="vending_machine"](around:RADIUS,LAT,LON);', e: '🥤', c: '#1e88e5' }
             };
 
-            if (type === 'all') {
-                query = Object.values(categories).map(cat => cat.q).join('');
-            } else if (categories[type]) {
-                query = categories[type].q;
-                emoji = categories[type].e;
-                color = categories[type].c;
+            // キャッシュが有効で、同じ地点・同じ半径でのフィルタ切り替えであれば、ネットワークフェッチをスキップしてメモリ内(foundFacilities)から瞬時に描画
+            const isSameLocation = lastFetchedCenter &&
+                                   Math.abs(lastFetchedCenter.lat - lat) < 0.0001 &&
+                                   Math.abs(lastFetchedCenter.lng - lon) < 0.0001 &&
+                                   lastFetchedRadius === radius;
+
+            let data = null;
+
+            if (isSameLocation && foundFacilities && foundFacilities.length > 0) {
+                // メモリ内キャッシュを使用するため、フェッチをスキップ
+                data = { elements: foundFacilities };
+                console.log("Using in-memory cache for fast filter switching.");
+            } else {
+                // 新しいリクエストを開始する前に、実行中の古いリクエストを中断（競合・二重サブミットによる429を回避）
+                if (activeAbortController) {
+                    activeAbortController.abort();
+                }
+                activeAbortController = new AbortController();
+                const currentSignal = activeAbortController.signal;
+
+                // 異なる地点・半径の場合は、すべてのカテゴリを一括取得してメモリに保存
+                lastFetchedCenter = center;
+                lastFetchedRadius = radius;
+
+                // ネットワーク負荷と WAF/429 制限を抑止するため、常に「すべて」のクエリを一括フェッチし、後続のフィルタはクライアント側で瞬時に絞り込みを行う
+                const combinedQuery = Object.values(categories).map(cat => cat.q).join('').replace(/RADIUS/g, radius).replace(/LAT/g, lat).replace(/LON/g, lon);
+
+                document.getElementById('loading-overlay').classList.remove('hidden');
+
+                try {
+                    let lastError = null;
+
+                    // 1. キャッシュの検索（LocalStorage）
+                    const cacheKey = `map-osm-cache-all-${radius}-${lat.toFixed(4)}-${lon.toFixed(4)}`;
+                    const cached = localStorage.getItem(cacheKey);
+                    if (cached) {
+                        try {
+                            const parsed = JSON.parse(cached);
+                            if (parsed && parsed.timestamp && (Date.now() - parsed.timestamp < 15 * 60 * 1000)) {
+                                data = parsed.data;
+                                console.log("Cached Overpass data used successfully.");
+                            }
+                        } catch (e) {
+                            console.warn("Cache parse error", e);
+                        }
+                    }
+
+                    // 2. キャッシュがない場合、エンドポイントを巡回してフェッチ（自動リトライ＆フォールバック）
+                    // 406 Not Acceptable (WAFブロック) 回避のため、GETの代わりにURLエンコードしたPOSTリクエストを使用
+                    // また、特定のミラーサーバーがハングアップして全体がフリーズするのを防ぐため、Promise.raceによる12秒のタイムアウトを各フェッチに設定
+                    if (!data) {
+                        for (const endpoint of overpassEndpoints) {
+                            if (currentSignal.aborted) break;
+                            try {
+                                const postBody = `data=${encodeURIComponent('[out:json][timeout:30];(' + combinedQuery + ');out center;')}`;
+                                const fetchPromise = fetch(endpoint, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/x-www-form-urlencoded'
+                                    },
+                                    body: postBody,
+                                    signal: currentSignal
+                                });
+                                const timeoutPromise = new Promise((_, reject) =>
+                                    setTimeout(() => reject(new Error('TimeoutError')), 12000)
+                                );
+
+                                const res = await Promise.race([fetchPromise, timeoutPromise]);
+                                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                                data = await res.json();
+                                if (data && data.elements) {
+                                    // キャッシュに保存
+                                    localStorage.setItem(cacheKey, JSON.stringify({
+                                        timestamp: Date.now(),
+                                        data: data
+                                    }));
+                                    break; // 成功したらループを抜ける
+                                }
+                            } catch (err) {
+                                if (err.name === 'AbortError') {
+                                    console.log("Request aborted gracefully.");
+                                    return; // 中断された場合は処理を中止
+                                }
+                                console.warn(`Endpoint ${endpoint} failed:`, err);
+                                lastError = err;
+                            }
+                        }
+                    }
+
+                    if (data && data.elements) {
+                        foundFacilities = data.elements;
+                    } else {
+                        console.error("すべてのOverpassエンドポイントで取得失敗。ローカル代替データを読み込みます。:", lastError);
+                        // 範囲内のローカルフォールバックデータをフィルター
+                        foundFacilities = localFallbackFacilities.filter(f => {
+                            const dist = getDistance(lat, lon, f.pos[0], f.pos[1]);
+                            return dist <= radius;
+                        }).map(f => ({
+                            type: "node",
+                            id: Math.random(),
+                            lat: f.pos[0],
+                            lon: f.pos[1],
+                            tags: {
+                                name: f.name,
+                                ...f.tags
+                            }
+                        }));
+                        data = { elements: foundFacilities };
+                    }
+                } catch (e) {
+                    console.error("OSMデータの取得に失敗:", e);
+                } finally {
+                    document.getElementById('loading-overlay').classList.add('hidden');
+                }
             }
 
-            query = query.replace(/RADIUS/g, radius).replace(/LAT/g, lat).replace(/LON/g, lon);
+            // ここから下は、メモリ/フェッチしたデータを用いて描画
+            markers.clearLayers();
+            const listContainer = document.getElementById('facility-list');
+            if (listContainer) listContainer.innerHTML = '';
 
-            document.getElementById('loading-overlay').classList.remove('hidden');
+            let elements = (data && data.elements) ? data.elements : [];
 
-            try {
-                let data = null;
-                let lastError = null;
+            // キーワードフィルタの適用
+            if (keyword) {
+                elements = elements.filter(el => {
+                    const name = (el.tags && el.tags.name) || '';
+                    return name.includes(keyword);
+                });
+            }
 
-                // 1. キャッシュの検索（位置情報、半径、タイプが近しいものをLocalStorageから探す）
-                const cacheKey = `map-osm-cache-${type}-${radius}-${lat.toFixed(4)}-${lon.toFixed(4)}`;
-                const cached = localStorage.getItem(cacheKey);
-                if (cached) {
-                    try {
-                        const parsed = JSON.parse(cached);
-                        if (parsed && parsed.timestamp && (Date.now() - parsed.timestamp < 15 * 60 * 1000)) {
-                            data = parsed.data;
-                            console.log("Cached Overpass data used successfully.");
-                        }
-                    } catch (e) {
-                        console.warn("Cache parse error", e);
-                    }
-                }
-
-                // 2. キャッシュがない場合、エンドポイントを巡回してフェッチ（自動リトライ＆フォールバック）
-                // 406 Not Acceptable (WAFブロック) 回避のため、GETの代わりにURLエンコードしたPOSTリクエストを使用
-                // また、高負荷時のタイムアウトを避けるため、クエリに [timeout:30]; を指定し、クライアント側のタイムアウトを35秒に引き上げ
-                if (!data) {
-                    for (const endpoint of overpassEndpoints) {
-                        try {
-                            const postBody = `data=${encodeURIComponent('[out:json][timeout:30];(' + query + ');out center;')}`;
-                            const res = await fetch(endpoint, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/x-www-form-urlencoded'
-                                },
-                                body: postBody,
-                                signal: AbortSignal.timeout ? AbortSignal.timeout(35000) : null
-                            });
-                            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                            data = await res.json();
-                            if (data && data.elements) {
-                                // キャッシュに保存
-                                localStorage.setItem(cacheKey, JSON.stringify({
-                                    timestamp: Date.now(),
-                                    data: data
-                                }));
-                                break; // 成功したらループを抜ける
-                            }
-                        } catch (err) {
-                            console.warn(`Endpoint ${endpoint} failed:`, err);
-                            lastError = err;
-                        }
-                    }
-                }
-
-                let elements = [];
-                let isFallbackUsed = false;
-
-                if (data && data.elements) {
-                    elements = data.elements;
-                } else {
-                    console.error("すべてのOverpassエンドポイントで取得失敗。ローカル代替データを読み込みます。:", lastError);
-                    isFallbackUsed = true;
-                    // 範囲内のローカルフォールバックデータをフィルター
-                    elements = localFallbackFacilities.filter(f => {
-                        const dist = getDistance(lat, lon, f.pos[0], f.pos[1]);
-                        if (dist > radius) return false;
-                        if (type !== 'all' && f.type !== type) return false;
-                        return true;
-                    }).map(f => ({
-                        type: "node",
-                        id: Math.random(),
-                        lat: f.pos[0],
-                        lon: f.pos[1],
-                        tags: {
-                            name: f.name,
-                            ...f.tags
-                        }
-                    }));
-                }
-
-                markers.clearLayers();
-                foundFacilities = [];
-                const listContainer = document.getElementById('facility-list');
-                listContainer.innerHTML = '';
-
-                if (keyword) {
-                    elements = elements.filter(el => {
-                        const name = (el.tags && el.tags.name) || '';
-                        return name.includes(keyword);
-                    });
-                }
-
-                elements.forEach(el => {
-                    let mEmoji = emoji;
-                    let mColor = color;
-                    const pos = el.center ? [el.center.lat, el.center.lon] : [el.lat, el.lon];
+            // カテゴリフィルタの適用
+            if (type !== 'all') {
+                elements = elements.filter(el => {
                     const tags = el.tags || {};
-                    const name = tags.name || tags.operator || "名称不明の施設";
+                    if (type === 'parks' && tags.leisure === 'park') return true;
+                    if (type === 'stations' && tags.railway === 'station') return true;
+                    if (type === 'toilets' && tags.amenity === 'toilets') return true;
+                    if (type === 'shops' && tags.shop && tags.shop.includes('convenience')) return true;
+                    if (type === 'parking' && tags.amenity === 'parking') return true;
+                    if (type === 'cafe' && tags.amenity === 'cafe') return true;
+                    if (type === 'vending' && tags.amenity === 'vending_machine') return true;
+                    return false;
+                });
+            }
 
-                    if (type === 'all') {
-                        if (tags.leisure === 'park') { mEmoji = "🌳"; mColor = "#2e7d32"; }
-                        else if (tags.railway === 'station') { mEmoji = "🚉"; mColor = "#1565c0"; }
-                        else if (tags.amenity === 'toilets') { mEmoji = "🚻"; mColor = "#f57c00"; }
-                        else if (tags.shop && tags.shop.includes('convenience')) { mEmoji = "🏪"; mColor = "#43a047"; }
-                        else if (tags.amenity === 'parking') { mEmoji = "🅿️"; mColor = "#546e7a"; }
-                        else if (tags.amenity === 'cafe') { mEmoji = "☕"; mColor = "#6d4c41"; }
-                        else if (tags.amenity === 'vending_machine') { mEmoji = "🥤"; mColor = "#1e88e5"; }
-                    }
+            elements.forEach(el => {
+                const tags = el.tags || {};
+                let mEmoji = "📍";
+                let mColor = "#333";
 
-                    const marker = L.marker(pos, { icon: createIcon(mEmoji, mColor) });
-                    let info = `<div class="p-2 min-w-[150px]"><b class="text-lg block mb-1">${name}</b>`;
-                    if (tags.leisure === 'park') info += `<div class="text-sm mb-1">♿ バリアフリー: ${tags.wheelchair==='yes'?'✅':'❓'}</div>`;
+                if (tags.leisure === 'park') { mEmoji = "🌳"; mColor = "#2e7d32"; }
+                else if (tags.railway === 'station') { mEmoji = "🚉"; mColor = "#1565c0"; }
+                else if (tags.amenity === 'toilets') { mEmoji = "🚻"; mColor = "#f57c00"; }
+                else if (tags.shop && tags.shop.includes('convenience')) { mEmoji = "🏪"; mColor = "#43a047"; }
+                else if (tags.amenity === 'parking') { mEmoji = "🅿️"; mColor = "#546e7a"; }
+                else if (tags.amenity === 'cafe') { mEmoji = "☕"; mColor = "#6d4c41"; }
+                else if (tags.amenity === 'vending_machine') { mEmoji = "🥤"; mColor = "#1e88e5"; }
 
-                    const routeUrl = `https://www.google.com/maps/dir/?api=1&destination=${pos[0]},${pos[1]}`;
-                    info += `<a href="${routeUrl}" target="_blank" class="block text-center bg-blue-500 text-white text-xs font-bold py-1 px-2 rounded mt-2">🚗 ルート</a></div>`;
+                const pos = el.center ? [el.center.lat, el.center.lon] : [el.lat, el.lon];
+                const name = tags.name || tags.operator || "名称不明の施設";
 
-                    marker.bindPopup(info);
-                    marker.addTo(markers);
+                const marker = L.marker(pos, { icon: createIcon(mEmoji, mColor) });
+                let info = `<div class="p-2 min-w-[150px]"><b class="text-lg block mb-1">${name}</b>`;
+                if (tags.leisure === 'park') info += `<div class="text-sm mb-1">♿ バリアフリー: ${tags.wheelchair==='yes'?'✅':'❓'}</div>`;
 
-                    // リストアイテムの作成
-                    const item = document.createElement('div');
-                    item.className = 'facility-item';
-                    item.innerHTML = `
-                        <div class="flex items-start gap-3">
-                            <div class="text-xl">${mEmoji}</div>
-                            <div class="flex-grow">
-                                <div class="font-bold">${name}</div>
-                                <div class="text-xs text-gray-500">${tags.operator || ''}</div>
-                                <div class="mt-2 flex gap-2">
-                                    <button class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded" onclick="window.focusFacility(${pos[0]}, ${pos[1]})">地図で見る</button>
-                                    <a href="${routeUrl}" target="_blank" class="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">ルート</a>
-                                </div>
+                const routeUrl = `https://www.google.com/maps/dir/?api=1&destination=${pos[0]},${pos[1]}`;
+                info += `<a href="${routeUrl}" target="_blank" class="block text-center bg-blue-500 text-white text-xs font-bold py-1 px-2 rounded mt-2">🚗 ルート</a></div>`;
+
+                marker.bindPopup(info);
+                marker.addTo(markers);
+
+                // リストアイテムの作成
+                const item = document.createElement('div');
+                item.className = 'facility-item';
+                item.innerHTML = `
+                    <div class="flex items-start gap-3">
+                        <div class="text-xl">${mEmoji}</div>
+                        <div class="flex-grow">
+                            <div class="font-bold">${name}</div>
+                            <div class="text-xs text-gray-500">${tags.operator || ''}</div>
+                            <div class="mt-2 flex gap-2">
+                                <button class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded" onclick="window.focusFacility(${pos[0]}, ${pos[1]})">地図で見る</button>
+                                <a href="${routeUrl}" target="_blank" class="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">ルート</a>
                             </div>
                         </div>
-                    `;
-                    listContainer.appendChild(item);
-                });
+                    </div>
+                `;
+                if (listContainer) listContainer.appendChild(item);
+            });
 
-                document.getElementById('count').textContent = elements.length;
-                if (elements.length === 0) {
-                    listContainer.innerHTML = '<div class="p-8 text-center text-gray-400">見つかりませんでした</div>';
-                }
-
-                if (window.radiusCircle) map.removeLayer(window.radiusCircle);
-                window.radiusCircle = L.circle([lat, lon], {
-                    radius: radius, color: '#8BC34A', fillColor: '#8BC34A', fillOpacity: 0.1, dashArray: '5, 10'
-                }).addTo(map);
-
-            } catch (e) {
-                console.error("OSMデータの取得に失敗:", e);
-            } finally {
-                document.getElementById('loading-overlay').classList.add('hidden');
+            document.getElementById('count').textContent = elements.length;
+            if (elements.length === 0 && listContainer) {
+                listContainer.innerHTML = '<div class="p-8 text-center text-gray-400">見つかりませんでした</div>';
             }
+
+            if (window.radiusCircle) map.removeLayer(window.radiusCircle);
+            window.radiusCircle = L.circle([lat, lon], {
+                radius: radius, color: '#8BC34A', fillColor: '#8BC34A', fillOpacity: 0.1, dashArray: '5, 10'
+            }).addTo(map);
         }
 
         window.focusFacility = (lat, lon) => {
