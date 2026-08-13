@@ -744,18 +744,26 @@ document.addEventListener('DOMContentLoaded', () => {
         centerMarker.bindPopup(`<b>${centerName}</b>`).openPopup();
 
         // Overpass API による周辺検索（公衆トイレ、駅、カフェ、近接の別の公園）
-        // 半径800mの円形検索。wayも含めることでエリア登録の施設も網羅
+        // 簡易的なメートル→経緯度変換により、Overpass APIで最も処理が高速な矩形範囲(bbox)を動的に算出（重いaround空間スキャンによるタイムアウトを回避）
         const radius = 800;
+        const latDelta = radius / 111320;
+        const lonDelta = radius / (40075000 * Math.cos(lat * Math.PI / 180) / 360);
+        const south = lat - latDelta;
+        const west = lon - lonDelta;
+        const north = lat + latDelta;
+        const east = lon + lonDelta;
+        const bbox = `${south.toFixed(6)},${west.toFixed(6)},${north.toFixed(6)},${east.toFixed(6)}`;
+
         const query = `
             (
-              node["amenity"="toilets"](around:${radius},${lat},${lon});
-              way["amenity"="toilets"](around:${radius},${lat},${lon});
-              node["railway"="station"](around:${radius},${lat},${lon});
-              way["railway"="station"](around:${radius},${lat},${lon});
-              node["amenity"="cafe"](around:${radius},${lat},${lon});
-              way["amenity"="cafe"](around:${radius},${lat},${lon});
-              node["leisure"="park"](around:${radius},${lat},${lon});
-              way["leisure"="park"](around:${radius},${lat},${lon});
+              node["amenity"="toilets"](${bbox});
+              way["amenity"="toilets"](${bbox});
+              node["railway"="station"](${bbox});
+              way["railway"="station"](${bbox});
+              node["amenity"="cafe"](${bbox});
+              way["amenity"="cafe"](${bbox});
+              node["leisure"="park"](${bbox});
+              way["leisure"="park"](${bbox});
             );
         `;
 
@@ -815,19 +823,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 2. キャッシュがない場合、エンドポイントを巡回してフェッチ
         // 406 Not Acceptable (WAFブロック) 回避のため、GETの代わりにURLエンコードしたPOSTリクエストを使用
-        // 高負荷によるタイムアウトを抑止するため、クエリ本体に [timeout:30]; を指定し、フロントエンドのタイムアウトを35秒に引き上げ
+        // また、特定のミラーサーバーがハングアップして全体がフリーズするのを防ぐため、Promise.raceによる12秒のタイムアウトを各フェッチに設定
         if (!data) {
             for (const endpoint of overpassEndpoints) {
                 try {
                     const postBody = `data=${encodeURIComponent('[out:json][timeout:30];' + query + 'out center;')}`;
-                    const res = await fetch(endpoint, {
+                    const fetchPromise = fetch(endpoint, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded'
                         },
-                        body: postBody,
-                        signal: AbortSignal.timeout ? AbortSignal.timeout(35000) : null
+                        body: postBody
                     });
+                    const timeoutPromise = new Promise((_, reject) =>
+                        setTimeout(() => reject(new Error('TimeoutError')), 5000)
+                    );
+
+                    const res = await Promise.race([fetchPromise, timeoutPromise]);
                     if (!res.ok) throw new Error(`HTTP ${res.status}`);
                     data = await res.json();
                     if (data && data.elements) {

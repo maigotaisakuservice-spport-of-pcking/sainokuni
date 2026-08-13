@@ -341,15 +341,24 @@
             const lat = center.lat;
             const lon = center.lng;
 
+            // 簡易的なメートル→経緯度変換により、Overpass APIで最も処理が高速な矩形範囲(bbox)を動的に算出（重いaround空間スキャンによるタイムアウトを回避）
+            const latDelta = radius / 111320;
+            const lonDelta = radius / (40075000 * Math.cos(lat * Math.PI / 180) / 360);
+            const south = lat - latDelta;
+            const west = lon - lonDelta;
+            const north = lat + latDelta;
+            const east = lon + lonDelta;
+            const bboxStr = `${south.toFixed(6)},${west.toFixed(6)},${north.toFixed(6)},${east.toFixed(6)}`;
+
             // すべてのOSM/Overpassミラーサーバーとの100%の互換性と最大の検索速度を両立するため、明示的な node, way, relation インデックス付き完全一致クエリを使用
             const categories = {
-                'parks': { q: 'node["leisure"="park"](around:RADIUS,LAT,LON);way["leisure"="park"](around:RADIUS,LAT,LON);relation["leisure"="park"](around:RADIUS,LAT,LON);', e: '🌳', c: '#2e7d32' },
-                'stations': { q: 'node["railway"="station"](around:RADIUS,LAT,LON);way["railway"="station"](around:RADIUS,LAT,LON);', e: '🚉', c: '#1565c0' },
-                'toilets': { q: 'node["amenity"="toilets"](around:RADIUS,LAT,LON);way["amenity"="toilets"](around:RADIUS,LAT,LON);relation["amenity"="toilets"](around:RADIUS,LAT,LON);', e: '🚻', c: '#f57c00' },
-                'shops': { q: 'node["shop"="convenience"](around:RADIUS,LAT,LON);way["shop"="convenience"](around:RADIUS,LAT,LON);', e: '🏪', c: '#43a047' },
-                'parking': { q: 'node["amenity"="parking"](around:RADIUS,LAT,LON);way["amenity"="parking"](around:RADIUS,LAT,LON);', e: '🅿️', c: '#546e7a' },
-                'cafe': { q: 'node["amenity"="cafe"](around:RADIUS,LAT,LON);way["amenity"="cafe"](around:RADIUS,LAT,LON);', e: '☕', c: '#6d4c41' },
-                'vending': { q: 'node["amenity"="vending_machine"](around:RADIUS,LAT,LON);way["amenity"="vending_machine"](around:RADIUS,LAT,LON);', e: '🥤', c: '#1e88e5' }
+                'parks': { q: 'node["leisure"="park"](BBOX);way["leisure"="park"](BBOX);relation["leisure"="park"](BBOX);', e: '🌳', c: '#2e7d32' },
+                'stations': { q: 'node["railway"="station"](BBOX);way["railway"="station"](BBOX);', e: '🚉', c: '#1565c0' },
+                'toilets': { q: 'node["amenity"="toilets"](BBOX);way["amenity"="toilets"](BBOX);relation["amenity"="toilets"](BBOX);', e: '🚻', c: '#f57c00' },
+                'shops': { q: 'node["shop"="convenience"](BBOX);way["shop"="convenience"](BBOX);', e: '🏪', c: '#43a047' },
+                'parking': { q: 'node["amenity"="parking"](BBOX);way["amenity"="parking"](BBOX);', e: '🅿️', c: '#546e7a' },
+                'cafe': { q: 'node["amenity"="cafe"](BBOX);way["amenity"="cafe"](BBOX);', e: '☕', c: '#6d4c41' },
+                'vending': { q: 'node["amenity"="vending_machine"](BBOX);way["amenity"="vending_machine"](BBOX);', e: '🥤', c: '#1e88e5' }
             };
 
             // キャッシュが有効で、同じ地点・同じ半径でのフィルタ切り替えであれば、ネットワークフェッチをスキップしてメモリ内(foundFacilities)から瞬時に描画
@@ -377,7 +386,7 @@
                 lastFetchedRadius = radius;
 
                 // ネットワーク負荷と WAF/429 制限を抑止するため、常に「すべて」のクエリを一括フェッチし、後続のフィルタはクライアント側で瞬時に絞り込みを行う
-                const combinedQuery = Object.values(categories).map(cat => cat.q).join('').replace(/RADIUS/g, radius).replace(/LAT/g, lat).replace(/LON/g, lon);
+                const combinedQuery = Object.values(categories).map(cat => cat.q).join('').replace(/BBOX/g, bboxStr);
 
                 document.getElementById('loading-overlay').classList.remove('hidden');
 
@@ -416,7 +425,7 @@
                                     signal: currentSignal
                                 });
                                 const timeoutPromise = new Promise((_, reject) =>
-                                    setTimeout(() => reject(new Error('TimeoutError')), 12000)
+                                    setTimeout(() => reject(new Error('TimeoutError')), 5000)
                                 );
 
                                 const res = await Promise.race([fetchPromise, timeoutPromise]);
