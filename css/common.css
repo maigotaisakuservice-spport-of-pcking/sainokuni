@@ -311,6 +311,7 @@ footer {
     transition: background-color 0.5s;
     padding: 3rem 0;
     margin-top: 5rem;
+    text-align: center;
 }
 footer .footer-logo {
     font-family: 'Mochiy Pop One', sans-serif;

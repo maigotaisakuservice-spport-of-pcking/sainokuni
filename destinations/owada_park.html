@@ -118,11 +118,11 @@
 
 <main>
     <div class="feature-list fade-in-up">
-        <div class="feature-item"><span>🎆</span> さいたま市花火大会</div>
-        <div class="feature-item"><span>🏊</span> 市民プール</div>
-        <div class="feature-item"><span>⚾</span> レジデンシャルスタジアム</div>
-        <div class="feature-item"><span>🎾</span> テニスコート</div>
-        <div class="feature-item"><span>🌳</span> 芝生広場</div>
+        <div class="feature-item cursor-pointer hover:scale-105 transition-transform" onclick="scrollToSection('fireworks')"><span>🎆</span> さいたま市花火大会</div>
+        <div class="feature-item cursor-pointer hover:scale-105 transition-transform" onclick="scrollToSection('pool')"><span>🏊</span> 市民プール</div>
+        <div class="feature-item cursor-pointer hover:scale-105 transition-transform" onclick="scrollToSection('stadium')"><span>⚾</span> レジデンシャルスタジアム</div>
+        <div class="feature-item cursor-pointer hover:scale-105 transition-transform" onclick="scrollToSection('tennis-courts')"><span>🎾</span> テニスコート</div>
+        <div class="feature-item cursor-pointer hover:scale-105 transition-transform" onclick="scrollToSection('lawn-plaza')"><span>🌳</span> 芝生広場</div>
     </div>
 
     <section class="fade-in-up">
@@ -133,7 +133,7 @@
         <p class="mb-6">特筆すべきは、毎年8月初旬に開催される「さいたま市花火大会 大和田公園会場」です。さいたま市が誇る3大花火大会のオープニングを華々しく飾るイベントとして、県内外から数十万人規模の来場者が訪れる、まさにさいたま市の夏のアイコン的なスポットとなっています。</p>
 
         <div class="family-info-grid">
-            <div class="family-info-card">
+            <div class="family-info-card" id="pool">
                 <div class="text-3xl mb-3">🏊</div>
                 <h4 class="font-bold mb-2">夏の定番！大規模な市民プール</h4>
                 <div class="text-emerald-500 font-bold">本格スライダー＆流水プールあり</div>
@@ -157,7 +157,7 @@
     <section class="fade-in-up">
         <h2>大和田公園を代表するハイライト施設</h2>
 
-        <div class="content-card">
+        <div class="content-card" id="fireworks">
             <canvas id="fireworks-canvas"></canvas>
             <h3 class="mt-0">🎆 さいたま市花火大会（大和田公園会場）</h3>
             <p>毎年8月初旬に開催される花火大会は、さいたま市の夏の訪れを告げる大人気行事です。周囲に見晴らしを遮る高い障害物が極めて少ない大和田公園内で打ち上げられるため、頭上で大音響とともに咲き誇る迫力満点の大輪の花火を間近で楽しむことができます。約5,000発の華麗な芸術花火が夜空を埋め尽くす様子は、感動の一言に尽きます！</p>
@@ -171,12 +171,12 @@
             </div>
         </div>
 
-        <div class="content-card">
+        <div class="content-card" id="pool">
             <h3 class="mt-0">🏊 さいたま市民に愛される「大和田公園プール」</h3>
             <p>夏限定でオープンする大和田公園プールは、驚くほど手頃な料金（大人440円、小中学生220円、未就学児無料）で利用できる本格派ウォーターレジャー施設です。全長約75mものハイスピードなスライダーや、流れに乗ってのんびり泳げる一周約100mの「流れるプール」、さらに水深が浅く水遊び用おもちゃの持ち込みも可能な「幼児プール」まであり、監視員も常駐しているためお子様連れでも安心・安全に水遊びを堪能できます。</p>
         </div>
 
-        <div class="content-card">
+        <div class="content-card" id="stadium">
             <h3 class="mt-0">⚾ レジデンシャルスタジアム大宮（大和田公園野球場）</h3>
             <p>地元の高校野球地区大会や、プロ・社会人野球の大会などでも頻繁に利用される本格的な野球スタジアムです。最新のスコアボードや素晴らしい天然芝、内野黒土の美しいグラウンド、夜間でも快適にプレーできる照明塔（ナイター）を誇り、野球ファンからプレイヤーまで、幅広く親しまれています。</p>
         </div>
@@ -186,11 +186,11 @@
         <h2>夏を遊び尽くす、おすすめ1日ファミリープラン</h2>
         <div class="content-card">
             <p><strong>【朝からプール＆夕方お散歩で夏を満喫プラン】</strong><br>
-            1. 09:00 - 開場に合わせて「大和田公園プール」に入場！午前中のまだ涼しい時間から、流れるプールやスライダーで思いっきりはしゃぎます。<br>
-            2. 12:00 - プール内の芝生エリアや日よけスペースでお弁当や売店の焼きそばを美味しくチャージ。<br>
-            3. 14:00 - プールから上がり、隣接する木陰の多い「芝生広場」で涼しい風を感じながらのんびり休憩タイム。<br>
-            4. 15:30 - 近隣を散策し、東武アーバンパークラインを走る電車を間近で眺めるトレインビュースポットでお子様と記念撮影。<br>
-            5. 16:30 - 隣の大宮公園に歩いて移動。夕暮れ時の氷川神社を参拝して涼やかな気分で帰路へ。</p>
+            09:00 - 開場に合わせて「大和田公園プール」に入場！午前中のまだ涼しい時間から、流れるプールやスライダーで思いっきりはしゃぎます。<br>
+            12:00 - プール内の芝生エリアや日よけスペースでお弁当や売店の焼きそばを美味しくチャージ。<br>
+            <span id="lawn-plaza">14:00 - プールから上がり、隣接する木陰の多い「芝生広場」で涼しい風を感じながらのんびり休憩タイム。</span><br>
+            15:30 - 近臨を散策し、東武アーバンパークラインを走る電車を間近で眺めるトレインビュースポットでお子様と記念撮影。<br>
+            16:30 - 隣の大宮公園に歩いて移動。夕暮れ時の氷川神社を参拝して涼やかな気分で帰路へ。</p>
         </div>
     </section>
 
@@ -199,7 +199,7 @@
         <ul class="info-list">
             <li><strong>アクセス:</strong> 東武アーバンパークライン「大宮公園駅」より徒歩約15分。または「北大宮駅」より徒歩約15分。大宮駅東口から東武バスにて「大和田公園」下車すぐ。</li>
             <li><strong>所在地:</strong> 埼玉県さいたま市大宮区寿能町2丁目519</li>
-            <li><strong>主な施設:</strong> 市営球場（野球場）、テニスコート（ハード・クレー）、市民プール、多目的広場、散策用遊歩道、有料駐車場完備。</li>
+            <li id="tennis-courts"><strong>主な施設:</strong> 市営球場（野球場）、テニスコート（ハード・クレー）、市民プール、多目的広場、散策用遊歩道、有料駐車場完備。</li>
         </ul>
         <iframe src="https://www.google.com/maps?q=35.9252,139.6425&z=15&output=embed"></iframe>
     </section>

@@ -89,7 +89,14 @@ function updateThemeIcon(mode, theme) {
     // ダークモード時は月（任意で切り替える場合）
     // if (mode === 'dark') icon = '🌙';
 
-    if (themeIcon) themeIcon.textContent = icon;
+    if (themeIcon) {
+        const emojiEl = themeIcon.querySelector('.icon-emoji');
+        if (emojiEl) {
+            emojiEl.textContent = icon;
+        } else {
+            themeIcon.textContent = icon;
+        }
+    }
     if (themeIconMobile) {
         // モバイルメニュー内は「カラー変更」の横なので🌳などのままでも良い
         let mobileIcon = '🌳';
@@ -531,6 +538,23 @@ function initRecommendations() {
         `;
     }).join('');
 }
+
+/**
+ * 指定されたIDの要素まで、固定ヘッダーの高さを考慮してスムーズスクロールします。
+ * @param {string} id - スクロール先要素のID
+ */
+window.scrollToSection = function(id) {
+    const el = document.getElementById(id);
+    if (el) {
+        const headerOffset = 90;
+        const elementPosition = el.getBoundingClientRect().top + window.pageYOffset;
+        const offsetPosition = elementPosition - headerOffset;
+        window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth"
+        });
+    }
+};
 
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();

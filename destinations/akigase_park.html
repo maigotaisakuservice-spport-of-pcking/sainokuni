@@ -80,11 +80,11 @@
 
 <main>
     <div class="feature-list fade-in-up">
-        <div class="feature-item"><span>🍖</span> バーベキュー</div>
-        <div class="feature-item"><span>⚽</span> スポーツの聖地</div>
-        <div class="feature-item"><span>🐦</span> バードウォッチング</div>
-        <div class="feature-item"><span>🪵</span> 豊かな自然</div>
-        <div class="feature-item"><span>🍼</span> おむつ替えスペース</div>
+        <div class="feature-item cursor-pointer hover:scale-105 transition-transform" onclick="scrollToSection('bbq')"><span>🍖</span> バーベキュー</div>
+        <div class="feature-item cursor-pointer hover:scale-105 transition-transform" onclick="scrollToSection('sports')"><span>⚽</span> スポーツの聖地</div>
+        <div class="feature-item cursor-pointer hover:scale-105 transition-transform" onclick="scrollToSection('birds')"><span>🐦</span> バードウォッチング</div>
+        <div class="feature-item cursor-pointer hover:scale-105 transition-transform" onclick="scrollToSection('nature')"><span>🪵</span> 豊かな自然</div>
+        <div class="feature-item cursor-pointer hover:scale-105 transition-transform" onclick="scrollToSection('diaper')"><span>🍼</span> おむつ替えスペース</div>
     </div>
 
     <section class="fade-in-up">
@@ -94,13 +94,13 @@
         <p class="mb-6">都会からわずかの距離にありながら、豊かな自然環境がそのまま残されているため、四季を通じて多様な動植物を観察できます。広い芝生広場にレジャーシートを広げてピクニックやキャッチボールを楽しんだり、秋には落ち葉を拾いながら林間散策を楽しんだりと、思い思いの贅沢な時間を快適に満喫できます。</p>
 
         <div class="family-info-grid">
-            <div class="family-info-card">
+            <div class="family-info-card" id="diaper">
                 <div class="text-3xl mb-3">🚻</div>
                 <h4 class="font-bold mb-2">トイレのキレイ度</h4>
                 <div class="toilet-rating">★★★☆☆</div>
                 <p class="text-xs opacity-70 mt-2">河川敷の広大なエリアに分散しているため簡易式のトイレもありますが、管理事務所や炊飯場（BBQ場）の近くに整備されたバリアフリー対応の多目的トイレがあり、小さなお子様連れや赤ちゃんでも安心です。</p>
             </div>
-            <div class="family-info-card">
+            <div class="family-info-card" id="bbq">
                 <div class="text-3xl mb-3">🍖</div>
                 <h4 class="font-bold mb-2">ファミリーBBQ</h4>
                 <div class="text-emerald-500 font-bold">予約制エリア・フリーエリアあり</div>
@@ -118,17 +118,17 @@
     <section class="fade-in-up">
         <h2>秋ヶ瀬公園の自然とアクティビティの魅力</h2>
 
-        <div class="content-card">
+        <div class="content-card" id="birds">
             <h3 class="mt-0">🪶 野鳥の楽園「ピクニックの森」</h3>
             <p>園内の北部に広がる「ピクニックの森」は、かつての荒川の豊かな湿地帯林（主にハンノキ林）が美しく保存された特別なエリアです。ここでは1年を通して多種多様な野鳥や渡り鳥が観察され、関東屈指のバードウォッチングのメッカとして、全国から野鳥愛好家たちが集まります。木製デッキの遊歩道が敷かれているため、お子様と一緒に木々の間を心地よくハイキングしながら、小鳥たちの美しいさえずりに耳を傾けることができます。</p>
         </div>
 
-        <div class="content-card">
+        <div class="content-card" id="sports">
             <h3 class="mt-0">⚽ スポーツ愛好家の楽園！圧倒的なコート数</h3>
             <p>秋ヶ瀬公園のスポーツ施設は埼玉県内でも最高レベルの数を誇ります。野球場11面、サッカー場2面、テニスコート22面、ラグビー場、ソフトボール場、さらには多目的グラウンドまで完備。週末には少年スポーツの熱い声が響き渡り、爽快な汗を流す人々の一大拠点となっています。</p>
         </div>
 
-        <div class="content-card">
+        <div class="content-card" id="nature">
             <h3 class="mt-0">🌳 木陰の散策路と芝生エリア</h3>
             <p>公園沿いには、緑豊かな木々で覆われた木陰の散策路が続いています。夏でも比較的涼しく、犬の散歩やランニング、ウォーキングに最適です。芝生広場には大型遊具は少ないものの、その分平らで安全なため、よちよち歩きのお子様の芝生デビューにもうってつけ。木陰の下にサンシェードテントを建てて読書やピクニックを楽しむ穏やかな過ごし方が大人気です。</p>
         </div>
@@ -138,12 +138,12 @@
         <h2>手ぶらで楽しむ、週末の大自然ピクニックおすすめコース</h2>
         <div class="content-card">
             <p><strong>【森の小鳥に癒される！バードウォッチング＆ピクニックプラン】</strong><br>
-            1. 10:00 - JR武蔵野線「西浦和駅」からタクシーまたはレンタサイクルで秋ヶ瀬公園へ入場。<br>
-            2. 10:30 - 北側の「ピクニックの森」へ移動し、木製遊歩道をのんびりハイキング。水辺に舞い降りる美しい野鳥を親子で探します。<br>
-            3. 12:00 - 芝生広場の広大な敷地にシートを広げてランチピクニック。おにぎりやサンドイッチを美味しく堪能。<br>
-            4. 13:30 - 子供と一緒に「三ツ池」周辺まで歩き、水辺の生き物（ザリガニやカエル、水生昆虫など）を楽しく観察。<br>
-            5. 15:00 - 広場でバドミントンやシャボン玉で元気いっぱい体を動かします。<br>
-            6. 16:30 - 荒川の夕暮れ時のパノラマビューを土手から眺めながら、最高の気分で帰路へ。</p>
+            10:00 - JR武蔵野線「西浦和駅」からタクシーまたはレンタサイクルで秋ヶ瀬公園へ入場。<br>
+            10:30 - 北側の「ピクニックの森」へ移動し、木製遊歩道をのんびりハイキング。水辺に舞い降りる美しい野鳥を親子で探します。<br>
+            12:00 - 芝生広場の広大な敷地にシートを広げてランチピクニック。おにぎりやサンドイッチを美味しく堪能。<br>
+            13:30 - 子供と一緒に「三ツ池」周辺まで歩き、水辺の生き物（ザリガニやカエル、水生昆虫など）を楽しく観察。<br>
+            15:00 - 広場でバドミントンやシャボン玉で元気いっぱい体を動かします。<br>
+            16:30 - 荒川の夕暮れ時のパノラマビューを土手から眺めながら、最高の気分で帰路へ。</p>
         </div>
     </section>
 

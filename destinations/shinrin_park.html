@@ -80,16 +80,16 @@
 
 <main>
     <div class="feature-list fade-in-up">
-        <div class="feature-item"><span>🚵</span> サイクリング</div>
-        <div class="feature-item"><span>🏐</span> ぽんぽこマウンテン</div>
-        <div class="feature-item"><span>🧺</span> 広大な広場</div>
-        <div class="feature-item"><span>🍂</span> 紅葉の名所</div>
-        <div class="feature-item"><span>👶</span> 充実した授乳室</div>
+        <div class="feature-item cursor-pointer hover:scale-105 transition-transform" onclick="scrollToSection('bike')"><span>🚵</span> サイクリング</div>
+        <div class="feature-item cursor-pointer hover:scale-105 transition-transform" onclick="scrollToSection('mountain')"><span>🏐</span> ぽんぽこマウンテン</div>
+        <div class="feature-item cursor-pointer hover:scale-105 transition-transform" onclick="scrollToSection('kids')"><span>🧺</span> 広大な広場</div>
+        <div class="feature-item cursor-pointer hover:scale-105 transition-transform" onclick="scrollToSection('autumn')"><span>🍂</span> 紅葉の名所</div>
+        <div class="feature-item cursor-pointer hover:scale-105 transition-transform" onclick="scrollToSection('course')"><span>👶</span> 充実した授乳室</div>
     </div>
 
     <section class="fade-in-up">
         <h2>圧倒的なスケール！一日では絶対に遊びきれない大自然のアドベンチャー森林</h2>
-        <p class="mb-6">比企郡滑川町に位置し、東京ドーム約65個分（約304ヘクタール）という想像を絶する圧倒的なスケールを誇る、日本初の<a href="https://www.shinrinkoen.jp/" target="_blank" rel="noopener" class="text-[var(--primary-color)] underline">国営武蔵丘陵森林公園</a>。広大な丘陵地に広がる大自然の雑木林を丸ごと活かした園内には、大人気の巨大トランポリンやアスレチック、全長約17km of サイクリング専用コース、ハーブ園など、アクティブ派のご家族からハイキング愛好家まで、全ての人が笑顔になれる極上の森です。</p>
+        <p class="mb-6">比企郡滑川町に位置し、東京ドーム約65個分（約304ヘクタール）という想像を絶する圧倒的なスケールを誇る、日本初の<a href="https://www.shinrinkoen.jp/" target="_blank" rel="noopener" class="text-[var(--primary-color)] underline">国営武蔵丘陵森林公園</a>。広大な丘陵地に広がる大自然の雑木林を丸ごと活かした園内には、大人気の巨大トランポリンやアスレチック、全長約17kmのサイクリング専用コース、ハーブ園など、アクティブ派のご家族からハイキング愛好家まで、全ての人が笑顔になれる極上の森です。</p>
 
         <p class="mb-6">特に中学生以下はいつでも【入園料無料】という、子育てファミリーに極めて親切な国営ならではの料金設計も嬉しいポイントです。春のネモフィラやルピナス、夏のひまわり、秋のコキアやモミジ紅葉ライトアップ、冬の梅林など、四季折々の美しい植物が咲き乱れ、何回訪れても新しい発見と感動が約束されています。</p>
 
@@ -100,7 +100,7 @@
                 <div class="toilet-rating">★★★★★</div>
                 <p class="text-xs opacity-70 mt-2">国営の徹底した維持管理システムにより、園内の全てのトイレは常にピカピカに保たれています。主要エリアには温水洗浄便座やバリアフリーの大型多目的トイレが配置されており完璧です。</p>
             </div>
-            <div class="family-info-card">
+            <div class="family-info-card" id="kids">
                 <div class="text-3xl mb-3">🍼</div>
                 <h4 class="font-bold mb-2">赤ちゃん連れ安心度</h4>
                 <div class="text-emerald-500 font-bold">パーフェクト</div>
@@ -118,17 +118,17 @@
     <section class="fade-in-up">
         <h2>森林公園を遊び尽くすための3大看板スポット</h2>
 
-        <div class="content-card">
+        <div class="content-card" id="bike">
             <h3 class="mt-0">🚲 全長17kmのサイクリング専用コースを駆け抜けよう！</h3>
             <p>園内は徒歩での移動が大変なほど広大なため、レンタサイクルを借りるのが絶対におすすめです！爽やかな風が通り抜ける全長約17.2kmの「自転車専用コース」が美しく整備されており、ママチャリからスポーツタイプ、子供乗せ電動アシスト自転車まで幅広く貸出可能。起伏に富んだスリリングなコースを走れば、まるで高原リゾートにいるような最高の爽快感を体験できます。</p>
         </div>
 
-        <div class="content-card">
+        <div class="content-card" id="mountain">
             <h3 class="mt-0">🏐 日本一のトランポリン「ぽんぽこマウンテン」</h3>
             <p>西口から程近い大広場にそびえる、まるで巨大な白い雲のような形をしたマウンテン型トランポリンです。その広さはなんと1,000平方メートル以上！山のような起伏を駆け上がり、青空に向かって高く飛び跳ねる感覚はここでしか味わえません。周囲には安全のためのネットや年齢制限エリア（小学生以下限定等）も敷かれているため、パパママも安心してお子様を遊ばせられます。</p>
         </div>
 
-        <div class="content-card">
+        <div class="content-card" id="autumn">
             <h3 class="mt-0">🧺 四季折々の極上の花々とライトアップイベント</h3>
             <p>「ハーブガーデン」や「花の道」では、四季折々の美しい植物が丁寧に手入れされています。特に秋に開催される「紅葉見ナイト（もみじみないと）」は、約500本もの美しいカエデが幻想的なライトアップを施され、水面に映る鏡面モミジは埼玉屈指の紅葉名所として遠方からも多くの観光客やカメラマンを惹きつけます。</p>
         </div>
@@ -136,14 +136,14 @@
 
     <section class="fade-in-up">
         <h2>大自然のアドベンチャーおすすめ1日攻略モデルコース</h2>
-        <div class="content-card">
+        <div class="content-card" id="course">
             <p><strong>【朝からアクティブにサイクリング＆ぽんぽこマウンテン制覇コース】</strong><br>
-            1. 09:30 - 南口または中央口から入場！すぐにレンタサイクル（大人520円/2時間）を借り、自転車で移動開始。<br>
-            2. 10:00 - 専用サイクリングロードを走りながら、「むさしのキッズドーム」へ直行。ローラー滑り台などのユニークな遊具で軽くウォーミングアップ！<br>
-            3. 11:00 - 西口エリアへ移動。大人気の「ぽんぽこマウンテン」で大空に向かって思いっきりジャンプ！<br>
-            4. 12:30 - 広大な「西口ひろば」の青々とした天然芝にレジャーシートを敷いて、お弁当タイム。木漏れ日の下でのんびり昼寝も最高です。<br>
-            5. 14:00 - 午後は「アスレチックコース」に挑戦！森の中に作られた木製アスレチックの全24ステージ完全制覇を目指します。<br>
-            6. 16:00 - レトロな園内巡回バスに乗ってゲートに戻り、売店で地元産のさっぱりした特製ソフトクリームを食べてハッピーに帰路へ。</p>
+            09:30 - 南口または中央口から入場！すぐにレンタサイクル（大人520円/2時間）を借り、自転車で移動開始。<br>
+            10:00 - 専用サイクリングロードを走りながら、「むさしのキッズドーム」へ直行。ローラー滑り台などのユニークな遊具で軽くウォーミングアップ！<br>
+            11:00 - 西口エリアへ移動。大人気の「ぽんぽこマウンテン」で大空に向かって思いっきりジャンプ！<br>
+            12:30 - 広大な「西口ひろば」の青々とした天然芝にレジャーシートを敷いて、お弁当タイム。木漏れ日の下でのんびり昼寝も最高です。<br>
+            14:00 - 午後は「アスレチックコース」に挑戦！森の中に作られた木製アスレチックの全24ステージ完全制覇を目指します。<br>
+            16:00 - レトロな園内巡回バスに乗ってゲートに戻り、売店で地元産のさっぱりした特製ソフトクリームを食べてハッピーに帰路へ。</p>
         </div>
     </section>
 

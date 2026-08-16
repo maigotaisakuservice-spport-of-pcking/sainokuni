@@ -80,11 +80,11 @@
 
 <main>
     <div class="feature-list fade-in-up">
-        <div class="feature-item"><span>🌸</span> 桜の名所</div>
-        <div class="feature-item"><span>🚆</span> 駅チカ</div>
-        <div class="feature-item"><span>🦁</span> 小さな動物園</div>
-        <div class="feature-item"><span>🏟️</span> 競技場併設</div>
-        <div class="feature-item"><span>⚙️</span> バリアフリー</div>
+        <div class="feature-item cursor-pointer hover:scale-105 transition-transform" onclick="scrollToSection('cherry')"><span>🌸</span> 桜の名所</div>
+        <div class="feature-item cursor-pointer hover:scale-105 transition-transform" onclick="scrollToSection('access')"><span>🚆</span> 駅チカ</div>
+        <div class="feature-item cursor-pointer hover:scale-105 transition-transform" onclick="scrollToSection('zoo')"><span>🦁</span> 小さな動物園</div>
+        <div class="feature-item cursor-pointer hover:scale-105 transition-transform" onclick="scrollToSection('retro')"><span>🏟️</span> 競技場併設</div>
+        <div class="feature-item cursor-pointer hover:scale-105 transition-transform" onclick="scrollToSection('walk')"><span>⚙️</span> バリアフリー</div>
     </div>
 
     <section class="fade-in-up">
@@ -93,14 +93,14 @@
 
         <p class="mb-6">毎年春になると、約1,000本ものソメイヨシノが一斉に咲き誇り、園内は桃色の絶景へと姿を変えます。シートを広げてピクニックを楽しむお花見客で大いに盛り上がる、埼玉県トップクラスの桜の聖地です。また、新緑や秋のモミジの季節など、四季を通じて豊かな日本の原風景を感じることができます。</p>
 
-        <div class="family-info-grid">
+        <div class="family-info-grid" id="cherry">
             <div class="family-info-card">
                 <div class="text-3xl mb-3">🚻</div>
                 <h4 class="font-bold mb-2">トイレのキレイ度</h4>
                 <div class="toilet-rating">★★★☆☆</div>
                 <p class="text-xs opacity-70 mt-2">歴史が古い公園であるためレトロな公衆トイレも残っていますが、多目的トイレや主要エリアのバリアフリー改修が進められており、車椅子やベビーカーでもスムーズに利用できます。</p>
             </div>
-            <div class="family-info-card">
+            <div class="family-info-card" id="access">
                 <div class="text-3xl mb-3">🚉</div>
                 <h4 class="font-bold mb-2">アクセスの良さ</h4>
                 <div class="text-emerald-500 font-bold">駅から徒歩10分</div>
@@ -123,12 +123,12 @@
             <p>大宮公園は、二千有余年の歴史を誇り、東京都・埼玉県にまたがる約280社ある氷川神社の総本社である「<a href="https://musashiichinomiya-hikawa.or.jp/" target="_blank" rel="noopener" class="text-[var(--primary-color)] underline">氷川神社</a>」と深く隣接しています。JR大宮駅東口から真っ直ぐ伸びる日本一長い参道（約2km）のケヤキ並木を歩き、厳かな本殿に参拝した後に、そのまま木漏れ日あふれる大宮公園へと足を進めるのが、地元で最も愛されている王道の散策・癒やしルートです。</p>
         </div>
 
-        <div class="content-card">
+        <div class="content-card" id="zoo">
             <h3 class="mt-0">🦁 大宮公園小動物園 (入園無料！)</h3>
             <p>園内の一角にある、地元ファミリーに大人気の県営の小動物園です。驚くべきことに【完全入園無料】でありながら、ツキノワグマやコアリクイ、カピバラ、ハイエナ、さらには色鮮やかな美しいフラミンゴやインコたちが放し飼いのように暮らすフライングケージなど、本格的な動物観察を満喫できます。特に「クビワペッカリー」や、活発に動き回るサルの仲間たちのコミカルな姿は、子どもたちだけでなく大人のカメラマンたちをも魅了しています。</p>
         </div>
 
-        <div class="content-card">
+        <div class="content-card" id="retro">
             <h3 class="mt-0">🎠 昭和レトロな児童遊園地</h3>
             <p>小動物園のすぐ隣には、どこか懐かしい昭和レトロな雰囲気が漂う児童遊園地があります。昔懐かしいバッテリーカーや、コインを入れると音楽に合わせてゆっくり揺れるヴィンテージな遊具が今でも現役で稼働しており、1回数十円というお財布に極めて優しい価格設計。パパやママ、おじいちゃんおばあちゃん世代にとっては懐かしく、小さなお子様にとっては新鮮に、家族全員が自然と笑顔になるのどかなスポットです。</p>
         </div>
@@ -136,14 +136,14 @@
 
     <section class="fade-in-up">
         <h2>おすすめの散歩・お出かけコース</h2>
-        <div class="content-card">
+        <div class="content-card" id="walk">
             <p><strong>【大宮の歴史・自然・動物をめぐる休日フルコース】</strong><br>
-            1. 10:00 - 大宮駅東口から「氷川参道」の木漏れ日を浴びながらのんびりウォーキング。<br>
-            2. 10:30 - 武蔵一宮 氷川神社に参拝。池にかかる朱色の太鼓橋で美しい写真を撮影。<br>
-            3. 11:00 - 大宮公園へ入場。園内中心部に広がる壮大な「赤松林」の下を散策。<br>
-            4. 11:30 - 人気の「大宮公園小動物園」でお茶目なカピバラやツキノワグマに挨拶。<br>
-            5. 12:30 - 児童遊園地近くのレトロな売店で、名物の「おでん」やたこ焼きをベンチでピクニックがてら美味しくいただく。<br>
-            6. 14:00 - 園内にある「埼玉県立歴史と民俗の博物館」で、埼玉の原始・古代から現代までの貴重な歴史資料や民俗コレクションをゆっくりと見学（入館料一般300円、高校生・大学生150円、中学生以下無料）。</p>
+            10:00 - 大宮駅東口から「氷川参道」の木漏れ日を浴びながらのんびりウォーキング。<br>
+            10:30 - 武蔵一宮 氷川神社に参拝。池にかかる朱色の太鼓橋で美しい写真を撮影。<br>
+            11:00 - 大宮公園へ入場。園内中心部に広がる壮大な「赤松林」の下を散策。<br>
+            11:30 - 人気の「大宮公園小動物園」でお茶目なカピバラやツキノワグマに挨拶。<br>
+            12:30 - 児童遊園地近くのレトロな売店で、名物の「おでん」やたこ焼きをベンチでピクニックがてら美味しくいただく。<br>
+            14:00 - 園内にある「埼玉県立歴史と民俗の博物館」で、埼玉の原始・古代から現代までの貴重な歴史資料や民俗コレクションをゆっくりと見学（入館料一般300円、高校生・大学生150円、中学生以下無料）。</p>
         </div>
     </section>
 

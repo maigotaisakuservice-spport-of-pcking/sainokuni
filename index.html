@@ -767,11 +767,11 @@ document.addEventListener('DOMContentLoaded', () => {
             );
         `;
 
-        // 障害対策の冗長化エンドポイントリスト
+        // 障害対策の冗長化エンドポイントリスト（高速・安定型ミラー）
         const overpassEndpoints = [
             'https://overpass-api.de/api/interpreter',
-            'https://overpass.kumi.systems/api/interpreter',
-            'https://overpass.openstreetmap.ru/api/interpreter'
+            'https://lz4.overpass-api.de/api/interpreter',
+            'https://overpass.private.coffee/api/interpreter'
         ];
 
         // API全滅時のローカルフォールバック用
@@ -836,7 +836,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         body: postBody
                     });
                     const timeoutPromise = new Promise((_, reject) =>
-                        setTimeout(() => reject(new Error('TimeoutError')), 5000)
+                        setTimeout(() => reject(new Error('TimeoutError')), 20000)
                     );
 
                     const res = await Promise.race([fetchPromise, timeoutPromise]);
@@ -1040,38 +1040,33 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const apiUrl = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=Saitama&days=3&lang=ja`;
                 let fetchedData = null;
-                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`;
 
+                // Try cors-anywhere.com first as requested
                 try {
-                    const proxyRes = await fetch(proxyUrl);
-                    if (!proxyRes.ok) throw new Error('Primary proxy (allorigins) failed');
-                    const proxyData = await proxyRes.json();
-                    if (proxyData && proxyData.contents) {
-                        fetchedData = JSON.parse(proxyData.contents);
-                    } else {
-                        throw new Error('Allorigins returned empty contents');
-                    }
+                    const corsAnywhereUrl = `https://cors-anywhere.com/${apiUrl}`;
+                    const proxyRes = await fetch(corsAnywhereUrl);
+                    if (!proxyRes.ok) throw new Error('Primary proxy (cors-anywhere.com) failed');
+                    fetchedData = await proxyRes.json();
                 } catch (e) {
-                    console.warn(`Primary proxy failed (attempt ${attempt}), trying secondary proxy...`, e);
+                    console.warn(`Primary proxy (cors-anywhere.com) failed (attempt ${attempt}), trying secondary proxy (allorigins)...`, e);
                     try {
-                        const fallbackRes = await fetch(`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(apiUrl)}`);
-                        if (!fallbackRes.ok) throw new Error('Secondary proxy (codetabs) failed');
-                        fetchedData = await fallbackRes.json();
+                        const alloriginsUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`;
+                        const fallbackRes = await fetch(alloriginsUrl);
+                        if (!fallbackRes.ok) throw new Error('Secondary proxy (allorigins) failed');
+                        const proxyData = await fallbackRes.json();
+                        if (proxyData && proxyData.contents) {
+                            fetchedData = JSON.parse(proxyData.contents);
+                        } else {
+                            throw new Error('Allorigins returned empty contents');
+                        }
                     } catch (e2) {
-                        console.warn(`Secondary proxy failed (attempt ${attempt}), trying third proxy (thingproxy)...`, e2);
+                        console.warn(`Secondary proxy (allorigins) failed, trying direct fetch...`, e2);
                         try {
-                            const thirdRes = await fetch(`https://thingproxy.freeboard.io/fetch/${encodeURIComponent(apiUrl)}`);
-                            if (!thirdRes.ok) throw new Error('Third proxy failed');
-                            fetchedData = await thirdRes.json();
+                            const directRes = await fetch(apiUrl);
+                            if (!directRes.ok) throw new Error('Direct fetch failed');
+                            fetchedData = await directRes.json();
                         } catch (e3) {
-                            console.warn(`Third proxy failed, trying direct fetch...`, e3);
-                            try {
-                                const directRes = await fetch(apiUrl);
-                                if (!directRes.ok) throw new Error('Direct fetch failed');
-                                fetchedData = await directRes.json();
-                            } catch (e4) {
-                                console.warn(`Direct fetch failed:`, e4);
-                            }
+                            console.warn(`Direct fetch failed:`, e3);
                         }
                     }
                 }

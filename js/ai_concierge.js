@@ -14,8 +14,8 @@
 
 let webllm = null;
 
-// 超軽量・高速なQwen2-0.5Bモデルを使用 (ローカルでの高速読み込み用)
-const SELECTED_MODEL = "Qwen2-0.5B-Instruct-q4f16_1-MLC";
+// 超軽量・高速なQwen2.5-1.5Bモデルを使用 (ローカルでの高速読み込み用)
+const SELECTED_MODEL = "Qwen2.5-1.5B-Instruct-q4f16_1-MLC";
 
 // AIサイタマニアくん用の厳格なシステムプロンプト
 const SYSTEM_PROMPT = `
@@ -185,7 +185,7 @@ function showDiscreetConsentInline() {
         <div class="inline-block p-4 rounded-2xl bg-slate-800 text-slate-200 max-w-[85%] shadow-lg border border-slate-700">
             <p class="text-sm font-bold mb-2">💡 高度なAIを起動しますか？</p>
             <p class="text-[11px] text-slate-400 mb-3 leading-relaxed">
-                より精度の高い自然な対話ができる高度なAIモデル（軽量版:約350MB）をダウンロードできます。
+                より精度の高い自然な対話ができる高度なAIモデル（高性能版:約900MB）をダウンロードできます。
                 ※不要な場合はダウンロードなしのまま簡易回答します。
             </p>
             <div class="flex gap-2">
