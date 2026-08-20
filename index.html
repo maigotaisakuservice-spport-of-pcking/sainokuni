@@ -1046,32 +1046,40 @@ document.addEventListener('DOMContentLoaded', () => {
                 const apiUrl = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=Saitama&days=3&lang=ja`;
                 let fetchedData = null;
 
-                // Try cors-anywhere.com first as requested
+                // 高速かつOrigin制限のないプロキシシーケンス (cors.sh -> cors-anywhere -> allorigins -> direct)
                 try {
-                    const corsAnywhereUrl = `https://cors-anywhere.com/${apiUrl}`;
-                    const proxyRes = await fetch(corsAnywhereUrl);
-                    if (!proxyRes.ok) throw new Error('Primary proxy (cors-anywhere.com) failed');
+                    const corsShUrl = `https://proxy.cors.sh/${apiUrl}`;
+                    const proxyRes = await fetch(corsShUrl);
+                    if (!proxyRes.ok) throw new Error('Primary proxy (cors.sh) failed');
                     fetchedData = await proxyRes.json();
                 } catch (e) {
-                    console.warn(`Primary proxy (cors-anywhere.com) failed (attempt ${attempt}), trying secondary proxy (allorigins)...`, e);
+                    console.warn(`Primary proxy (cors.sh) failed (attempt ${attempt}), trying secondary proxy...`, e);
                     try {
-                        const alloriginsUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`;
-                        const fallbackRes = await fetch(alloriginsUrl);
-                        if (!fallbackRes.ok) throw new Error('Secondary proxy (allorigins) failed');
-                        const proxyData = await fallbackRes.json();
-                        if (proxyData && proxyData.contents) {
-                            fetchedData = JSON.parse(proxyData.contents);
-                        } else {
-                            throw new Error('Allorigins returned empty contents');
-                        }
+                        const corsAnywhereUrl = `https://cors-anywhere.com/${apiUrl}`;
+                        const fallbackRes = await fetch(corsAnywhereUrl);
+                        if (!fallbackRes.ok) throw new Error('Secondary proxy (cors-anywhere) failed');
+                        fetchedData = await fallbackRes.json();
                     } catch (e2) {
-                        console.warn(`Secondary proxy (allorigins) failed, trying direct fetch...`, e2);
+                        console.warn(`Secondary proxy failed, trying tertiary proxy (allorigins)...`, e2);
                         try {
-                            const directRes = await fetch(apiUrl);
-                            if (!directRes.ok) throw new Error('Direct fetch failed');
-                            fetchedData = await directRes.json();
+                            const alloriginsUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`;
+                            const thirdRes = await fetch(alloriginsUrl);
+                            if (!thirdRes.ok) throw new Error('Tertiary proxy (allorigins) failed');
+                            const proxyData = await thirdRes.json();
+                            if (proxyData && proxyData.contents) {
+                                fetchedData = JSON.parse(proxyData.contents);
+                            } else {
+                                throw new Error('Allorigins returned empty contents');
+                            }
                         } catch (e3) {
-                            console.warn(`Direct fetch failed:`, e3);
+                            console.warn(`Tertiary proxy failed, trying direct fetch...`, e3);
+                            try {
+                                const directRes = await fetch(apiUrl);
+                                if (!directRes.ok) throw new Error('Direct fetch failed');
+                                fetchedData = await directRes.json();
+                            } catch (e4) {
+                                console.warn(`Direct fetch failed:`, e4);
+                            }
                         }
                     }
                 }
