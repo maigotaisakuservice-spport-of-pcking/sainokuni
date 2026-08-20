@@ -476,7 +476,7 @@
 <button onclick="scrollToTop()" class="go-to-top-button" aria-label="トップへ戻る">↑</button>
 
 <script defer src="js/common.js" defer></script>
-<script type="module" src="js/ai_concierge.js" defer></script>
+<script src="js/ai_concierge.js" defer></script>
 <script>
 // --- YouTube Iframe Player API & Mute/Unmute Control ---
 var ytPlayer = null;
@@ -537,17 +537,22 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentRssIdx = 0;
 
     async function initSliders() {
+        // file:// プロトコル直接実行時やネットワーク環境を考慮した統合データ
+        rssItems = [
+            { "title": "大宮公園：春のさくら祭り2026", "link": "destinations/omiya_park.html", "description": "「日本さくら名所100選」に選ばれた県内屈指の桜スポット。" },
+            { "title": "国営武蔵丘陵森林公園：新アスレチック登場", "link": "destinations/shinrin_park.html", "description": "日本最大級のネット遊具「冒険コース」がリニューアル！" },
+            { "title": "【イチオシ】大和田公園：夏の花火大会、開催決定！", "link": "destinations/owada_park.html", "description": "さいたま市の夏を彩る「さいたま市花火大会 大和田公園会場」。" },
+            { "title": "北浦和公園：音楽噴水と芸術の散歩道", "link": "destinations/kita_urawa_park.html", "description": "定時に奏でられる音楽噴水と近代美術館が魅力。" },
+            { "title": "秋ヶ瀬公園：広大な自然のオアシス", "link": "destinations/akigase_park.html", "description": "荒川河川敷に広がる野鳥の宝庫。BBQエリアも充実。" }
+        ];
         try {
             const res = await fetch('js/slider_content.json');
-            if (!res.ok) throw new Error('Fetch failed');
-            rssItems = await res.json();
+            if (res.ok) {
+                const loaded = await res.json();
+                if (loaded && loaded.length) rssItems = loaded;
+            }
         } catch (e) {
-            console.error('RSS content load error:', e);
-            rssItems = [
-                { "title": "2026年 埼玉公園プロジェクト始動！", "link": "news.html" },
-                { "title": "【注目】北浦和公園の音楽噴水ショー、夜間ライトアップ実施中", "link": "destinations/kita_urawa_park.html" },
-                { "title": "SAITAMA PARK: 2Dゲームで遊ぼう！", "link": "saitama_mini_game.html" }
-            ];
+            console.log('Local file mode or offline: using embedded slider items.', e);
         }
         updateRssDisplay();
         setInterval(() => {
