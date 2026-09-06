@@ -87,18 +87,21 @@
 ### 2. ローカル配置画像・動画・メディア (`/images/`)
 | ファイル名 | 形式 | 搭載先ページ | 用途・詳細 |
 | :--- | :--- | :--- | :--- |
-| `kita_urawa_park.jpg` | JPEG | 各種 | 北浦和公園の景観（メインビジュアル）。トップ、ギャラリー、各詳細ページで使用。 |
-| `kita_urawa_fountain.jpg` | JPEG | `gallery.html` | 北浦和公園音楽噴水の静止画。 |
-| `kita_urawa_path.jpg` | JPEG | `gallery.html` | 北浦和公園の緑に囲まれた散策路の風景。 |
-| `kita_urawa_sculpture_1.jpg`| JPEG | `gallery.html` | 園内に展示されている野外彫刻アート作品その1。 |
-| `momas_placeholder.jpg` | JPEG | `gallery.html` | 園内にある「埼玉県立近代美術館 (MOMAS)」の外観写真。 |
-| `omiya_park.jpg` | JPEG | 各種 | 歴史ある大宮公園のメイン景観写真。 |
-| `shinrin_park.jpg` | JPEG | 各種 | 国営武蔵丘陵森林公園の広大なサイクリングロード・自然写真。 |
-| `akigase_park.jpg` | JPEG | 各種 | 秋ヶ瀬公園の広大な芝生とレジャーエリアの写真。 |
+| `quiz.jpg` | JPEG | `saitama_mini_game.html`, `game/quiz.html` | 埼玉マスター検定クイズ用（開いた本と本棚のイメージ）。 |
 | `densya.jpg` | JPEG | 共通モーダル | アクセスモーダル内の、埼玉を走る電車のイメージ写真。 |
-| `fishing.jpg` | JPEG | `saitama_mini_game.html`| Play-Hubにおける「長瀞の川釣りゲーム」カード用ビジュアル。 |
-| `quiz.jpg` | JPEG | `saitama_mini_game.html`| Play-Hubにおける「埼玉マスター検定クイズ」カード用ビジュアル。 |
-| `kita_urawa_fountain.mp4` | MP4 | 各種 | 北浦和公園のシンボルである音楽噴水ショーの美しいローカル動画（背景再生用等）。 |
+
+### 2.1 外部配信画像（写真・景観・メディア）
+| 写真カテゴリ/スポット | ソースURL | 搭載先ページ |
+| :--- | :--- | :--- |
+| 北浦和公園 メイン景観 | `https://thumb.photo-ac.com/04/04d880c10523a7f1589138951a67355e_w.jpeg` | 各種 |
+| 北浦和公園 彫刻アート | `https://www.go2park.net/tools/kitaurawa/kitaurawa_artwork09.jpg` | `gallery.html` |
+| 埼玉県立近代美術館 (MOMAS) | `https://cdn.jalan.jp/jalan/img/1/kuchikomi/2161/KL/fdee3_0002161459_3.jpg` | `gallery.html` |
+| 大宮公園 メイン景観 | `https://gogo-saitama.jp/wp/wp-content/uploads/2022/05/pixta_15102193_XL.jpg` | 各種 |
+| 武蔵丘陵森林公園 メイン景観 | `https://www.sbaa-bicycle.com/wordpress/wp-content/uploads/2022/05/01.jpg` | 各種 |
+| 秋ヶ瀬公園 メイン景観 / 川 | `https://rental-field.com/park_img/load.php?file=2.jpg&id=63` | 各種, `game/fishing.html` |
+| 大和田公園 メイン景観 | `https://visitsaitamacity.jp/rails/active_storage/representations/proxy/.../%E5%A4%A7%E5%AE%AE%E5%85%AC%E5%9C%921.jpg` | 各種 |
+| 北浦和公園 音楽噴水 | `https://tse2.mm.bing.net/th/id/OIP._tJ09jsbMCa2JJFF-Dx97gHaE7?r=0&rs=1&pid=ImgDetMain&o=7&rm=3` | `gallery.html` |
+| 大和田公園 花火動画 | `https://www.youtube.com/embed/HsPJzwCiLJI` (YouTube 埋め込み) | `destinations/owada_park.html` |
 
 ### 3. 外部読み込み Web 画像アセット (Unsplash 等)
 *※CSSの表現力およびビジュアル補強のため、ネットワーク経由で動的ロードする外部ストックフォトです。*

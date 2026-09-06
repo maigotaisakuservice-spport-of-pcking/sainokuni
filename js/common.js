@@ -222,11 +222,11 @@ function readPageText() {
 
 // 公園データの定義
 const PARK_DATA = [
-    { name: "大宮公園", link: "omiya_park.html", img: "omiya_park.jpg" },
-    { name: "北浦和公園", link: "kita_urawa_park.html", img: "kita_urawa_park.jpg" },
-    { name: "森林公園", link: "shinrin_park.html", img: "shinrin_park.jpg" },
-    { name: "大和田公園", link: "owada_park.html", img: "owada_park.jpg", isFeatured: true },
-    { name: "秋ヶ瀬公園", link: "akigase_park.html", img: "akigase_park.jpg" }
+    { name: "大宮公園", link: "omiya_park.html", img: "https://gogo-saitama.jp/wp/wp-content/uploads/2022/05/pixta_15102193_XL.jpg" },
+    { name: "北浦和公園", link: "kita_urawa_park.html", img: "https://thumb.photo-ac.com/04/04d880c10523a7f1589138951a67355e_w.jpeg" },
+    { name: "森林公園", link: "shinrin_park.html", img: "https://www.sbaa-bicycle.com/wordpress/wp-content/uploads/2022/05/01.jpg" },
+    { name: "大和田公園", link: "owada_park.html", img: "https://visitsaitamacity.jp/rails/active_storage/representations/proxy/eyJfcmFpbHMiOnsiZGF0YSI6MTY0OTYsInB1ciI6ImJsb2JfaWQifX0=--c4feeba5af3b5593908fc962b5ac0d981a283264/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJ3ZWJwIiwicmVzaXplX3RvX2ZpdCI6WzEyODAsNzIwXX0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--5d15d906d46426d4b0f27ed1576e886714aadc6c/%E5%A4%A7%E5%AE%AE%E5%85%AC%E5%9C%921.jpg", isFeatured: true },
+    { name: "秋ヶ瀬公園", link: "akigase_park.html", img: "https://rental-field.com/park_img/load.php?file=2.jpg&id=63" }
 ];
 
 function getRandomPark() {

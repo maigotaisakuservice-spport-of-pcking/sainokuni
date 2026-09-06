@@ -329,7 +329,17 @@ window.clearChat = clearChat;
  */
 function fallbackResponse(msg) {
     let response = "ﾋﾟﾋﾟｯ...埼玉の公園情報をスキャンした。\n";
-    if (msg.match(/花火|夏|祭|プール|泳/)) {
+    if (msg.match(/大宮/)) {
+        response += "『大宮公園』(destinations/omiya_park.html)は歴史ある県営公園で桜の名所や小動物園がある。";
+    } else if (msg.match(/大和田/)) {
+        response += "『大和田公園』(destinations/owada_park.html)は花火大会や市民プール、野球場があるスポットである。";
+    } else if (msg.match(/森林/)) {
+        response += "『森林公園』(destinations/shinrin_park.html)は広大な自然とサイクリングが楽しめる国営公園である。";
+    } else if (msg.match(/秋ヶ瀬|秋ガ瀬/)) {
+        response += "『秋ヶ瀬公園』(destinations/akigase_park.html)は荒川沿いの緑地でバーベキューやスポーツに好適である。";
+    } else if (msg.match(/北浦和/)) {
+        response += "『北浦和公園』(destinations/kita_urawa_park.html)は音楽噴水と埼玉県立近代美術館がある文化的な公園である。";
+    } else if (msg.match(/花火|夏|祭|プール|泳/)) {
         response += "花火やプールを楽しむなら『大和田公園』がおすすめである。さいたま市を代表するレジャースポットである。詳細：destinations/owada_park.html";
     } else if (msg.match(/腹|食べ|うどん|弁当|空いた|グルメ/)) {
         response += "ピクニックなら『秋ヶ瀬公園』(destinations/akigase_park.html)が最適である。埼玉名物うどんや十万石まんじゅうの持参を推奨する。";
