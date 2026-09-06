@@ -475,8 +475,8 @@
 
 <button onclick="scrollToTop()" class="go-to-top-button" aria-label="トップへ戻る">↑</button>
 
-<script defer src="js/common.js" defer></script>
-<script src="js/ai_concierge.js" defer></script>
+<script defer src="js/common.js"></script>
+<script type="module" src="js/ai_concierge.js" defer></script>
 <script>
 // --- YouTube Iframe Player API & Mute/Unmute Control ---
 var ytPlayer = null;
@@ -1046,31 +1046,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 const apiUrl = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=Saitama&days=3&lang=ja`;
                 let fetchedData = null;
 
-                // 高速かつOrigin制限のないプロキシシーケンス (cors.sh -> cors-anywhere -> allorigins -> direct)
+                // オープンかつ鍵不要なプロキシチェーン (corsproxy.io -> allorigins -> codetabs -> direct)
                 try {
-                    const corsShUrl = `https://proxy.cors.sh/${apiUrl}`;
-                    const proxyRes = await fetch(corsShUrl);
-                    if (!proxyRes.ok) throw new Error('Primary proxy (cors.sh) failed');
+                    const corsProxyUrl = `https://corsproxy.io/?${encodeURIComponent(apiUrl)}`;
+                    const proxyRes = await fetch(corsProxyUrl);
+                    if (!proxyRes.ok) throw new Error('Primary proxy (corsproxy.io) failed');
                     fetchedData = await proxyRes.json();
                 } catch (e) {
-                    console.warn(`Primary proxy (cors.sh) failed (attempt ${attempt}), trying secondary proxy...`, e);
+                    console.warn(`Primary proxy (corsproxy.io) failed (attempt ${attempt}), trying secondary proxy...`, e);
                     try {
-                        const corsAnywhereUrl = `https://cors-anywhere.com/${apiUrl}`;
-                        const fallbackRes = await fetch(corsAnywhereUrl);
-                        if (!fallbackRes.ok) throw new Error('Secondary proxy (cors-anywhere) failed');
-                        fetchedData = await fallbackRes.json();
+                        const alloriginsUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`;
+                        const thirdRes = await fetch(alloriginsUrl);
+                        if (!thirdRes.ok) throw new Error('Secondary proxy (allorigins) failed');
+                        const proxyData = await thirdRes.json();
+                        if (proxyData && proxyData.contents) {
+                            fetchedData = JSON.parse(proxyData.contents);
+                        } else {
+                            throw new Error('Allorigins returned empty contents');
+                        }
                     } catch (e2) {
-                        console.warn(`Secondary proxy failed, trying tertiary proxy (allorigins)...`, e2);
+                        console.warn(`Secondary proxy failed, trying tertiary proxy (codetabs)...`, e2);
                         try {
-                            const alloriginsUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`;
-                            const thirdRes = await fetch(alloriginsUrl);
-                            if (!thirdRes.ok) throw new Error('Tertiary proxy (allorigins) failed');
-                            const proxyData = await thirdRes.json();
-                            if (proxyData && proxyData.contents) {
-                                fetchedData = JSON.parse(proxyData.contents);
-                            } else {
-                                throw new Error('Allorigins returned empty contents');
-                            }
+                            const codetabsUrl = `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(apiUrl)}`;
+                            const fourthRes = await fetch(codetabsUrl);
+                            if (!fourthRes.ok) throw new Error('Tertiary proxy (codetabs) failed');
+                            fetchedData = await fourthRes.json();
                         } catch (e3) {
                             console.warn(`Tertiary proxy failed, trying direct fetch...`, e3);
                             try {

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 ページが見つかりません | SAITAMA PARKS</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'selector'
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=Mochiy+Pop+One&display=swap" rel="stylesheet">
+
+    <!-- サイト共通スタイル -->
+    <link rel="stylesheet" href="css/common.css">
+
+    <style>
+        .header-main {
+            background: var(--header-bg);
+            backdrop-filter: blur(10px);
+            color: #ecf0f1;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0; width: 100%; z-index: 1000;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        /* 404 アニメーション背景 Canvas */
+        #lost-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .hero-404 {
+            min-height: 70vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            padding: 8rem 1.5rem 4rem 1.5rem;
+            overflow: hidden;
+            background: radial-gradient(circle at center, rgba(16, 185, 129, 0.08) 0%, transparent 70%);
+        }
+
+        .glitch-text {
+            font-size: clamp(80px, 18vw, 180px);
+            font-family: 'Mochiy Pop One', sans-serif;
+            font-weight: 900;
+            line-height: 1;
+            background: linear-gradient(135deg, var(--primary-color) 0%, #10b981 50%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(1deg); }
+        }
+
+        .park-card-404 {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px var(--card-shadow);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .park-card-404:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 35px var(--card-shadow);
+            border-color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+
+<header class="header-main">
+    <div class="flex items-center gap-4">
+        <h1 class="text-2xl font-bold tracking-tighter" style="font-family: 'Mochiy Pop One';"><a href="index.html">SAITAMA PARKS</a></h1>
+    </div>
+    <nav class="flex items-center gap-4 md:gap-8">
+        <a href="destinations/kita_urawa_park.html" class="hover-accent-text font-bold text-sm md:text-base">公園を探す</a>
+        <a href="map.html" class="hover-accent-text font-bold text-sm md:text-base">マップ</a>
+        <a href="saitama_mini_game.html" class="hover-accent-text font-bold text-sm md:text-base">ゲーム</a>
+        <button onclick="toggleMenu()" class="hover-accent-text font-bold text-sm md:text-base">MENU</button>
+        <div class="flex items-center gap-2 ml-2 border-l border-white/20 pl-4">
+            <button onclick="toggleAccessibilityPanel()" class="hover:scale-110 transition-transform text-xl" id="theme-toggle-icon" title="アクセシビリティ設定">⚙️</button>
+        </div>
+    </nav>
+</header>
+
+<!-- モバイルメニュー -->
+<div id="menu-overlay" class="menu-overlay" onclick="toggleMenu()"></div>
+<div id="menu-content" class="menu-content">
+    <div class="p-6">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-xl font-bold" style="font-family: 'Mochiy Pop One';">MENU</h2>
+            <button onclick="toggleMenu()" class="text-2xl">&times;</button>
+        </div>
+        <nav class="flex flex-col gap-6 text-lg">
+            <a href="index.html" class="flex items-center gap-3">🏠 ホーム</a>
+            <a href="destinations/kita_urawa_park.html" class="flex items-center gap-3">🌳 公園を探す</a>
+            <a href="map.html" class="flex items-center gap-3">🗺️ マップ</a>
+            <a href="saitama_mini_game.html" class="flex items-center gap-3">🎮 ゲーム</a>
+            <hr class="border-slate-700">
+            <button onclick="toggleTheme()" class="flex items-center gap-3 w-full text-left"><span>🌳</span> カラー変更</button>
+            <button onclick="toggleDarkMode()" class="flex items-center gap-3 w-full text-left"><span>🌓</span> ダークモード切替</button>
+        </nav>
+    </div>
+</div>
+
+<main class="relative">
+    <section class="hero-404">
+        <canvas id="lost-canvas"></canvas>
+        <div class="relative z-10 max-w-2xl mx-auto">
+            <div class="glitch-text mb-2">404</div>
+            <h2 class="text-2xl md:text-4xl font-extrabold mb-4 tracking-tight">公園の中で迷子になってしまったようです...</h2>
+            <p class="text-base md:text-lg opacity-80 mb-8 leading-relaxed">
+                お探しのページ（URL）は見つかりませんでした。<br>
+                移動または削除された可能性があります。埼玉の魅力あふれる公園へ戻りましょう！
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="index.html" class="px-8 py-4 rounded-full bg-[var(--primary-color)] text-white font-bold text-base shadow-lg hover:scale-105 hover:shadow-xl transition-all flex items-center gap-2">
+                    🏠 ホームに戻る
+                </a>
+                <a href="map.html" class="px-8 py-4 rounded-full bg-slate-800 hover:bg-slate-700 text-white font-bold text-base shadow-lg hover:scale-105 transition-all flex items-center gap-2 border border-slate-700">
+                    🗺️ マップで公園を探す
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- おすすめ公園セクション -->
+    <section class="max-w-6xl mx-auto px-6 py-12">
+        <div class="text-center mb-12">
+            <span class="inline-block px-4 py-1.5 rounded-full bg-[var(--accent-bg)] text-[var(--primary-color)] font-bold text-xs mb-3 border border-[var(--accent-border)]">RECOMMENDED PARKS</span>
+            <h3 class="text-2xl md:text-3xl font-extrabold">埼玉のイチオシ公園スポット</h3>
+            <p class="text-sm opacity-70 mt-2">迷ったらこちら！埼玉県を代表する5大公園をチェック</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <a href="destinations/owada_park.html" class="park-card-404">
+                <div class="relative h-48 overflow-hidden">
+                    <img loading="lazy" decoding="async" src="images/owada_park.jpg" alt="大和田公園" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                    <div class="absolute top-3 left-3 bg-red-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-full animate-pulse shadow">イチオシ！</div>
+                </div>
+                <div class="p-5">
+                    <h4 class="font-bold text-lg mb-1">大和田公園</h4>
+                    <p class="text-xs opacity-75 line-clamp-2">花火大会の聖地＆プール。夏のアクティビティに最適！</p>
+                </div>
+            </a>
+
+            <a href="destinations/omiya_park.html" class="park-card-404">
+                <div class="relative h-48 overflow-hidden">
+                    <img loading="lazy" decoding="async" src="images/omiya_park.jpg" alt="大宮公園" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                    <div class="absolute top-3 left-3 bg-pink-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow">桜の名所</div>
+                </div>
+                <div class="p-5">
+                    <h4 class="font-bold text-lg mb-1">大宮公園</h4>
+                    <p class="text-xs opacity-75 line-clamp-2">県内最古の歴史を誇る名所。小動物園や参道も人気。</p>
+                </div>
+            </a>
+
+            <a href="destinations/kita_urawa_park.html" class="park-card-404">
+                <div class="relative h-48 overflow-hidden">
+                    <img loading="lazy" decoding="async" src="images/kita_urawa_park.jpg" alt="北浦和公園" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                    <div class="absolute top-3 left-3 bg-emerald-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow">アート＆音楽</div>
+                </div>
+                <div class="p-5">
+                    <h4 class="font-bold text-lg mb-1">北浦和公園</h4>
+                    <p class="text-xs opacity-75 line-clamp-2">音楽噴水と埼玉県立近代美術館が響き合う芸術公園。</p>
+                </div>
+            </a>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="max-w-6xl mx-auto px-6">
+        <div class="footer-logo">SAITAMA PARKS</div>
+        <hr>
+        <p class="text-sm opacity-80">© 2026 埼玉県公園ガイドポータル - 自然と共に生きる。</p>
+        <div class="footer-links mt-8 flex justify-center gap-8 text-sm flex-wrap">
+            <a onclick="openModal('about')" class="cursor-pointer">サイトについて</a>
+            <a onclick="openModal('access')" class="cursor-pointer">アクセス</a>
+            <a onclick="openModal('legal')" class="cursor-pointer">利用規約</a>
+            <a onclick="openModal('copyright')" class="cursor-pointer">著作権</a>
+        </div>
+    </div>
+</footer>
+
+<script defer src="js/common.js"></script>
+<script>
+    // 404 Canvas アニメーション (木漏れ日と舞い散る葉っぱ)
+    document.addEventListener('DOMContentLoaded', () => {
+        const canvas = document.getElementById('lost-canvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const leaves = [];
+        const leafColors = ['#10b981', '#059669', '#34d399', '#f59e0b', '#10b98188'];
+
+        for (let i = 0; i < 25; i++) {
+            leaves.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 8 + 6,
+                vx: Math.random() * 1.5 - 0.75,
+                vy: Math.random() * 1 + 0.5,
+                angle: Math.random() * Math.PI * 2,
+                vAngle: (Math.random() - 0.5) * 0.05,
+                color: leafColors[Math.floor(Math.random() * leafColors.length)]
+            });
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            leaves.forEach(l => {
+                ctx.save();
+                ctx.translate(l.x, l.y);
+                ctx.rotate(l.angle);
+                ctx.fillStyle = l.color;
+
+                // 葉っぱ描画
+                ctx.beginPath();
+                ctx.ellipse(0, 0, l.size, l.size / 2, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+
+                l.x += l.vx + Math.sin(l.y / 20) * 0.5;
+                l.y += l.vy;
+                l.angle += l.vAngle;
+
+                if (l.y > canvas.height + 20) {
+                    l.y = -20;
+                    l.x = Math.random() * canvas.width;
+                }
+            });
+
+            requestAnimationFrame(animate);
+        }
+        animate();
+    });
+</script>
+</body>
+</html>
