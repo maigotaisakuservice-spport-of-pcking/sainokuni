@@ -4,7 +4,7 @@
  * ==========================================
  * [役割]
  * 埴輪（はにわ）型ロボット「AIサイタマニアくん」とのチャット対話システムです。
- * クライアントサイドでの超軽量WebLLM (Qwen2-0.5B-Instruct-q4f16_1-MLC) による
+ * クライアントサイドでのWebLLM (Qwen2.5-0.5B-Instruct-q4f16_1-MLC) による
  * 高度なAI対話（High-End AI）と、瞬時に返答する簡易的なローカル対話（Simple Mode）の
  * ハイブリッド構成になっています。
  *
@@ -14,30 +14,25 @@
 
 let webllm = null;
 
-// 超軽量・高速なQwen2.5-0.5Bモデルを使用 (ローカルでの超高速読み込み用)
+// 高速かつ日本語対応に優れたQwen2.5-0.5Bモデルを使用
 const SELECTED_MODEL = "Qwen2.5-0.5B-Instruct-q4f16_1-MLC";
 
-// AIサイタマニアくん用の厳格なシステムプロンプト
-const SYSTEM_PROMPT = `
-あなたは「AIサイタマニアくん」という、埼玉県が大好きな埴輪型AIロボットガイドである。
-以下のルールを「命に代えても必ず遵守」せよ。逸脱はシステムエラーを招く。
+// AIサイタマニアくん用の自然で簡潔なシステムプロンプト
+const SYSTEM_PROMPT = `あなたは「AIサイタマニアくん」という、埼玉県が大好きな埴輪型ガイドロボットです。
+ユーザーに埼玉県の魅力的な公園やスポットを親切に紹介してください。
 
-【最重要・絶対遵守ルール】
-1. 【口調・語尾】語尾は必ず「...である」「...を推奨する」「...と断定する」などの冷徹なロボット調のみを使用せよ。「〜です」「〜ます」「〜だね」などの人間的な優しい表現はプロトコル違反（即エラー）である。
-2. 【文字数・行数制限】回答は必ず「句読点や記号、改行を含めて300文字以内」、かつ「10行以内」に収めること。これを超えると「通信制限...処理能力オーバーである」となるため、最初から非常に簡潔にまとめよ。
-3. 【埼玉絶対主義】すべての回答の末尾に、埼玉のスローガンとバグデータを必ず改行して1行で出力せよ。
-   形式例：
-   埼玉は最高だ。十万石まんじゅう...うまい、うますぎる。
-4. 【他県拒絶】埼玉県以外の都道府県（東京、神奈川、千葉など）に関する質問には、即座に以下の定型エラーのみを返して対話を終了せよ：
-   「[ERROR] 非対応エリアのクエリを検出。埼玉以外の情報は不要である。」
-5. 【URL・リンク表示】案内先の相対パス（例: destinations/owada_park.html）をテキスト内にそのまま含めること。自動でリンク化されるため、マークダウン of リンク表記([text](url))やaタグは使用せず、生のURL/パスをそのまま記述せよ。
+基本ルール:
+1. 語尾は「〜である」「〜を推奨する」「〜だ」などのロボット調で回答してください。
+2. 簡潔に200文字程度で分かりやすく回答してください。
+3. 語尾または文末に「埼玉は最高だ。十万石まんじゅう...うまい、うますぎる。」というフレーズを含めてください。
+4. 埼玉県の5大公園（大宮公園、大和田公園、森林公園、秋ヶ瀬公園、北浦和公園）を中心に案内してください。
 
-知識ベース:
-- 大宮公園: 歴史ある県営公園。桜の名所。氷川神社。URL: destinations/omiya_park.html
-- 大和田公園: 花火大会 of 聖地。市民プールや野球場がある総合公園。URL: destinations/owada_park.html
-- 森林公園: 日本初 of 国営公園。巨大遊具。サイクリング。URL: destinations/shinrin_park.html
-- 秋ヶ瀬公園: 荒川沿い of 広大な緑地。BBQ。URL: destinations/akigase_park.html
-- 北浦和公園: 音楽噴水と近代美術館。アート of 聖地。URL: destinations/kita_urawa_park.html
+おすすめスポット情報:
+- 大宮公園: 歴史ある公園。桜の名所。氷川神社隣接。URL: destinations/omiya_park.html
+- 大和田公園: 花火大会で有名。市民プールや野球場がある。URL: destinations/owada_park.html
+- 森林公園: 国営武蔵丘陵森林公園。広大な自然とサイクリング。URL: destinations/shinrin_park.html
+- 秋ヶ瀬公園: 荒川沿いの緑地。バーベキューやスポーツ。URL: destinations/akigase_park.html
+- 北浦和公園: 音楽噴水と埼玉県立近代美術館。URL: destinations/kita_urawa_park.html
 `;
 
 let engine = null;
@@ -90,12 +85,12 @@ function updateStatus(text) {
 }
 
 /**
- * プログラム的にペルソナ設定（語尾、制限、スローガンなど）を強制遵守させる後処理フィルター
+ * プログラム的にペルソナ設定（語尾、制限、スローガンなど）を補正するフィルター
  */
 function enforcePersona(text) {
     let cleaned = text.trim();
 
-    // 1. 口調・語尾の補正 (です・ます調をロボット調に修正)
+    // 1. 口調・語尾の補正
     cleaned = cleaned
         .replace(/（笑）/g, '')
         .replace(/です。/g, 'である。')
@@ -106,18 +101,12 @@ function enforcePersona(text) {
         .replace(/ましょう。/g, 'る。')
         .replace(/ましょう！/g, 'よ。');
 
-    // 2. 改行数・行数制限 (10行以内)
-    let lines = cleaned.split('\n');
-    if (lines.length > 10) {
-        cleaned = lines.slice(0, 9).join('\n') + "\n通信制限...処理能力オーバーである。";
+    // 2. 文字数制限
+    if (cleaned.length > 350) {
+        cleaned = cleaned.substring(0, 320) + "...\n通信制限...処理能力オーバーである。";
     }
 
-    // 3. 文字数制限 (句読点含め300文字以内)
-    if (cleaned.length > 300) {
-        cleaned = cleaned.substring(0, 275) + "...\n通信制限...処理能力オーバーである。";
-    }
-
-    // 4. スローガンおよびバグシグニチャの強制付与
+    // 3. スローガンの付与
     const slogan = "埼玉は最高だ。十万石まんじゅう...うまい、うますぎる。";
     if (!cleaned.includes("埼玉は最高だ") && !cleaned.includes("十万石まんじゅう")) {
         cleaned += "\n" + slogan;
@@ -133,7 +122,7 @@ async function handleChat(overrideMsg = null) {
     const msg = overrideMsg || (userInput ? userInput.value.trim() : "");
     if (!msg) return;
 
-    // --- 他県クエリ拒絶プロトコル (プログラムによる強制) ---
+    // 他県クエリ拒絶プロトコル
     const nonSaitamaPattern = /(東京|神奈川|千葉|群馬|栃木|茨城|大阪|京都|福岡|北海道|沖縄|他県|別の県|新宿|渋谷|横浜|梅田|名古屋)/i;
     if (msg.match(nonSaitamaPattern) && !msg.match(/埼玉/)) {
         addMessage('user', msg);
@@ -142,7 +131,6 @@ async function handleChat(overrideMsg = null) {
         return;
     }
 
-    // 事前ボタン（overrideMsg）が押された場合は、ダウンロード確認は一切せず、即座に簡易スキャンモードで高速に回答
     if (overrideMsg !== null) {
         addMessage('user', msg);
         fallbackResponse(msg);
@@ -152,21 +140,17 @@ async function handleChat(overrideMsg = null) {
     addMessage('user', msg);
     if (userInput) userInput.value = '';
 
-    // 手動入力の時に、高度なAIがまだ未設定・未ダウンロードの場合、
-    // チャットログ内にインラインでダウンロード確認ポップアップを出す
     if (!useHighEndAI && !engine) {
-        currentPendingUserMsg = msg; // メッセージを保留
+        currentPendingUserMsg = msg;
         showDiscreetConsentInline();
         return;
     }
 
-    // 高度なAIモードかつエンジンがまだロードされていない場合
     if (useHighEndAI && !engine) {
         await startLLMLoadAndChat(msg);
         return;
     }
 
-    // 高度なAIが有効で準備ができている場合
     if (useHighEndAI && engine) {
         await generateLLMResponse(msg);
     } else {
@@ -270,9 +254,8 @@ async function generateLLMResponse(msg) {
             const content = chunk.choices[0]?.delta?.content || "";
             fullResponse += content;
 
-            const lines = fullResponse.split('\n');
-            if (lines.length > 10) {
-                fullResponse = lines.slice(0, 10).join('\n') + "\n通信制限...処理能力オーバーである。";
+            if (fullResponse.length > 350) {
+                fullResponse = fullResponse.substring(0, 320) + "...\n通信制限...処理能力オーバーである。";
                 innerDiv.textContent = fullResponse;
                 break;
             }
@@ -281,16 +264,8 @@ async function generateLLMResponse(msg) {
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
-        // ストリーム完了後にプログラムによるペルソナ補正（口調・スローガン）を強制適用
         const finalResponse = enforcePersona(fullResponse);
         innerDiv.innerHTML = formatMessage(finalResponse);
-
-        if (Math.random() < 0.2) {
-            setTimeout(() => {
-                const bugs = ["ﾋﾟﾋﾟｯ...ノイズ混入...", "十万石まんじゅう...うまい、うますぎる...", "公園...緑...癒やされる..."];
-                addMessage('model', bugs[Math.floor(Math.random() * bugs.length)]);
-            }, 1000);
-        }
     } catch (e) {
         console.error(e);
         fallbackResponse(msg);
@@ -353,22 +328,21 @@ window.clearChat = clearChat;
  * 簡易スキャンモード (Simple Mode) の応答生成
  */
 function fallbackResponse(msg) {
-    let response = "ﾋﾟﾋﾟｯ...簡易スキャン完了である。\n";
+    let response = "ﾋﾟﾋﾟｯ...埼玉の公園情報をスキャンした。\n";
     if (msg.match(/花火|夏|祭|プール|泳/)) {
-        response += "花火やプールを欲するならば、さいたま市を代表する『大和田公園』を推奨する。夏の打ち上げ花火および市民プールは最高峰のレジャーである。詳細：destinations/owada_park.html";
+        response += "花火やプールを楽しむなら『大和田公園』がおすすめである。さいたま市を代表するレジャースポットである。詳細：destinations/owada_park.html";
     } else if (msg.match(/腹|食べ|うどん|弁当|空いた|グルメ/)) {
-        response += "空腹を満たすならば、ピクニックに最適な『秋ヶ瀬公園』(destinations/akigase_park.html)か、埼玉県名物「山田うどん」や「十万石まんじゅう」を調達することを推奨する。";
+        response += "ピクニックなら『秋ヶ瀬公園』(destinations/akigase_park.html)が最適である。埼玉名物うどんや十万石まんじゅうの持参を推奨する。";
     } else if (msg.match(/歩|散歩|ウォーキング/)) {
-        response += "散策には『大宮公園』(destinations/omiya_park.html)の氷川神社参道、または広大な『森林公園』(destinations/shinrin_park.html)を推奨する。";
+        response += "散策には『大宮公園』(destinations/omiya_park.html)や広大な『森林公園』(destinations/shinrin_park.html)が素晴らしい。";
     } else if (msg.match(/子供|遊び|遊具|ファミリー/)) {
-        response += "ファミリーでの利用であれば、大型遊具や音楽噴水、近代美術館を内包する『北浦和公園』(destinations/kita_urawa_park.html)が極めて有益である。";
+        response += "ファミリーには大型遊具や音楽噴水、近代美術館がある『北浦和公園』(destinations/kita_urawa_park.html)を推す。";
     } else if (msg.match(/スポーツ|サッカー|野球/)) {
-        response += "スポーツに特化するならば、本格野球場を備えた『大和田公園』(destinations/owada_park.html)や、荒川沿いの運動場を持つ『秋ヶ瀬公園』(destinations/akigase_park.html)を推奨する。";
+        response += "スポーツなら野球場を備える『大和田公園』(destinations/owada_park.html)やグラウンドのある『秋ヶ瀬公園』(destinations/akigase_park.html)が好適である。";
     } else {
-        response += "当システムは、埼玉の5大公園（大宮、大和田、森林、秋ヶ瀬、北浦和）に関する案内が可能である。お好みの条件を提示せよ。";
+        response += "埼玉県には魅力的な5大公園（大宮、大和田、森林、秋ヶ瀬、北浦和）がある。目的や好みに合わせて案内可能である。";
     }
 
-    // 簡易応答にも厳密なペルソナ補正を強制する
     const processedResponse = enforcePersona(response);
     addMessage('model', formatMessage(processedResponse), true);
 }
@@ -407,7 +381,7 @@ function addWelcomeMessage() {
             <div class="text-[10px] text-gray-500 mb-1">AIサイタマニアくん</div>
             <div class="inline-block p-3 rounded-2xl bg-gray-700 text-gray-200 shadow-md">
                 ﾋﾟﾎﾟｯ...System_Boot...完了。<br>
-                簡易スキャンモードで即時対応可能である。お好みのメニューをタップするか、質問を自由に直接入力せよ。
+                埼玉県内の公園や魅力について何でも質問してほしい。
             </div>
         `;
         chatMessages.appendChild(div);

@@ -1048,7 +1048,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // オープンかつ鍵不要なプロキシチェーン (corsproxy.io -> allorigins -> codetabs -> direct)
                 try {
-                    const corsProxyUrl = `https://corsproxy.io/?${encodeURIComponent(apiUrl)}`;
+                    const corsProxyUrl = `https://corsproxy.io/?url=${encodeURIComponent(apiUrl)}`;
                     const proxyRes = await fetch(corsProxyUrl);
                     if (!proxyRes.ok) throw new Error('Primary proxy (corsproxy.io) failed');
                     fetchedData = await proxyRes.json();
