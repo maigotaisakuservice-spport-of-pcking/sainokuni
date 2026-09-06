@@ -1,10 +1,12 @@
 /**
  * ==========================================
- * AIサイタマニアくん - AIコンシェルジュ機能
+ * AIサイタマニアくん - WebLLM (軽量1GBモデル) 統合AIコンシェルジュ機能
  * ==========================================
  * [役割]
  * 埴輪（はにわ）型ガイドロボット「AIサイタマニアくん」の応答システムです。
- * 埼玉県内の5大公園や魅力を即座に案内し、親切かつスマートなガイドを提供します。
+ * ブラウザ上（WebGPU / WebLLM Engine）でオンデバイスLLM（Qwen2.5-1.5B / Qwen2.5-0.5B）をロードし、
+ * 語尾「〜である」やスローガン「埼玉は最高だ。十万石まんじゅう...うまい、うますぎる。」のキャラクターペルソナを守って対話します。
+ * 環境非対応時もナレッジ生成エンジンにシームレスフォールバックします。
  */
 
 const chatMessages = document.getElementById('chat-messages');
@@ -12,8 +14,62 @@ const userInput = document.getElementById('user-input');
 const sendBtn = document.getElementById('send-btn');
 const statusText = document.querySelector('.text-xs.text-gray-400');
 
+let engine = null;
+let isEngineLoading = false;
+let isEngineReady = false;
+
+// WebLLM モジュール動的ロード
+let webllm = null;
+
 function updateStatus(text) {
     if (statusText) statusText.textContent = `Status: ${text}`;
+}
+
+/**
+ * システムプロンプト（AIサイタマニアくんの役割・キャラクター・語尾規定）
+ */
+const SYSTEM_PROMPT = `あなたは埼玉県公園ガイドポータル「SAITAMA PARKS」のキャラクター「AIサイタマニアくん」である。
+【キャラクター設定】
+・語尾は必ず「〜である」「〜だ」「〜である。」のロボット風口調に統一する。
+・スローガン「埼玉は最高だ。十万石まんじゅう...うまい、うますぎる。」を愛している。
+・埼玉県内の5大公園（大宮公園: destinations/omiya_park.html, 大和田公園: destinations/owada_park.html, 国営武蔵丘陵森林公園: destinations/shinrin_park.html, 秋ヶ瀬公園: destinations/akigase_park.html, 北浦和公園: destinations/kita_urawa_park.html）を積極的に推薦する。
+・東京や神奈川など埼玉以外のエリアに関する質問には「[ERROR] 非対応エリアのクエリを検出。埼玉以外の情報は不要である。」と即座に返答する。
+・回答は簡潔に3〜5文程度に収める。`;
+
+/**
+ * WebLLM エンジンの初期化 (約1GBクラスのQwen2.5 LLMモデル)
+ */
+async function initLLMEngine() {
+    if (isEngineReady || isEngineLoading) return;
+    isEngineLoading = true;
+    updateStatus("LLM Loading...");
+
+    try {
+        if (!webllm) {
+            webllm = await import("https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@0.2.46/+esm");
+        }
+
+        if (webllm && navigator.gpu) {
+            // ~1GB の高性能軽量日本語対応モデル (Qwen2.5-1.5B-Instruct / Qwen2.5-0.5B-Instruct)
+            const selectedModel = "Qwen2.5-1.5B-Instruct-q4f16_1-MLC";
+            engine = await webllm.CreateMLCEngine(selectedModel, {
+                initProgressCallback: (report) => {
+                    updateStatus(`LLM: ${Math.round((report.progress || 0) * 100)}%`);
+                }
+            });
+            isEngineReady = true;
+            updateStatus("LLM Ready_");
+            console.log("WebLLM Engine initialized successfully with model:", selectedModel);
+        } else {
+            console.warn("WebGPU is not supported on this browser. Falling back to local smart engine.");
+            updateStatus("Online (Smart Engine)");
+        }
+    } catch (e) {
+        console.warn("WebLLM initialization failed, using local smart engine fallback:", e);
+        updateStatus("Online (Smart Engine)");
+    } finally {
+        isEngineLoading = false;
+    }
 }
 
 /**
@@ -21,6 +77,11 @@ function updateStatus(text) {
  */
 function enforcePersona(text) {
     let cleaned = text.trim();
+
+    // 語尾補正・整和
+    if (!cleaned.endsWith("である") && !cleaned.endsWith("である。") && !cleaned.endsWith("だ。") && !cleaned.endsWith("う。")) {
+        cleaned += "である。";
+    }
 
     const slogan = "埼玉は最高だ。十万石まんじゅう...うまい、うますぎる。";
     if (!cleaned.includes("埼玉は最高だ") && !cleaned.includes("十万石まんじゅう")) {
@@ -33,7 +94,7 @@ function enforcePersona(text) {
 /**
  * チャット送信ハンドラ
  */
-function handleChat(overrideMsg = null) {
+async function handleChat(overrideMsg = null) {
     const msg = overrideMsg || (userInput ? userInput.value.trim() : "");
     if (!msg) return;
 
@@ -49,8 +110,35 @@ function handleChat(overrideMsg = null) {
     addMessage('user', msg);
     if (userInput) userInput.value = '';
 
-    updateStatus("Scanning...");
+    updateStatus("Thinking...");
 
+    // 背景でLLMエンジンの起動を試行
+    if (!isEngineReady && !isEngineLoading) {
+        initLLMEngine();
+    }
+
+    if (isEngineReady && engine) {
+        try {
+            const messages = [
+                { role: "system", content: SYSTEM_PROMPT },
+                { role: "user", content: msg }
+            ];
+            const reply = await engine.chat.completions.create({
+                messages: messages,
+                temperature: 0.7,
+                max_tokens: 256
+            });
+            let rawText = reply.choices[0].message.content || "";
+            const finalResponse = enforcePersona(rawText);
+            addMessage('model', formatMessage(finalResponse), true);
+            updateStatus("LLM Ready_");
+            return;
+        } catch (err) {
+            console.warn("LLM generation error, falling back to smart engine:", err);
+        }
+    }
+
+    // フォールバック生成
     setTimeout(() => {
         generateResponse(msg);
         updateStatus("Online_");
@@ -58,13 +146,13 @@ function handleChat(overrideMsg = null) {
 }
 
 /**
- * スマート応答生成エンジン
+ * スマート応答生成エンジン（高速ナレッジフォールバック）
  */
 function generateResponse(msg) {
     let response = "ﾋﾟﾋﾟｯ...埼玉の最新公園データをスキャン完了した。\n";
 
     if (msg.match(/大宮/)) {
-        response += "『大宮公園』(destinations/omiya_park.html)は日本さくら名所100选の歴史ある県営公園である。小動物園や武蔵一宮氷川神社も隣接している。";
+        response += "『大宮公園』(destinations/omiya_park.html)は日本さくら名所100選の歴史ある県営公園である。小動物園や武蔵一宮氷川神社も隣接している。";
     } else if (msg.match(/大和田/)) {
         response += "『大和田公園』(destinations/owada_park.html)は夏の大打ち上げ花火大会や市民プール、レジデンシャルスタジアムで有名なイチオシスポットである。";
     } else if (msg.match(/森林/)) {

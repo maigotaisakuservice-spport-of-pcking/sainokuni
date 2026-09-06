@@ -218,7 +218,7 @@
 <div class="hero-slider" id="main-slider">
     <!-- 北浦和公園 音楽噴水ショーのYouTube動画埋め込み（自動再生・ループ・消音） -->
     <iframe id="hero-video-iframe" class="absolute inset-0 w-full h-full object-cover pointer-events-none scale-110"
-            src="https://www.youtube.com/embed/YpN7w5bpVaQ?autoplay=1&mute=1&loop=1&playlist=YpN7w5bpVaQ&start=24&end=200&controls=0&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3&enablejsapi=1"
+            src="https://www.youtube.com/embed/YpN7w5bpVaQ?autoplay=1&mute=1&start=24&end=200&controls=0&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3&enablejsapi=1"
             frameborder="0"
             allow="autoplay; encrypted-media"
             allowfullscreen></iframe>
@@ -226,7 +226,7 @@
         <div class="hero-text" style="font-family: 'Mochiy Pop One';">
             緑あふれる、<br>埼玉の公園へ。
         </div>
-        <p class="text-xl md:text-2xl mt-4 opacity-90">SAITAMA NATURE 2026</p>
+        <p class="text-xl md:text-2xl mt-4 opacity-90">SAITAMA PARK 2026</p>
 
         <!-- 音声ON/OFFトグルボタン（周りに合わせたデザイン、RSSバーやチャットボタンと重ならない絶妙な配置） -->
         <button id="hero-mute-btn" onclick="toggleHeroVideoMute()" class="absolute bottom-24 right-4 md:bottom-10 md:right-10 z-20 bg-black/50 hover:bg-black/70 border border-white/20 text-white text-xs md:text-sm font-bold px-4 py-2.5 rounded-full flex items-center gap-2 shadow-lg hover:scale-105 transition-all backdrop-blur-md" title="音声を聞く">
@@ -247,20 +247,20 @@
 </div>
 
 <section id="widgets" class="!py-12 bg-[var(--accent-bg)] dark:bg-[var(--accent-bg-dark)] border-y border-[var(--accent-border)] dark:border-gray-800">
-    <h2 class="section-title !mb-12">リアルタイム埼玉</h2>
+    <h2 class="section-title !mb-12 dark:text-white">リアルタイム埼玉</h2>
     <div class="widget-container">
         <div class="widget-card relative" id="weather-widget">
             <button onclick="openWeatherModal()" class="absolute top-4 right-4 flex items-center gap-1 text-gray-400 hover:text-[var(--primary-color)] transition-all group border border-gray-200 dark:border-gray-700 rounded-full px-2 py-1 bg-white/50 dark:bg-black/20 hover:border-[var(--primary-color)]" title="詳細な予報を見る">
                 <span class="text-[10px] font-bold">詳細な予報</span>
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
             </button>
-            <h3 class="font-bold mb-4">現在の天気（さいたま市）</h3>
-            <div id="weather-info" class="text-2xl font-bold text-[var(--primary-color)]">Loading...</div>
+            <h3 class="font-bold mb-4 dark:text-white">現在の天気（さいたま市）</h3>
+            <div id="weather-info" class="text-2xl font-bold text-[var(--primary-color)] dark:text-emerald-400">Loading...</div>
             <div id="weather-recommend" class="mt-4 text-sm font-bold animate-pulse"></div>
         </div>
         <div class="widget-card">
-            <h3 class="font-bold mb-4">イベントカウントダウン</h3>
-            <div id="countdown" class="text-xl">
+            <h3 class="font-bold mb-4 dark:text-white">イベントカウントダウン</h3>
+            <div id="countdown" class="text-xl dark:text-slate-100">
                 森林公園・紅葉ライトアップまで あと <span id="days-to-festival" class="text-red-500 font-bold">--</span> 日
             </div>
         </div>
@@ -303,7 +303,7 @@
         </a>
         <a href="destinations/owada_park.html" class="article-card">
             <div class="relative">
-                <img loading="lazy" decoding="async" src="https://visitsaitamacity.jp/rails/active_storage/representations/proxy/eyJfcmFpbHMiOnsiZGF0YSI6MTY0OTYsInB1ciI6ImJsb2JfaWQifX0=--c4feeba5af3b5593908fc962b5ac0d981a283264/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJ3ZWJwIiwicmVzaXplX3RvX2ZpdCI6WzEyODAsNzIwXX0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--5d15d906d46426d4b0f27ed1576e886714aadc6c/%E5%A4%A7%E5%AE%AE%E5%85%AC%E5%9C%921.jpg" alt="大和田公園" class="w-full h-48 object-cover">
+                <img loading="lazy" decoding="async" src="https://tse4.mm.bing.net/th/id/OIP.mTTEYSuTcweeJ3ZRiU2IHwHaFn?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" alt="大和田公園" class="w-full h-48 object-cover">
                 <div class="absolute top-4 left-4 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded-full animate-pulse">イチオシ！</div>
             </div>
             <div class="p-6">
@@ -335,7 +335,7 @@
 </section>
 
 <section id="movie" class="bg-[var(--accent-bg)] dark:bg-gray-800 rounded-3xl my-20 p-12">
-    <h2 class="section-title">埼玉の自然を感じる</h2>
+    <h2 class="section-title dark:text-white">埼玉の自然を感じる</h2>
     <div class="aspect-video max-w-4xl mx-auto rounded-2xl overflow-hidden shadow-2xl">
         <iframe width="100%" height="100%" src="https://www.youtube.com/embed/61qSijTSWKo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
     </div>
@@ -347,7 +347,7 @@
         <div class="gallery-item"><img loading="lazy" decoding="async" src="https://thumb.photo-ac.com/04/04d880c10523a7f1589138951a67355e_w.jpeg" alt="北浦和公園" loading="lazy" decoding="async"></div>
         <div class="gallery-item"><img loading="lazy" decoding="async" src="https://gogo-saitama.jp/wp/wp-content/uploads/2022/05/pixta_15102193_XL.jpg" alt="大宮公園" loading="lazy" decoding="async"></div>
         <div class="gallery-item relative">
-            <img loading="lazy" decoding="async" src="https://visitsaitamacity.jp/rails/active_storage/representations/proxy/eyJfcmFpbHMiOnsiZGF0YSI6MTY0OTYsInB1ciI6ImJsb2JfaWQifX0=--c4feeba5af3b5593908fc962b5ac0d981a283264/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJ3ZWJwIiwicmVzaXplX3RvX2ZpdCI6WzEyODAsNzIwXX0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--5d15d906d46426d4b0f27ed1576e886714aadc6c/%E5%A4%A7%E5%AE%AE%E5%85%AC%E5%9C%921.jpg" alt="大和田公園">
+            <img loading="lazy" decoding="async" src="https://tse4.mm.bing.net/th/id/OIP.mTTEYSuTcweeJ3ZRiU2IHwHaFn?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" alt="大和田公園">
             <div class="absolute top-2 right-2 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded-full animate-pulse">イチオシ！</div>
         </div>
         <div class="gallery-item"><img loading="lazy" decoding="async" src="https://www.sbaa-bicycle.com/wordpress/wp-content/uploads/2022/05/01.jpg" alt="森林公園" loading="lazy" decoding="async"></div>
@@ -363,8 +363,8 @@
 
 <section id="simple-map" class="bg-[var(--accent-bg)] dark:bg-slate-900 rounded-3xl overflow-hidden shadow-xl border border-[var(--accent-border)] dark:border-slate-800">
     <div class="p-6 md:p-10">
-        <h2 class="section-title !mb-2 text-center">近くの公園を探す</h2>
-        <p class="text-[var(--primary-color)] mb-6 font-bold text-center">身近な自然や周辺の便利施設をマップでチェック！</p>
+        <h2 class="section-title !mb-2 text-center dark:text-white">近くの公園を探す</h2>
+        <p class="text-[var(--primary-color)] dark:text-emerald-400 mb-6 font-bold text-center">身近な自然や周辺の便利施設をマップでチェック！</p>
 
         <!-- 公園選択＆GPSボタンエリア -->
         <div class="flex flex-wrap justify-center gap-2 mb-6">
@@ -492,11 +492,20 @@ window.onYouTubeIframeAPIReady = function() {
 };
 
 function onYtPlayerReady(event) {
-    // プレイヤーの準備が完了
+    // プレイヤーの準備が完了したら定期的に再生秒数を監視して24秒～200秒で固定ループ
+    setInterval(() => {
+        if (ytPlayer && typeof ytPlayer.getCurrentTime === 'function') {
+            const currentTime = ytPlayer.getCurrentTime();
+            if (currentTime >= 200 || currentTime < 23.5) {
+                ytPlayer.seekTo(24, true);
+                ytPlayer.playVideo();
+            }
+        }
+    }, 1000);
 }
 
 function onYtPlayerStateChange(event) {
-    // ループ再生時に常に同じ開始位置(24秒)から再生をやり直す
+    // ループ再生時に常に最初と同じ開始位置(24秒)から再生をやり直す
     if (event.data === YT.PlayerState.ENDED) {
         if (ytPlayer && typeof ytPlayer.seekTo === 'function') {
             ytPlayer.seekTo(24, true);
@@ -1166,8 +1175,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         recommendEl.innerHTML = `
-            <div class="text-xs text-gray-500 mb-1">${recommend.text}</div>
-            <a href="${recommend.link}" class="text-[var(--primary-color)] underline">✨ おススメ: ${recommend.name}</a>
+            <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">${recommend.text}</div>
+            <a href="${recommend.link}" class="text-[var(--primary-color)] dark:text-emerald-400 underline">✨ おススメ: ${recommend.name}</a>
         `;
     }
 

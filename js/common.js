@@ -192,14 +192,14 @@ function readPageText() {
 
     const speak = () => {
         const voices = window.speechSynthesis.getVoices();
-        // 自然な日本語音声の優先順位付け
+        // 厳格に日本語対応（ja / ja-JP / ja_JP）の音声エンジンのみを抽出・優先選択
+        const isJa = (v) => v.lang === 'ja-JP' || v.lang === 'ja_JP' || (v.lang && v.lang.toLowerCase().startsWith('ja'));
         const japaneseVoice =
-            voices.find(v => v.lang === 'ja-JP' && v.name.includes('Natural')) ||
-            voices.find(v => v.lang === 'ja-JP' && v.name.includes('Online')) ||
-            voices.find(v => v.lang === 'ja-JP' && (v.name.includes('Nanami') || v.name.includes('Keita') || v.name.includes('Siri'))) ||
-            voices.find(v => v.lang === 'ja-JP' && v.name.includes('Google')) ||
-            voices.find(v => v.lang === 'ja-JP') ||
-            voices[0];
+            voices.find(v => isJa(v) && v.name.includes('Natural')) ||
+            voices.find(v => isJa(v) && v.name.includes('Online')) ||
+            voices.find(v => isJa(v) && (v.name.includes('Nanami') || v.name.includes('Keita') || v.name.includes('Kyoko') || v.name.includes('Otoya') || v.name.includes('Siri'))) ||
+            voices.find(v => isJa(v) && v.name.includes('Google')) ||
+            voices.find(v => isJa(v));
 
         if (japaneseVoice) {
             utterance.voice = japaneseVoice;
@@ -225,7 +225,7 @@ const PARK_DATA = [
     { name: "大宮公園", link: "omiya_park.html", img: "https://gogo-saitama.jp/wp/wp-content/uploads/2022/05/pixta_15102193_XL.jpg" },
     { name: "北浦和公園", link: "kita_urawa_park.html", img: "https://thumb.photo-ac.com/04/04d880c10523a7f1589138951a67355e_w.jpeg" },
     { name: "森林公園", link: "shinrin_park.html", img: "https://www.sbaa-bicycle.com/wordpress/wp-content/uploads/2022/05/01.jpg" },
-    { name: "大和田公園", link: "owada_park.html", img: "https://visitsaitamacity.jp/rails/active_storage/representations/proxy/eyJfcmFpbHMiOnsiZGF0YSI6MTY0OTYsInB1ciI6ImJsb2JfaWQifX0=--c4feeba5af3b5593908fc962b5ac0d981a283264/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJ3ZWJwIiwicmVzaXplX3RvX2ZpdCI6WzEyODAsNzIwXX0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--5d15d906d46426d4b0f27ed1576e886714aadc6c/%E5%A4%A7%E5%AE%AE%E5%85%AC%E5%9C%921.jpg", isFeatured: true },
+    { name: "大和田公園", link: "owada_park.html", img: "https://tse4.mm.bing.net/th/id/OIP.mTTEYSuTcweeJ3ZRiU2IHwHaFn?r=0&rs=1&pid=ImgDetMain&o=7&rm=3", isFeatured: true },
     { name: "秋ヶ瀬公園", link: "akigase_park.html", img: "https://rental-field.com/park_img/load.php?file=2.jpg&id=63" }
 ];
 
@@ -442,7 +442,7 @@ const modalContents = {
             <p>当サイトの情報の正確性・安全性については細心の注意を払っておりますが、その内容を完全に保証するものではありません。利用者が当ポータルサイトの情報を用いて行う一切の行為、およびそれによって生じるいかなる損害・トラブルについて、当プロジェクトおよび運営組織は一切の責任を負いません。現地の案内や各公式ウェブサイトの最新情報を必ず合わせてご確認ください。</p>
 
             <hr class="border-gray-200 dark:border-gray-700 my-4">
-            <p class="text-xs text-center opacity-75">© 2026 Saitama Parks Promotion Association. All Rights Reserved.</p>
+            <p class="text-xs text-center opacity-75">© 2026 Saitama Prefecture Park Guide Portal - Living with nature. All Rights Reserved.</p>
         </div>
     `,
     legal: `
