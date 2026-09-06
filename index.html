@@ -485,13 +485,24 @@ var ytPlayer = null;
 window.onYouTubeIframeAPIReady = function() {
     ytPlayer = new YT.Player('hero-video-iframe', {
         events: {
-            'onReady': onYtPlayerReady
+            'onReady': onYtPlayerReady,
+            'onStateChange': onYtPlayerStateChange
         }
     });
 };
 
 function onYtPlayerReady(event) {
     // プレイヤーの準備が完了
+}
+
+function onYtPlayerStateChange(event) {
+    // ループ再生時に常に同じ開始位置(24秒)から再生をやり直す
+    if (event.data === YT.PlayerState.ENDED) {
+        if (ytPlayer && typeof ytPlayer.seekTo === 'function') {
+            ytPlayer.seekTo(24, true);
+            ytPlayer.playVideo();
+        }
+    }
 }
 
 // ミュート状態のトグル
