@@ -78,6 +78,17 @@
     background-color: #1e293b !important;
 }
 
+/* Enhanced contrast in dark mode for section titles and primary color text */
+[data-mode="dark"] .section-title,
+.dark .section-title {
+    color: #f8fafc !important;
+}
+
+[data-mode="dark"] .text-\[var\(--primary-color\)\],
+.dark .text-\[var\(--primary-color\)\] {
+    color: #34d399 !important;
+}
+
 body {
     font-family: 'Noto Sans JP', sans-serif;
     font-size: clamp(16px, 2vw, 18px); /* Slightly larger base size for mobile readability */

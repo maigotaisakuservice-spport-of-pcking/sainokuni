@@ -108,7 +108,7 @@
 </div>
 
 <div class="hero-image-container mt-[60px]">
-    <img loading="lazy" decoding="async" src="https://visitsaitamacity.jp/rails/active_storage/representations/proxy/eyJfcmFpbHMiOnsiZGF0YSI6MTY0OTYsInB1ciI6ImJsb2JfaWQifX0=--c4feeba5af3b5593908fc962b5ac0d981a283264/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJ3ZWJwIiwicmVzaXplX3RvX2ZpdCI6WzEyODAsNzIwXX0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--5d15d906d46426d4b0f27ed1576e886714aadc6c/%E5%A4%A7%E5%AE%AE%E5%85%AC%E5%9C%921.jpg" alt="大和田公園" class="animate-in fade-in duration-1000">
+    <img loading="lazy" decoding="async" src="https://tse4.mm.bing.net/th/id/OIP.mTTEYSuTcweeJ3ZRiU2IHwHaFn?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" alt="大和田公園" class="animate-in fade-in duration-1000">
     <div class="absolute inset-0 bg-black/40 flex flex-col justify-center items-center text-white">
         <div class="featured-badge">イチオシ！</div>
         <h2 class="text-5xl md:text-7xl font-bold mb-4" style="font-family: 'Mochiy Pop One';">大和田公園</h2>
@@ -162,9 +162,38 @@
             <h3 class="mt-0">🎆 さいたま市花火大会（大和田公園会場）</h3>
             <p>毎年8月初旬に開催される花火大会は、さいたま市の夏の訪れを告げる大人気行事です。周囲に見晴らしを遮る高い障害物が極めて少ない大和田公園内で打ち上げられるため、頭上で大音響とともに咲き誇る迫力満点の大輪の花火を間近で楽しむことができます。約5,000発の華麗な芸術花火が夜空を埋め尽くす様子は、感動の一言に尽きます！</p>
 
-            <!-- 大和田公園花火動画 (YouTube動画埋め込み) -->
-            <div class="relative rounded-2xl overflow-hidden mt-6 shadow-lg border border-slate-200 dark:border-slate-700 aspect-video bg-black flex flex-col justify-center items-center">
-                <iframe width="769" height="400" class="w-full h-full" src="https://www.youtube.com/embed/HsPJzwCiLJI" title="大和田公園花火大会" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <!-- 大和田公園花火動画 (YouTube動画埋め込み・独自プレーヤー制御) -->
+            <div id="owada-video-container" class="relative rounded-2xl overflow-hidden mt-6 shadow-lg border border-slate-200 dark:border-slate-700 aspect-video bg-black flex flex-col justify-center items-center group">
+                <iframe id="owada-fireworks-iframe" class="w-full h-full pointer-events-none scale-105" src="https://www.youtube.com/embed/HsPJzwCiLJI?autoplay=1&mute=1&loop=1&playlist=HsPJzwCiLJI&controls=0&showinfo=0&rel=0&modestbranding=1&enablejsapi=1" title="大和田公園花火大会 2026" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                <!-- 動画を直接操作されないように上から被せる透明オーバーレイ -->
+                <div class="absolute inset-0 z-10 bg-transparent cursor-pointer" onclick="toggleOwadaPlay()"></div>
+
+                <!-- 独自の本格動画プレーヤー操作バー（仲介） -->
+                <div class="absolute bottom-0 left-0 right-0 z-20 flex flex-col p-3 md:p-4 bg-gradient-to-t from-black/90 via-black/70 to-transparent backdrop-blur-md border-t border-white/10 transition-opacity duration-300">
+                    <!-- シークバー/プログレスバー -->
+                    <div class="w-full mb-2 flex items-center gap-2 cursor-pointer group/progress" onclick="seekOwadaVideo(event)" id="owada-progress-container">
+                        <div class="w-full bg-white/30 h-1.5 hover:h-2.5 rounded-full overflow-hidden transition-all relative">
+                            <div id="owada-progress-bar" class="bg-red-500 h-full w-0 transition-all duration-200"></div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <button id="owada-play-btn" onclick="toggleOwadaPlay()" class="hover:scale-110 text-white text-lg md:text-xl transition-all focus:outline-none" title="再生/一時停止">
+                                ⏸️
+                            </button>
+                            <button id="owada-mute-btn" onclick="toggleOwadaMute()" class="hover:scale-110 text-white text-base md:text-lg transition-all focus:outline-none" title="ミュート切替">
+                                🔇
+                            </button>
+                            <span id="owada-time-display" class="text-[11px] md:text-xs font-mono text-white/90">0:00 / 0:00</span>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs md:text-sm font-bold text-white flex items-center gap-1.5 drop-shadow">🎆 大和田公園花火大会 2026</span>
+                            <span class="text-[10px] bg-red-600 text-white px-2 py-0.5 rounded font-bold uppercase tracking-wider">LOOP</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -227,6 +256,121 @@
 
 <script defer src="../js/common.js"></script>
 <script>
+    // --- YouTube IFrame Player API & 独自プレイヤー仲介制御 ---
+    var owadaPlayer = null;
+
+    window.onYouTubeIframeAPIReady = function() {
+        owadaPlayer = new YT.Player('owada-fireworks-iframe', {
+            events: {
+                'onReady': onOwadaPlayerReady,
+                'onStateChange': onOwadaPlayerStateChange
+            }
+        });
+    };
+
+    var owadaTimer = null;
+
+    function onOwadaPlayerReady(event) {
+        if (owadaPlayer && typeof owadaPlayer.playVideo === 'function') {
+            owadaPlayer.playVideo();
+        }
+        if (owadaTimer) clearInterval(owadaTimer);
+        owadaTimer = setInterval(updateOwadaControlUI, 500);
+    }
+
+    function onOwadaPlayerStateChange(event) {
+        if (event.data === YT.PlayerState.ENDED) {
+            if (owadaPlayer && typeof owadaPlayer.seekTo === 'function') {
+                owadaPlayer.seekTo(0, true);
+                owadaPlayer.playVideo();
+            }
+        }
+        updateOwadaControlUI();
+    }
+
+    window.toggleOwadaPlay = function() {
+        if (!owadaPlayer || typeof owadaPlayer.getPlayerState !== 'function') return;
+        var state = owadaPlayer.getPlayerState();
+        if (state === YT.PlayerState.PLAYING) {
+            owadaPlayer.pauseVideo();
+        } else {
+            owadaPlayer.playVideo();
+        }
+        setTimeout(updateOwadaControlUI, 100);
+    };
+
+    window.toggleOwadaMute = function() {
+        if (!owadaPlayer || typeof owadaPlayer.isMuted !== 'function') return;
+        if (owadaPlayer.isMuted()) {
+            owadaPlayer.unMute();
+        } else {
+            owadaPlayer.mute();
+        }
+        setTimeout(updateOwadaControlUI, 100);
+    };
+
+    window.seekOwadaVideo = function(event) {
+        if (!owadaPlayer || typeof owadaPlayer.getDuration !== 'function' || typeof owadaPlayer.seekTo !== 'function') return;
+        const container = document.getElementById('owada-progress-container');
+        if (!container) return;
+        const rect = container.getBoundingClientRect();
+        const clickX = event.clientX - rect.left;
+        const pct = Math.max(0, Math.min(1, clickX / rect.width));
+        const duration = owadaPlayer.getDuration() || 0;
+        owadaPlayer.seekTo(duration * pct, true);
+        updateOwadaControlUI();
+    };
+
+    function formatTime(sec) {
+        if (!sec || isNaN(sec)) return "0:00";
+        const m = Math.floor(sec / 60);
+        const s = Math.floor(sec % 60);
+        return `${m}:${s < 10 ? '0' : ''}${s}`;
+    }
+
+    function updateOwadaControlUI() {
+        if (!owadaPlayer) return;
+        const playBtn = document.getElementById('owada-play-btn');
+        const muteBtn = document.getElementById('owada-mute-btn');
+        const timeDisplay = document.getElementById('owada-time-display');
+        const progressBar = document.getElementById('owada-progress-bar');
+
+        if (playBtn && typeof owadaPlayer.getPlayerState === 'function') {
+            var state = owadaPlayer.getPlayerState();
+            if (state === YT.PlayerState.PLAYING) {
+                playBtn.innerHTML = '⏸️';
+            } else {
+                playBtn.innerHTML = '▶️';
+            }
+        }
+
+        if (muteBtn && typeof owadaPlayer.isMuted === 'function') {
+            if (owadaPlayer.isMuted()) {
+                muteBtn.innerHTML = '🔇';
+            } else {
+                muteBtn.innerHTML = '🔊';
+            }
+        }
+
+        if (typeof owadaPlayer.getCurrentTime === 'function' && typeof owadaPlayer.getDuration === 'function') {
+            const current = owadaPlayer.getCurrentTime() || 0;
+            const duration = owadaPlayer.getDuration() || 0;
+            if (timeDisplay) {
+                timeDisplay.textContent = `${formatTime(current)} / ${formatTime(duration)}`;
+            }
+            if (progressBar && duration > 0) {
+                const pct = (current / duration) * 100;
+                progressBar.style.width = `${pct}%`;
+            }
+        }
+    }
+
+    // YouTube APIの動的読み込み
+    const ytScriptTag = document.createElement('script');
+    ytScriptTag.src = "https://www.youtube.com/iframe_api";
+    const firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(ytScriptTag, firstScriptTag);
+
     // 花火アニメーション
     document.addEventListener('DOMContentLoaded', () => {
         const canvas = document.getElementById('fireworks-canvas');
