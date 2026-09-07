@@ -192,42 +192,19 @@ function readPageText() {
 
     const utterance = new SpeechSynthesisUtterance(textToRead);
 
-    const speak = () => {
-        const voices = window.speechSynthesis.getVoices();
-        const isJa = (v) => v.lang === 'ja-JP' || v.lang === 'ja_JP' || (v.lang && v.lang.toLowerCase().startsWith('ja'));
-        const jaVoices = voices.filter(isJa);
+    // ブラウザ標準のデフォルト日本語設定で自然に読み上げ
+    utterance.lang = 'ja-JP';
+    utterance.rate = 1.0;
+    utterance.pitch = 1.0;
+    utterance.volume = 1.0;
 
-        // ユーザーがアクセシビリティパネルで手動選択した声を適用
-        const savedVoiceURI = localStorage.getItem('saitama-tts-voice');
-        let selectedVoice = savedVoiceURI ? jaVoices.find(v => v.voiceURI === savedVoiceURI) : null;
-
-        // 手動選択がない場合、ブラウザが持つ最もナチュラルな音声を優先自動選択
-        if (!selectedVoice) {
-            selectedVoice =
-                jaVoices.find(v => v.name.includes('Neural') || v.name.includes('Natural')) ||
-                jaVoices.find(v => v.name.includes('Online') || v.name.includes('Premium') || v.name.includes('Enhanced')) ||
-                jaVoices.find(v => v.name.includes('Nanami') || v.name.includes('Keita') || v.name.includes('Kyoko') || v.name.includes('Otoya') || v.name.includes('Siri') || v.name.includes('Hattori') || v.name.includes('Mei') || v.name.includes('Takumi')) ||
-                jaVoices.find(v => v.name.includes('Google')) ||
-                jaVoices[0];
-        }
-
-        if (selectedVoice) {
-            utterance.voice = selectedVoice;
-        }
-        utterance.lang = 'ja-JP';
-        // 最も人間の発声に近いナチュラルな発音パラメータ
-        utterance.rate = 0.98;
-        utterance.pitch = 1.0;
-        utterance.volume = 1.0;
-
-        window.speechSynthesis.speak(utterance);
-    };
-
-    if (window.speechSynthesis.getVoices().length === 0) {
-        window.speechSynthesis.onvoiceschanged = speak;
-    } else {
-        speak();
+    const voices = window.speechSynthesis.getVoices();
+    const defaultJaVoice = voices.find(v => v.lang === 'ja-JP' || v.lang === 'ja_JP' || (v.lang && v.lang.toLowerCase().startsWith('ja')));
+    if (defaultJaVoice) {
+        utterance.voice = defaultJaVoice;
     }
+
+    window.speechSynthesis.speak(utterance);
 }
 
 // 公園データの定義
@@ -359,43 +336,13 @@ function toggleAccessibilityPanel() {
                     </button>
                 </div>
 
-                <!-- 音声読み上げ & 声の選択 -->
-                <div class="space-y-2 p-3 bg-slate-50 dark:bg-slate-800 rounded-2xl">
-                    <p class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">🗣️ 読み上げ音声の選択</p>
-                    <select id="tts-voice-select" onchange="localStorage.setItem('saitama-tts-voice', this.value)" class="w-full text-xs p-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white font-medium focus:outline-none">
-                        <option value="">自動選択 (最軽量・高音質優先)</option>
-                    </select>
-                    <button onclick="readPageText()" class="w-full flex items-center justify-center gap-2 p-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl transition-colors font-bold text-xs shadow-sm">
-                        🔊 ページを読み上げる
-                    </button>
-                </div>
+                <!-- 音声読み上げ -->
+                <button onclick="readPageText()" class="w-full flex items-center justify-center gap-2 p-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-2xl transition-colors font-bold text-sm dark:text-white">
+                    🔊 ページを読み上げる
+                </button>
             </div>
         `;
         document.body.appendChild(panel);
-
-        // 音声一覧をドロップダウンに生成populate
-        const populateVoiceList = () => {
-            const selectEl = document.getElementById('tts-voice-select');
-            if (!selectEl) return;
-            const voices = window.speechSynthesis.getVoices();
-            const isJa = (v) => v.lang === 'ja-JP' || v.lang === 'ja_JP' || (v.lang && v.lang.toLowerCase().startsWith('ja'));
-            const jaVoices = voices.filter(isJa);
-            const savedVoiceURI = localStorage.getItem('saitama-tts-voice') || '';
-
-            selectEl.innerHTML = '<option value="">自動選択 (自然な高音質エンジン優先)</option>';
-            jaVoices.forEach(v => {
-                const opt = document.createElement('option');
-                opt.value = v.voiceURI;
-                opt.textContent = `${v.name} (${v.lang})`;
-                if (v.voiceURI === savedVoiceURI) opt.selected = true;
-                selectEl.appendChild(opt);
-            });
-        };
-
-        populateVoiceList();
-        if (window.speechSynthesis.onvoiceschanged !== undefined) {
-            window.speechSynthesis.onvoiceschanged = populateVoiceList;
-        }
 
         // 初回表示アニメーション
         setTimeout(() => {
