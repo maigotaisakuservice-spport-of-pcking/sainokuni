@@ -29,6 +29,7 @@ function initTheme() {
     const savedTheme = localStorage.getItem('saitama-theme') || 'green';
 
     document.documentElement.setAttribute('data-mode', savedMode);
+    document.documentElement.classList.toggle('dark', savedMode === 'dark');
     document.documentElement.setAttribute('data-theme', savedTheme);
     updateThemeIcon(savedMode, savedTheme);
 }
@@ -58,6 +59,7 @@ function toggleDarkMode() {
     const newMode = currentMode === 'dark' ? 'light' : 'dark';
 
     document.documentElement.setAttribute('data-mode', newMode);
+    document.documentElement.classList.toggle('dark', newMode === 'dark');
     localStorage.setItem('saitama-mode', newMode);
     updateThemeIcon(newMode, document.documentElement.getAttribute('data-theme'));
 
@@ -449,7 +451,7 @@ const modalContents = {
         <h2 class="text-2xl font-bold mb-4">利用規約 (ToS) / EULA</h2>
         <div class="space-y-4 text-xs leading-relaxed max-h-[60vh] overflow-y-auto pr-2">
             <p>本サイト（SAITAMA PARKS 2026）をご利用いただく際は、以下の規約に同意したものとみなします。</p>
-            <p><strong>1. AIサービスの利用:</strong> 「AIサイタマニアくん」は試験的なLLM技術を使用しており、情報の正確性を保証しません。埼玉愛が強すぎるあまり不適切な表現（十万石まんじゅうの過度な推奨等）が含まれる場合があります。</p>
+            <p><strong>1. AIサービスの利用:</strong> 「AIサイタマニアくん」は試験的な技術を使用しており、情報の正確性を保証しません。埼玉愛が強すぎるあまり不適切な表現（十万石まんじゅうの過度な推奨等）が含まれる場合があります。</p>
             <p><strong>2. 禁止事項:</strong> 本サイトのデータを不正にスクレイピングする行為、およびAIエンジンに対して攻撃的なプロンプトを入力する行為を禁じます。</p>
             <p><strong>3. 免責事項:</strong> 本サイトの情報に基づいて発生した損害について、当プロジェクトは一切の責任を負いません。実際の公園の状況は現地の案内に従ってください。</p>
             <p><strong>4. アップデート:</strong> 本規約は予告なく変更されることがあります。</p>
