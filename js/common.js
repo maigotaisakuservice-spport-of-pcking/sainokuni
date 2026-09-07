@@ -196,10 +196,12 @@ function readPageText() {
         const voices = window.speechSynthesis.getVoices();
         // 厳格に日本語対応（ja / ja-JP / ja_JP）の音声エンジンのみを抽出・優先選択
         const isJa = (v) => v.lang === 'ja-JP' || v.lang === 'ja_JP' || (v.lang && v.lang.toLowerCase().startsWith('ja'));
+
+        // より高音質で自然な音声（Neural, Natural, Premium, Enhanced, Apple / Google / Microsoft の高品質音声）を優先選択
         const japaneseVoice =
-            voices.find(v => isJa(v) && v.name.includes('Natural')) ||
-            voices.find(v => isJa(v) && v.name.includes('Online')) ||
-            voices.find(v => isJa(v) && (v.name.includes('Nanami') || v.name.includes('Keita') || v.name.includes('Kyoko') || v.name.includes('Otoya') || v.name.includes('Siri'))) ||
+            voices.find(v => isJa(v) && (v.name.includes('Neural') || v.name.includes('Natural'))) ||
+            voices.find(v => isJa(v) && (v.name.includes('Online') || v.name.includes('Premium') || v.name.includes('Enhanced'))) ||
+            voices.find(v => isJa(v) && (v.name.includes('Nanami') || v.name.includes('Keita') || v.name.includes('Kyoko') || v.name.includes('Otoya') || v.name.includes('Siri') || v.name.includes('Hattori'))) ||
             voices.find(v => isJa(v) && v.name.includes('Google')) ||
             voices.find(v => isJa(v));
 
@@ -207,9 +209,9 @@ function readPageText() {
             utterance.voice = japaneseVoice;
         }
         utterance.lang = 'ja-JP';
-        // より人間らしく、聞き取りやすい設定
-        utterance.rate = 0.95; // 少し落ち着いた速度に
-        utterance.pitch = 1.05; // わずかに高めに
+        // 自然な人間らしいイントネーションと流暢な話速に調整
+        utterance.rate = 1.0;  // 標準的なナチュラルスピード
+        utterance.pitch = 1.0; // ピッチ変換による人工音感を防ぐため1.0に設定
         utterance.volume = 1.0;
 
         window.speechSynthesis.speak(utterance);
